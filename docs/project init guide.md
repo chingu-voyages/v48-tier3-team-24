@@ -18,7 +18,6 @@ TL;DR:
 a.	For each page component, we’ll have an accompanying .ts file where we resolve any data queries
 3.	`~/styles` would likely be untouched until we want to start changing global CSS. Most CSS should be tailwind within their components.
 a.	Mostly for global colors and text fonts.
-4.	`~/utils` would house project wide utilities.
 
 ## Some notes on the documentation:
 
