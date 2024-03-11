@@ -15,9 +15,9 @@ Visit https://create.t3.gg/en/folder-structure for a breakdown on the file struc
 TL;DR:
 1.	`~/pages` is the front end portion of the project. tRPC calls such as queries or mutations invoked here are resolved on the server side
 2.	`~/server` is the back end. tRPC resolvers are functions talk to Prisma to fetch data from our DB on Railway.
-a.	For each page component, we’ll have an accompanying .ts file where we resolve any data queries
+- For each page component, we’ll have an accompanying .ts file where we resolve any data queries
 3.	`~/styles` would likely be untouched until we want to start changing global CSS. Most CSS should be tailwind within their components.
-a.	Mostly for global colors and text fonts.
+- Mostly for global colors and text fonts.
 
 ## Some notes on the documentation:
 
