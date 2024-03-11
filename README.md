@@ -36,7 +36,8 @@ coding!
 
 - Teammate BrianTam : [GitHub](https://github.com/Briantam0422) / [LinkedIn](https://www.linkedin.com/in/brian-tam-dev/)
 
-- Teammate name #1: [GitHub](https://github.com/ghaccountname) / [LinkedIn](https://linkedin.com/in/liaccountname)
+- Teammate name Michael Park: [GitHub](https://github.com/mpark4656)
+
 - Teammate name #2: [GitHub](https://github.com/ghaccountname) / [LinkedIn](https://linkedin.com/in/liaccountname)
 
    ...
