@@ -38,7 +38,6 @@ coding!
 
 - Teammate name Michael Park: [GitHub](https://github.com/mpark4656)
 
-- Teammate name #2: [GitHub](https://github.com/ghaccountname) / [LinkedIn](https://linkedin.com/in/liaccountname)
+- Teammate name Ivan Alejandre: [GitHub](https://github.com/ialej001)
 
-   ...
 - Teammate name #n: [GitHub](https://github.com/ghaccountname) / [LinkedIn](https://linkedin.com/in/liaccountname)
