@@ -14,15 +14,49 @@ datasource db {
 }
 
 model Post {
-    id        Int      @id @default(autoincrement())
-    name      String
+    id              Int        @id @default(autoincrement())
+    name            String // event title
+    description     String     @db.Text
+    dateTime        DateTime
+    image           String?
+    price           Float      @default(0)
+    maxParticipants Int?       @default(0)
+    invitLink       String?
+    address         String
+    lat             Float // for google map api
+    lng             Float // for google map api
+    status          PostStatus @default(UPCOMING)
+    isPrivate       Boolean    @default(false) // flag for private event or public event
+    isFree          Boolean    @default(true) // flag for free or fee required
+
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
     createdBy   User   @relation(fields: [createdById], references: [id])
     createdById String
 
+    postParticipants PostParticipants[]
+
     @@index([name])
+}
+
+enum PostStatus {
+    UPCOMING
+    IN_PROGRESS
+    COMPLETED
+    CANCELED
+}
+
+model PostParticipants {
+    id Int @id @default(autoincrement())
+
+    user   User   @relation(fields: [userId], references: [id])
+    userId String
+
+    post   Post @relation(fields: [postId], references: [id])
+    postId Int
+
+    createdAt DateTime @default(now())// record when they join
 }
 
 // Necessary for Next auth
@@ -53,19 +87,20 @@ model Session {
 }
 
 model User {
-    id            String    @id @default(cuid())
-    name          String?                           // Discord profile name
-    username      String?   @unique                 // Credentials username
-    password      String?                           // Credentials password
-    firstName     String?
-    lastName      String?
-    email         String?   @unique
-    emailVerified DateTime?
-    role          Role      @default(USER)
-    image         String?
-    accounts      Account[]
-    sessions      Session[]
-    posts         Post[]
+    id               String             @id @default(cuid())
+    name             String? // Discord profile name
+    username         String?            @unique // Credentials username
+    password         String? // Credentials password
+    firstName        String?
+    lastName         String?
+    email            String?            @unique
+    emailVerified    DateTime?
+    role             Role               @default(USER)
+    image            String?
+    accounts         Account[]
+    sessions         Session[]
+    posts            Post[]
+    postParticipants PostParticipants[]
 }
 
 enum Role {
