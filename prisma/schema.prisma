@@ -54,13 +54,23 @@ model Session {
 
 model User {
     id            String    @id @default(cuid())
-    name          String?
+    name          String?                           // Discord profile name
+    username      String?   @unique                 // Credentials username
+    password      String?                           // Credentials password
+    firstName     String?
+    lastName      String?
     email         String?   @unique
     emailVerified DateTime?
+    role          Role      @default(USER)
     image         String?
     accounts      Account[]
     sessions      Session[]
     posts         Post[]
+}
+
+enum Role {
+    USER
+    ADMIN
 }
 
 model VerificationToken {
