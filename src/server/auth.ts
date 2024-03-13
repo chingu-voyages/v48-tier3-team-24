@@ -6,12 +6,12 @@ import {
   type NextAuthOptions,
 } from "next-auth";
 import { type Adapter } from "next-auth/adapters";
-import CredentialsProvider from "next-auth/providers/credentials";
-import DiscordProvider from "next-auth/providers/discord";
-import { User as PrismaUser } from '@prisma/client';
+import type { User } from '@prisma/client';
 import { env } from "~/env";
 import { db } from "~/server/db";
-import { compare, hash } from "~/utils/bcrypt";
+import { compare } from "~/utils/bcrypt";
+import CredentialsProvider from "next-auth/providers/credentials";
+import DiscordProvider from "next-auth/providers/discord";
 
 /**
  * Module augmentation for `next-auth` types. Allows us to add custom properties to the `session`
@@ -21,12 +21,8 @@ import { compare, hash } from "~/utils/bcrypt";
  */
 declare module "next-auth" {
   interface Session extends DefaultSession {
-    user: DefaultSession["user"] & {
-      id: string;
-    };
+    user: DefaultSession["user"] & User;
   }
-
-  interface User extends PrismaUser {}
 }
 
 /**
@@ -40,12 +36,28 @@ export const authOptions: NextAuthOptions = {
     maxAge: 24 * 60 * 60, // 1 day
   },
   callbacks: {
-    session: async ({ session, token, user }) => {
+    jwt: async ({ token, account }) => {
+      // If an additional argument other than token is defined, it means user is being signed in.
+      if(account?.provider === 'credentials') {
+        const user = await db.user.findFirst({
+          where: { id: token.sub }
+        });
+        token.username = user?.username;
+        token.firstName = user?.firstName;
+        token.lastName = user?.lastName;
+      }
+      return token;
+    },
+    session: async ({ session, token }) => {
       return {
         ...session,
         user: {
           ...session.user,
           id: token.sub,
+          // Crendential users will have username instead of name
+          username: token.username,
+          firstName: token.firstName,
+          lastName: token.lastName
         },
       };
     }
@@ -69,7 +81,10 @@ export const authOptions: NextAuthOptions = {
           }
         });
         if(user) {
-          const match = await compare(credentials?.password!, user.password!);
+          if(!credentials?.password || !user.password) {
+            return null; // No password
+          }
+          const match = await compare(credentials?.password, user.password);
           if(!match) return null; // incorrect password
           return user;
         }
