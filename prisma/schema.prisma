@@ -17,7 +17,8 @@ model Event {
     id              Int         @id @default(autoincrement())
     name            String // event title
     description     String      @db.Text
-    dateTime        DateTime
+    startDateTime   DateTime
+    endDateTime     DateTime
     image           String?
     price           Float       @default(0)
     maxParticipants Int?        @default(0)
@@ -29,11 +30,11 @@ model Event {
     isPrivate       Boolean     @default(false) // flag for private event or public event
     isFree          Boolean     @default(true) // flag for free or fee required
 
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
+    createdAt       DateTime @default(now())
+    updatedAt       DateTime @updatedAt
 
-    createdBy   User   @relation(fields: [createdById], references: [id])
-    createdById String
+    createdBy       User   @relation(fields: [createdById], references: [id])
+    createdById     String
 
     eventParticipants EventParticipants[]
 
