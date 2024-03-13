@@ -13,21 +13,21 @@ datasource db {
     url      = env("DATABASE_URL")
 }
 
-model Post {
-    id              Int        @id @default(autoincrement())
+model Event {
+    id              Int         @id @default(autoincrement())
     name            String // event title
-    description     String     @db.Text
+    description     String      @db.Text
     dateTime        DateTime
     image           String?
-    price           Float      @default(0)
-    maxParticipants Int?       @default(0)
-    invitLink       String?
+    price           Float       @default(0)
+    maxParticipants Int?        @default(0)
+    inviteLink      String?
     address         String
-    lat             Float // for google map api
-    lng             Float // for google map api
-    status          PostStatus @default(UPCOMING)
-    isPrivate       Boolean    @default(false) // flag for private event or public event
-    isFree          Boolean    @default(true) // flag for free or fee required
+    lat             Float? // for google map api
+    lng             Float? // for google map api
+    status          EventStatus @default(UPCOMING)
+    isPrivate       Boolean     @default(false) // flag for private event or public event
+    isFree          Boolean     @default(true) // flag for free or fee required
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
@@ -35,28 +35,28 @@ model Post {
     createdBy   User   @relation(fields: [createdById], references: [id])
     createdById String
 
-    postParticipants PostParticipants[]
+    eventParticipants EventParticipants[]
 
     @@index([name])
 }
 
-enum PostStatus {
+enum EventStatus {
     UPCOMING
     IN_PROGRESS
     COMPLETED
     CANCELED
 }
 
-model PostParticipants {
+model EventParticipants {
     id Int @id @default(autoincrement())
 
     user   User   @relation(fields: [userId], references: [id])
     userId String
 
-    post   Post @relation(fields: [postId], references: [id])
-    postId Int
+    event   Event @relation(fields: [eventId], references: [id])
+    eventId Int
 
-    createdAt DateTime @default(now())// record when they join
+    createdAt DateTime @default(now()) // record when they join
 }
 
 // Necessary for Next auth
@@ -87,20 +87,20 @@ model Session {
 }
 
 model User {
-    id               String             @id @default(cuid())
-    name             String? // Discord profile name
-    username         String?            @unique // Credentials username
-    password         String? // Credentials password
-    firstName        String?
-    lastName         String?
-    email            String?            @unique
-    emailVerified    DateTime?
-    role             Role               @default(USER)
-    image            String?
-    accounts         Account[]
-    sessions         Session[]
-    posts            Post[]
-    postParticipants PostParticipants[]
+    id                String              @id @default(cuid())
+    name              String? // Discord profile name
+    username          String?             @unique // Credentials username
+    password          String? // Credentials password
+    firstName         String?
+    lastName          String?
+    email             String?             @unique
+    emailVerified     DateTime?
+    role              Role                @default(USER)
+    image             String?
+    accounts          Account[]
+    sessions          Session[]
+    events            Event[]
+    eventParticipants EventParticipants[]
 }
 
 enum Role {
