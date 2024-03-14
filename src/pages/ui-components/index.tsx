@@ -2,7 +2,7 @@
 import { FaDiscord } from "react-icons/fa";
 import Button from "~/components/Button";
 
-export default function UiComponents(props) {
+export default function UiComponents() {
   const onClick = () => {
     console.log("I do nothing");
   };
