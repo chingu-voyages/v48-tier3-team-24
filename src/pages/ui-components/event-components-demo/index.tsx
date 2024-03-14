@@ -2,6 +2,7 @@ import { Event } from "@prisma/client";
 import EventItem, { iEventItem } from "~/components/Event/EventItem";
 import DemoImage1 from "public/img/demo-image-1.jpg";
 import demoStatusData from "./demo_data";
+import { EventList } from "~/components/Event/EventList";
 
 const eventItemDemoData: iEventItem = {
   id: 1,
@@ -162,6 +163,11 @@ const EventComponentsDemo = (props) => {
           <div className="sm:w-full md:w-1/2 lg:w-1/3">
             <EventItem event={eventItemDemoDataWithImage} />
           </div>
+        </div>
+
+        <div className="mb-10">
+          <h1 className="mb-5 text-2xl font-bold">Event Card List</h1>
+          <EventList events={demoStatus} />
         </div>
       </div>
     </>
