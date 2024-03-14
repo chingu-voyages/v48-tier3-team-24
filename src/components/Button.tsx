@@ -1,61 +1,92 @@
-import { MouseEventHandler, ReactNode } from "react";
+"use client";
 
-interface ButtonProps {
-  children?: ReactNode;
-  type?: "button" | "submit" | "reset";
-  color: "default" | "primary" | "warning" | "danger" | "info";
+import { type FC, type ReactNode, type ComponentProps } from "react";
+import { type VariantProps, cva } from "class-variance-authority";
+import { cn } from "~/utils/components";
+
+const buttonVariants = cva(
+  "px-10 py-3 cursor-pointer font-bold w-full sm:w-96 ",
+  {
+    variants: {
+      variant: {
+        default: "",
+        primary:
+          "border border-[#0A2A75] text-white bg-[#0A2A75] hover:bg-[#0A2A75] hover:text-white hover:shadow-xl",
+        warning:
+          "border border-[#F2B705] text-white bg-[#F2B705] hover:bg-[#F2B705]  hover:text-white hover:shadow-lg",
+        danger:
+          "border border-[#F20505] text-white bg-[#F20505] hover:bg-[#F20505]  hover:text-white hover:shadow-lg",
+        info: "border border-[#8C8C8C] text-white bg-[#8C8C8C] hover:bg-[#8C8C8C]  hover:text-white hover:shadow-lg",
+      },
+      outline: {
+        default: "",
+        primary:
+          "border border-[#5865F2] text-[#5865F2] hover:text-[#FFFFFF] hover:bg-[#5865F2]",
+        warning:
+          "border border-[#F2B705] text-[#F2B705] hover:text-[#FFFFFF] hover:bg-[#F2B705]",
+        danger:
+          "border border-[#F20505] text-[#F20505] hover:text-[#FFFFFF] hover:bg-[#F20505]",
+        info: "border border-[#8C8C8C] text-[#8C8C8C] hover:text-[#FFFFFF] hover:bg-[#8C8C8C]",
+      },
+      size: {
+        default: "text-base",
+        sm: "text-base",
+        md: "text-md",
+        lg: "text-lg",
+        xl: "text-xl",
+      },
+      rounded: {
+        default: "rounded",
+        sm: "rounded-sm",
+        md: "rounded-md",
+        lg: "rounded-lg",
+        xl: "rounded-xl",
+      },
+    },
+    defaultVariants: {
+      variant: "default",
+      outline: "default",
+      size: "default",
+      rounded: "default",
+    },
+  },
+);
+
+interface ButtonProps
+  extends ComponentProps<"button">,
+    VariantProps<typeof buttonVariants> {
   icon?: ReactNode;
-  link?: boolean;
-  outline?: boolean;
-  rounded?: boolean;
-  styles?: string;
-  onClick: MouseEventHandler;
 }
 
-export default function Button(props: ButtonProps) {
-  let baseColor = "transparent";
-  let baseBgColor = "transparent";
-  let hoverBgColor = "#5865F2";
-  let baseTextColor = "#5865F2";
-  let hoverTextColor = "text-white";
-  let baseBorderColor = "#5865F2";
-  let hoverBorderColor = "#5865F2";
-  switch (props.color) {
-    case "primary":
-      baseColor = "#5865F2";
-    case "danger":
-      baseColor = "#1865F2";
-  }
-
-  baseBgColor = baseColor;
-  hoverBgColor = "transparent";
-  baseTextColor = "text-white";
-  hoverTextColor = baseColor;
-  baseBorderColor = baseColor;
-  hoverBorderColor = baseColor;
-
-  if (props.outline) {
-    baseBgColor = "transparent";
-    hoverBgColor = baseColor;
-    baseTextColor = baseColor;
-    hoverTextColor = "text-white";
-    baseBorderColor = baseColor;
-  }
-
-  const baseStyle = `${props.rounded ? "rounded" : ""} border border-[${baseBorderColor}] hover:border-[${hoverBorderColor}] px-10 py-3 text-[${baseTextColor}] font-bold w-full sm:w-96 bg-[${baseBgColor}] hover:bg-[${hoverBgColor}] hover:text-[${hoverTextColor}] cursor-pointer ${props.styles}`;
-
+const Button: FC<ButtonProps> = ({
+  children,
+  className,
+  type,
+  icon,
+  onClick,
+  variant,
+  size,
+  rounded,
+  outline,
+  ...props
+}) => {
   return (
     <>
       <button
-        type={props.type ? props.type : "button"}
-        className={baseStyle}
-        onClick={props.onClick}
+        type={type ? type : "button"}
+        className={cn(
+          buttonVariants({ variant, size, rounded, outline, className }),
+        )}
+        onClick={onClick}
+        {...props}
       >
-        <span className="flex flex-row items-center justify-center gap-3 text-xs sm:text-base">
-          {props.icon}
-          {props.children}
+        <span className="flex flex-row items-center justify-center gap-3">
+          {icon}
+          {children}
         </span>
       </button>
     </>
   );
-}
+};
+
+export default Button;
