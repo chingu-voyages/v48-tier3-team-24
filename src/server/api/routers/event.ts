@@ -1,3 +1,4 @@
+import { createInputMiddleware } from "@trpc/server";
 import { z } from "zod";
 
 import {
@@ -6,7 +7,7 @@ import {
   publicProcedure,
 } from "~/server/api/trpc";
 
-export const postRouter = createTRPCRouter({
+export const eventRouter = createTRPCRouter({
   hello: publicProcedure
     .input(z.object({ text: z.string() }))
     .query(({ input }) => {
@@ -16,21 +17,36 @@ export const postRouter = createTRPCRouter({
     }),
 
   create: protectedProcedure
-    .input(z.object({ name: z.string().min(1) }))
+    .input(z.object({ 
+      name: z.string().min(1),
+      description: z.string().min(1),
+      startDateTime: z.date().min(new Date()),
+      endDateTime: z.date(),
+      address: z.string().min(1)
+    }).refine(data => {
+      data.endDateTime > data.startDateTime, {
+        message: "The event end datetime cannot be earlier than the event start datetime.",
+        path: ["endDateTime"]
+      }
+    }))
     .mutation(async ({ ctx, input }) => {
       // simulate a slow db call
       await new Promise((resolve) => setTimeout(resolve, 1000));
 
-      return ctx.db.post.create({
+      return ctx.db.event.create({
         data: {
           name: input.name,
+          description: input.description,
+          startDateTime: input.startDateTime,
+          endDateTime: input.endDateTime,
+          address: input.address,
           createdBy: { connect: { id: ctx.session.user.id } },
         },
       });
     }),
 
   getLatest: protectedProcedure.query(({ ctx }) => {
-    return ctx.db.post.findFirst({
+    return ctx.db.event.findFirst({
       orderBy: { createdAt: "desc" },
       where: { createdBy: { id: ctx.session.user.id } },
     });
