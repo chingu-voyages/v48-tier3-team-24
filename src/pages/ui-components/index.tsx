@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 
-const UiComponents = (props) => {
+const UiComponents = () => {
   return (
     <>
       <div className="p-20">
