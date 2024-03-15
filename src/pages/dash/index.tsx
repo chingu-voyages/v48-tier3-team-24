@@ -1,7 +1,7 @@
 import { useSession } from "next-auth/react";
 import React from "react";
 import EventList, { EventsType } from "~/components/dash/EventList";
-import { SideNav } from "~/components/dash/sideNav";
+import { SideNav } from "~/components/dash/SideNav";
 
 function UserDash() {
   const { data: sessionData } = useSession();

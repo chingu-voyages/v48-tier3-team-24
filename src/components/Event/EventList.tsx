@@ -7,7 +7,7 @@ interface EventListProps {
 export const EventList = (props: EventListProps) => {
   return (
     <>
-      <div className="md:10 lg:20 flex grid grid-cols-1 flex-wrap gap-5 p-5 md:grid-cols-2 lg:grid-cols-3">
+      <div className="md:10 lg:20 grid grid-cols-1 gap-5 p-5 md:grid-cols-2 lg:grid-cols-3">
         {props.events.map((event) => {
           return (
             <>
