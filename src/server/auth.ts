@@ -23,6 +23,13 @@ declare module "next-auth" {
   interface Session extends DefaultSession {
     user: DefaultSession["user"] & User;
   }
+  interface Profile {
+    email?: string;
+    image?: string;
+    name?: string;
+    sub?: string;
+    verified?: boolean;
+  }
 }
 
 /**
@@ -36,15 +43,23 @@ export const authOptions: NextAuthOptions = {
     maxAge: 24 * 60 * 60, // 1 day
   },
   callbacks: {
-    jwt: async ({ token, account }) => {
+    jwt: async ({ token, account, profile }) => {
       // If an additional argument other than token is defined, it means user is being signed in.
+      const user = await db.user.findFirst({
+        where: { id: token.sub }
+      });
+      token.role = user?.role;
       if(account?.provider === 'credentials') {
-        const user = await db.user.findFirst({
-          where: { id: token.sub }
-        });
         token.username = user?.username;
         token.firstName = user?.firstName;
         token.lastName = user?.lastName;
+        token.emailVerified = user?.emailVerified;
+      }
+      if(account?.provider === 'discord') {
+        // For discord, make sure the discord user has verified their account in discord
+        if(profile && profile.verified) {
+          token.emailVerified = new Date();
+        }
       }
       return token;
     },
@@ -54,6 +69,7 @@ export const authOptions: NextAuthOptions = {
         user: {
           ...session.user,
           id: token.sub,
+          role: token.role,
           // Crendential users will have username instead of name
           username: token.username,
           firstName: token.firstName,
