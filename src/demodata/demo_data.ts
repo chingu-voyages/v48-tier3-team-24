@@ -1,7 +1,7 @@
 import DemoImage1 from "public/img/demo-image-1.jpg";
 import { iEventItem } from "~/components/Event/EventItem";
 
-const demoStatusData: Array<iEventItem> = [
+export const demoStatusData: Array<iEventItem> = [
 {
   id: 2,
   name: "This is an Event Name",
@@ -283,5 +283,3 @@ const demoStatusData: Array<iEventItem> = [
   ],
 }
 ]
-
-export default demoStatusData
