@@ -1,11 +1,14 @@
 import { signOut, useSession } from "next-auth/react";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import React from "react";
 import EventContainer from "~/components/Event/EventContainer";
 import { demoStatusData } from "~/utils/demo_data";
 
 function UserDash() {
   const { data: sessionData } = useSession();
+
+  const router = useRouter();
 
   if (!sessionData) {
     return <div>Access denied.</div>;
@@ -16,10 +19,17 @@ function UserDash() {
 
   return (
     <>
-      <nav className="flex flex-row gap-8 p-5 border-b-4">
+      <nav className="flex flex-row gap-8 border-b-4 p-5">
         <Link href="">Browse Events</Link>
         <Link href="">My Profile</Link>
-        <Link href="/" onClick={() => signOut()}>Sign out</Link>
+        <Link
+          href="/"
+          onClick={() =>
+            signOut({ redirect: false }).then(() => router.push("/"))
+          }
+        >
+          Sign out
+        </Link>
       </nav>
       <section className="flex flex-col gap-6 p-6">
         <EventContainer title="My hosted events" events={events1} />
