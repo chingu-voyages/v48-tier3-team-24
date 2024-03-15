@@ -1,6 +1,6 @@
 import { Event, EventParticipants, EventStatus, User } from "@prisma/client";
 import { EventList } from "./EventList";
-import Image from "next/image";
+import Image, { StaticImageData } from "next/image";
 import { CiCalendarDate, CiBookmarkCheck } from "react-icons/ci";
 import { HiOutlineTicket } from "react-icons/hi2";
 import { MdOutlinePublic } from "react-icons/md";
@@ -14,7 +14,7 @@ export interface iEventItem {
   description: string;
   startDateTime: string;
   endDateTime: string;
-  image?: string;
+  image?: StaticImageData;
   price?: number;
   maxParticipants?: number;
   inviteLink?: string;

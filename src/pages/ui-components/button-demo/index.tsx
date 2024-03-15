@@ -3,7 +3,7 @@
 import { FaDiscord } from "react-icons/fa";
 import Button from "~/components/Button";
 
-const ButtonDemo = (props) => {
+const ButtonDemo = () => {
   const onClick = () => {
     console.log("I do nothing");
   };
