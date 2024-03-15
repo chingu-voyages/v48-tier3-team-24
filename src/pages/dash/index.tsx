@@ -1,7 +1,7 @@
-import { useSession } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
+import Link from "next/link";
 import React from "react";
-import { EventList } from "~/components/Event/EventList";
-import { SideNav } from "~/components/dash/SideNav";
+import EventContainer from "~/components/Event/EventContainer";
 import { demoStatusData } from "~/utils/demo_data";
 
 function UserDash() {
@@ -15,13 +15,17 @@ function UserDash() {
   const events2 = demoStatusData.slice(1, 3);
 
   return (
-    <section className="flex gap-4 p-6">
-      <SideNav />
-      <div className="flex flex-col gap-6 pl-6">
-        <EventList events={events1} />
-        <EventList events={events2} />
-      </div>
-    </section>
+    <>
+      <nav className="flex flex-row gap-8 p-5 border-b-4">
+        <Link href="">Browse Events</Link>
+        <Link href="">My Profile</Link>
+        <Link href="/" onClick={() => signOut()}>Sign out</Link>
+      </nav>
+      <section className="flex flex-col gap-6 p-6">
+        <EventContainer title="My hosted events" events={events1} />
+        <EventContainer title="Upcoming registered events" events={events2} />
+      </section>
+    </>
   );
 }
 
