@@ -1,4 +1,4 @@
-import { EventStatus } from "@prisma/client";
+import type { EventStatus } from "@prisma/client";
 import { MdOutlinePublic } from "react-icons/md";
 
 interface EventItemStatusProps {

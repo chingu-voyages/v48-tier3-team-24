@@ -1,9 +1,7 @@
-import React, { MouseEventHandler } from "react";
+import React from "react";
 import Button from "../Button";
 
-interface SideNavProps {}
-
-export const SideNav = ({}: SideNavProps) => {
+export const SideNav = () => {
   return (
     <div className="flex flex-col gap-2 w-48">
       <Button type="button">Button 1</Button>

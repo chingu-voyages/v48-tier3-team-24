@@ -1,9 +1,11 @@
-import { EventStatus, User } from "@prisma/client";
-import Image, { StaticImageData } from "next/image";
+import type { EventStatus, User } from "@prisma/client";
+import type { StaticImageData } from "next/image";
+import type { MouseEventHandler } from "react";
+
+import Image from "next/image";
 import { CiCalendarDate, CiBookmarkCheck } from "react-icons/ci";
 import { HiOutlineTicket } from "react-icons/hi2";
 import { RiGhostSmileLine } from "react-icons/ri";
-import { MouseEventHandler } from "react";
 import { EventItemStatus } from "./EventItemStatus";
 
 export interface EventItemType {
@@ -56,7 +58,7 @@ const EventItem = (props: EventItemProps) => {
             </div>
             {props.event.eventParticipants.map((participant: User) => {
               return (
-                <div className="h-10 w-10 rounded-full border">
+                <div className="h-10 w-10 rounded-full border" key={participant.id}>
                   <p className="mt-2 text-center first-letter:capitalize">
                     {participant.username?.charAt(0)}
                   </p>

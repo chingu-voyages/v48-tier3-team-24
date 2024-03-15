@@ -1,7 +1,7 @@
 import DemoImage1 from "public/img/demo-image-1.jpg";
-import { EventItemType } from "~/components/Event/EventItem";
+import type { EventItemType } from "~/components/Event/EventItem";
 
-const demoStatusData: EventItemType[] = [
+export const demoStatusData: EventItemType[] = [
   {
     id: 1,
     name: "This is an Event Name",
@@ -284,4 +284,3 @@ const demoStatusData: EventItemType[] = [
   },
 ];
 
-export default demoStatusData;

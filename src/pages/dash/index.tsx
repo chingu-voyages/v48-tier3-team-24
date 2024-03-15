@@ -2,7 +2,7 @@ import { useSession } from "next-auth/react";
 import React from "react";
 import { EventList } from "~/components/Event/EventList";
 import { SideNav } from "~/components/dash/SideNav";
-import demoStatusData from "~/pages/ui-components/event-components-demo/demo_data";
+import { demoStatusData } from "~/utils/demo_data";
 
 function UserDash() {
   const { data: sessionData } = useSession();

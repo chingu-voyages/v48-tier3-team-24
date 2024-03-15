@@ -1,7 +1,7 @@
-import { Event } from "@prisma/client";
-import EventItem, { EventItemType } from "~/components/Event/EventItem";
+import type { EventItemType } from "~/components/Event/EventItem";
+import EventItem from "~/components/Event/EventItem";
 import DemoImage1 from "public/img/demo-image-1.jpg";
-import demoStatusData from "./demo_data";
+import { demoStatusData } from "../../../utils/demo_data";
 import { EventList } from "~/components/Event/EventList";
 
 const eventItemDemoData: EventItemType = {
