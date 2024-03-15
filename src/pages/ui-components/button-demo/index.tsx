@@ -1,9 +1,9 @@
 "use client";
 
 import { FaDiscord } from "react-icons/fa";
-import Button from "~/components/Button";
+import Button, { ButtonProps } from "~/components/Button";
 
-const ButtonDemo = (props) => {
+const ButtonDemo = (props: ButtonProps) => {
   const onClick = () => {
     console.log("I do nothing");
   };

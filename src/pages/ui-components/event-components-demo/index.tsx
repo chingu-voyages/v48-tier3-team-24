@@ -1,10 +1,10 @@
 import { Event } from "@prisma/client";
-import EventItem, { iEventItem } from "~/components/Event/EventItem";
+import EventItem, { EventItemType } from "~/components/Event/EventItem";
 import DemoImage1 from "public/img/demo-image-1.jpg";
 import demoStatusData from "./demo_data";
 import { EventList } from "~/components/Event/EventList";
 
-const eventItemDemoData: iEventItem = {
+const eventItemDemoData: EventItemType = {
   id: 1,
   name: "This is an Event Name",
   description:
@@ -75,7 +75,7 @@ const eventItemDemoData: iEventItem = {
   ],
 };
 
-const eventItemDemoDataWithImage: iEventItem = {
+const eventItemDemoDataWithImage: EventItemType = {
   id: 1,
   name: "This is an Event Name",
   description:
@@ -148,7 +148,7 @@ const eventItemDemoDataWithImage: iEventItem = {
 
 const demoStatus = demoStatusData;
 
-const EventComponentsDemo = (props) => {
+const EventComponentsDemo = () => {
   return (
     <>
       <div className="p-20">
