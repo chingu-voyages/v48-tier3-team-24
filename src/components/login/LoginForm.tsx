@@ -3,6 +3,7 @@ import { FaRegCircleUser } from "react-icons/fa6";
 import { FiLock } from "react-icons/fi";
 import { FaDiscord } from "react-icons/fa";
 import type { FormEvent } from "react";
+import Button from "../Button";
 import toast from "react-hot-toast";
 import Link from "next/link";
 
@@ -76,6 +77,9 @@ const LoginForm = () => {
       </button>
       <Link href="/register" className="text-lg hover:text-blue-800">
         Register
+      </Link>
+      <Link href="/recover" className="text-sm sm:text-lg hover:text-blue-800">
+        Forgot username or password?
       </Link>
     </form>
   );
