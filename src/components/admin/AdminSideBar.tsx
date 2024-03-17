@@ -21,7 +21,7 @@ const AdminSideBar = () => {
         </Link>
         <Link href="/admin/payments" className={`py-3 pl-3 flex flex-row items-center gap-3 text-white ${selectedRoute === "/payments" ? "bg-es-primary-light font-bold" : "hover:bg-es-primary-light hover:pl-5"}`}>
           <MdOutlinePayment />
-          Payment Managemen
+          Payment Management
         </Link>
       </div>
     </aside>
