@@ -1,6 +1,8 @@
 import Button from "./Button";
 import { IoMdNotificationsOutline } from "react-icons/io";
 import { RiMenu4Fill } from "react-icons/ri";
+import Logo from "../../public/logo/EventSync.svg";
+import Image from "next/image";
 
 const Header = () => {
   const goToMyEvent = () => {
@@ -13,10 +15,17 @@ const Header = () => {
   };
 
   return (
-    <div className="fixed min-h-10 w-full items-center px-20 py-5 shadow">
+    <div className="fixed min-h-10 w-full items-center px-20 py-5">
       <div className="flex justify-between">
         <div className="flex items-center gap-5">
-          <div>Logo</div>
+          <div>
+            <Image
+              src="/logo/EventSync.svg"
+              width={150}
+              height={50}
+              alt="Logo of EventSync"
+            />
+          </div>
           <div>Search Bar</div>
         </div>
         <div className="hidden items-center gap-8 md:flex">
