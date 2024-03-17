@@ -10,7 +10,11 @@ const Header = () => {
           <div>Search Bar</div>
         </div>
         <div className="flex items-center gap-8">
-          <Button size="sm" className="hidden md:block" outline="info">
+          <Button
+            size="sm"
+            className="hidden rounded-lg px-3 py-1 text-black md:block"
+            outline="info"
+          >
             Manage Event
           </Button>
           <IoMdNotificationsOutline className="text-3xl" />
