@@ -1,5 +1,6 @@
+import { Prisma } from "@prisma/client";
 import { createInputMiddleware } from "@trpc/server";
-import { SessionSchema } from "schemas";
+import { EventSchema } from "schemas";
 import { z } from "zod";
 
 import {
@@ -59,24 +60,48 @@ export const eventRouter = createTRPCRouter({
     });
   }),
 
-  getAllHostedEvents: protectedProcedure
-    .query(({ ctx }) => {
-      return ctx.db.event.findMany({
-        orderBy: { createdAt: "desc" },
-        where: { createdById: ctx.session.user.id },
+  getAllHostedEvents: protectedProcedure.query(({ ctx }) => {
+    return ctx.db.event.findMany({
+      orderBy: { createdAt: "desc" },
+      where: { createdById: ctx.session.user.id },
+    });
+  }),
+
+  getAllAttendingEvents: protectedProcedure.query(({ ctx }) => {
+    return ctx.db.event.findMany({
+      orderBy: { createdAt: "desc" },
+      where: {
+        eventParticipants: {
+          some: {
+            id: ctx.session.user.id,
+          },
+        },
+      },
+    });
+  }),
+
+  createEvent: protectedProcedure
+    .input(EventSchema)
+    .mutation(async ({ ctx, input }) => {
+      // has all data passed by the form except the User object
+      let event: Prisma.EventCreateWithoutCreatedByInput = input;
+
+      // creates the event and connects it to the session's user
+      return await ctx.db.event.create({
+        data: { ...event, createdBy: { connect: { id: ctx.session.user.id } } },
       });
     }),
 
-  getAllAttendingEvents: protectedProcedure
-    .query(({ ctx }) => {
-      return ctx.db.event.findMany({
-        orderBy: { createdAt: "desc" },
+  // adds a user to an existing event
+  addUserToEvent: protectedProcedure
+    .input(z.object({ eventId: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      return await ctx.db.event.update({
+        data: {
+          eventParticipants: { connect: { id: ctx.session.user.id } },
+        },
         where: {
-          eventParticipants: {
-            some: {
-              id: ctx.session.user.id,
-            },
-          },
+          id: input.eventId,
         },
       });
     }),
