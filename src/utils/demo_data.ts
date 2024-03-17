@@ -7,7 +7,7 @@ export const demoStatusData: EventItemType[] = [
     name: "This is an Event Name",
     description:
       "Lorem ipsum dolor sit amet, consectetur adipiscing elitsed do eiusmod.",
-    startDateTime: new Date("2024-03-14T23:00"),
+    startDateTime: new Date("2024-03-14T08:30"),
     endDateTime: new Date("2024-03-14T23:00"),
     image: DemoImage1,
     price: 0,
@@ -34,7 +34,7 @@ export const demoStatusData: EventItemType[] = [
       image: null,
     },
     eventParticipants: [
-      {
+      {user: {
         id: "1",
         name: null,
         username: "Brian Tam",
@@ -45,8 +45,8 @@ export const demoStatusData: EventItemType[] = [
         emailVerified: null,
         role: "USER",
         image: null,
-      },
-      {
+      }},
+      {user: {
         id: "2",
         name: null,
         username: "Ivan A",
@@ -57,8 +57,8 @@ export const demoStatusData: EventItemType[] = [
         emailVerified: null,
         role: "USER",
         image: null,
-      },
-      {
+      }},
+      {user: {
         id: "3",
         name: null,
         username: "Michael P",
@@ -69,7 +69,7 @@ export const demoStatusData: EventItemType[] = [
         emailVerified: null,
         role: "USER",
         image: null,
-      },
+      }},
     ],
   },
   {
@@ -104,7 +104,7 @@ export const demoStatusData: EventItemType[] = [
       image: null,
     },
     eventParticipants: [
-      {
+      {user: {
         id: "1",
         name: null,
         username: "Brian Tam",
@@ -115,8 +115,8 @@ export const demoStatusData: EventItemType[] = [
         emailVerified: null,
         role: "USER",
         image: null,
-      },
-      {
+      }},
+      {user: {
         id: "2",
         name: null,
         username: "Ivan A",
@@ -127,8 +127,8 @@ export const demoStatusData: EventItemType[] = [
         emailVerified: null,
         role: "USER",
         image: null,
-      },
-      {
+      }},
+      {user: {
         id: "3",
         name: null,
         username: "Michael P",
@@ -139,7 +139,7 @@ export const demoStatusData: EventItemType[] = [
         emailVerified: null,
         role: "USER",
         image: null,
-      },
+      }},
     ],
   },
   {
@@ -174,7 +174,7 @@ export const demoStatusData: EventItemType[] = [
       image: null,
     },
     eventParticipants: [
-      {
+      {user: {
         id: "1",
         name: null,
         username: "Brian Tam",
@@ -185,8 +185,8 @@ export const demoStatusData: EventItemType[] = [
         emailVerified: null,
         role: "USER",
         image: null,
-      },
-      {
+      }},
+      {user: {
         id: "2",
         name: null,
         username: "Ivan A",
@@ -197,8 +197,8 @@ export const demoStatusData: EventItemType[] = [
         emailVerified: null,
         role: "USER",
         image: null,
-      },
-      {
+      }},
+      {user: {
         id: "3",
         name: null,
         username: "Michael P",
@@ -209,7 +209,7 @@ export const demoStatusData: EventItemType[] = [
         emailVerified: null,
         role: "USER",
         image: null,
-      },
+      }},
     ],
   },
   {
@@ -244,7 +244,7 @@ export const demoStatusData: EventItemType[] = [
       image: null,
     },
     eventParticipants: [
-      {
+      {user: {
         id: "1",
         name: null,
         username: "Brian Tam",
@@ -255,8 +255,8 @@ export const demoStatusData: EventItemType[] = [
         emailVerified: null,
         role: "USER",
         image: null,
-      },
-      {
+      }},
+      {user: {
         id: "2",
         name: null,
         username: "Ivan A",
@@ -267,8 +267,8 @@ export const demoStatusData: EventItemType[] = [
         emailVerified: null,
         role: "USER",
         image: null,
-      },
-      {
+      }},
+      {user: {
         id: "3",
         name: null,
         username: "Michael P",
@@ -279,7 +279,7 @@ export const demoStatusData: EventItemType[] = [
         emailVerified: null,
         role: "USER",
         image: null,
-      },
+      }},
     ],
   },
 ];

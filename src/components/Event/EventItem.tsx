@@ -32,11 +32,15 @@ export interface EventItemType {
   createdAt: Date;
   updatedAt?: Date;
   createdBy: User;
-  eventParticipants: User[];
+  eventParticipants: EventParticipants[];
+}
+
+interface EventParticipants {
+  user: User
 }
 
 const eventWithParticipants = Prisma.validator<Prisma.EventDefaultArgs>()({
-  include: { eventParticipants: true, createdBy: true },
+  include: { eventParticipants: { include: {user: true}}, createdBy: true },
 });
 export type EventWithParticipants = Prisma.EventGetPayload<
   typeof eventWithParticipants
@@ -68,7 +72,17 @@ const EventItem = (props: EventItemProps) => {
                 +{props.event.eventParticipants.length}
               </div>
             </div>
-            <div className="self-center text-center">Participants</div>
+            {props.event.eventParticipants.map((participant) => {
+                return (
+                  <>
+                    <div className="h-10 w-10 rounded-full border">
+                      <p className="mt-2 text-center first-letter:capitalize">
+                        {participant.user?.username?.charAt(0)}
+                      </p>
+                    </div>
+                  </>
+                );
+              })}
           </div>
           <div>
             <EventItemStatus status={props.event.status} />
@@ -87,12 +101,12 @@ const EventItem = (props: EventItemProps) => {
         <div className="flex flex-wrap items-center gap-2">
           <div className="mb-1 flex items-center">
             <CiCalendarDate />
-            <p className="ml-2">{props.event.startDateTime.toLocaleString()}</p>
+            <p className="ml-2">{formatDateTime(props.event.startDateTime)}</p>
           </div>
           <p>-</p>
           <div className="mb-1 flex items-center">
             <CiCalendarDate />
-            <p className="ml-2">{props.event.startDateTime.toLocaleString()}</p>
+            <p className="ml-2">{formatDateTime(props.event.endDateTime)}</p>
           </div>
         </div>
 
@@ -116,5 +130,25 @@ const EventItem = (props: EventItemProps) => {
     </div>
   );
 };
+
+const formatDateTime = (dt: Date) => {
+  const year = dt.getFullYear();
+  const month = dt.getMonth()+1;
+  const day = dt.getDate();
+
+  let hour = dt.getHours();
+  let minutes: number | string = dt.getMinutes();
+  let timeSuffix = "AM"
+  
+  if (hour > 12) {
+    hour = hour - 12;
+    timeSuffix = "PM"
+  }
+
+  if (minutes === 0) {
+    minutes = "00"
+  }
+  return `${year}/${month}/${day} at ${hour}:${minutes} ${timeSuffix}`
+}
 
 export default EventItem;

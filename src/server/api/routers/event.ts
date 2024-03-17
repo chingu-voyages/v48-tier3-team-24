@@ -60,19 +60,18 @@ export const eventRouter = createTRPCRouter({
     });
   }),
 
-  getAllHostedEvents: protectedProcedure
-    .query(({ ctx }) => {
-      return ctx.db.event.findMany({
-        orderBy: { createdAt: "desc" },
-        where: { createdById: ctx.session.user.id },
-        include: {
-          eventParticipants: {
-            include: {user: true}
-          },
-          createdBy: true
+  getAllHostedEvents: protectedProcedure.query(({ ctx }) => {
+    return ctx.db.event.findMany({
+      orderBy: { createdAt: "desc" },
+      where: { createdById: ctx.session.user.id },
+      include: {
+        eventParticipants: {
+          include: { user: true },
         },
-      });
-    }),
+        createdBy: true,
+      },
+    });
+  }),
 
   getAllAttendingEvents: protectedProcedure.query(({ ctx }) => {
     return ctx.db.event.findMany({
@@ -86,8 +85,8 @@ export const eventRouter = createTRPCRouter({
       },
       include: {
         eventParticipants: true,
-        createdBy: true
-      }
+        createdBy: true,
+      },
     });
   }),
 
