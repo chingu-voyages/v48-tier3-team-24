@@ -1,17 +1,15 @@
 import Button from "./Button";
 import { IoMdNotificationsOutline } from "react-icons/io";
-import { RiMenu4Fill } from "react-icons/ri";
 import Image from "next/image";
-import { useState } from "react";
 import { useSession } from "next-auth/react";
 import { api } from "~/utils/api";
 import { useRouter } from "next/router";
 import HeaderProfileIconMenu from "./HeaderProfileIconMenu";
+import HeaderDropDownMenu from "./HeaderDropDownMenu";
 
 const Header = () => {
   const router = useRouter();
   const { data: sessionData } = useSession();
-  const [openIconMenu, setOpenIconMenu] = useState(false);
 
   const { data: secretMessage } = api.post.getSecretMessage.useQuery(
     undefined, // no input
@@ -19,13 +17,11 @@ const Header = () => {
   );
 
   const goTo = async (route: string) => {
-    /* TODO redirect to a page  */
-    console.log("manage event button onClick", route);
     await router.push(route);
   };
 
   return (
-    <div className="fixed min-h-10 w-full items-center px-20 py-5">
+    <div className="fixed min-h-10 w-full items-center px-20 py-10">
       <div className="flex justify-between">
         <div className="flex items-center gap-5">
           <div>
@@ -36,32 +32,41 @@ const Header = () => {
               alt="Logo of EventSync"
             />
           </div>
+          {/* TODO Search Bar component */}
           <div>Search Bar</div>
         </div>
-        <div className="hidden items-center gap-8 md:flex">
-          <Button
-            size="sm"
-            className="rounded-lg px-3 py-1 text-black"
-            outline="info"
-            onClick={() => goTo("/my-event")}
-          >
-            Manage Event
-          </Button>
-          <IoMdNotificationsOutline
-            className="relative cursor-pointer text-3xl"
-            onClick={() => goTo("/notification")}
-          />
-          {sessionData ? (
-            <HeaderProfileIconMenu/>
-          ) : (
+
+        {sessionData ? (
+          <div className="hidden items-center gap-8 md:flex">
+            <Button
+              size="sm"
+              className="rounded-lg px-3 py-1 text-black"
+              outline="info"
+              onClick={() => goTo("/my-event")}
+            >
+              Manage Event
+            </Button>
+            <IoMdNotificationsOutline
+              className="relative cursor-pointer text-3xl"
+              onClick={() => goTo("/notification")}
+            />
+            <HeaderProfileIconMenu goTo={goTo} />
+          </div>
+        ) : (
+          <div className="hidden items-center gap-8 md:flex">
             <div className="cursor-pointer" onClick={() => goTo("/login")}>
-              Sign In
+              Login
             </div>
-          )}
-        </div>
-        <div className="block text-3xl md:hidden">
-          <RiMenu4Fill />
-        </div>
+            <div className="cursor-pointer" onClick={() => goTo("/register")}>
+              Sign Up
+            </div>
+          </div>
+        )}
+        <HeaderDropDownMenu
+          className="block md:hidden"
+          goTo={goTo}
+          sessionData={sessionData}
+        />
       </div>
     </div>
   );

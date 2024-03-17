@@ -1,22 +1,19 @@
-import { useRouter } from "next/router";
 import { useState } from "react";
 import { FaRegCircleUser } from "react-icons/fa6";
 import { MdOutlineLogout } from "react-icons/md";
 
-export default function HeaderProfileIconMenu() {
-  const router = useRouter();
+interface HeaderDropDownMenuProps {
+  goTo: (route: string) => void;
+}
+
+export default function HeaderProfileIconMenu(props: HeaderDropDownMenuProps) {
   const [openIconMenu, setOpenIconMenu] = useState(false);
-  const goTo = async (route: string) => {
-    /* TODO redirect to a page  */
-    console.log("manage event button onClick", route);
-    await router.push(route);
-  };
   const onClickIconMenu = () => {
     setOpenIconMenu(!openIconMenu);
     console.log("onclick menu");
   };
-
   const logout = () => {
+    /* TODO handle logo */
     console.log("logout");
   };
   return (
@@ -29,14 +26,14 @@ export default function HeaderProfileIconMenu() {
       </div>
       {openIconMenu && (
         <div
-          className="absolute right-0 top-14 min-w-44 p-5 text-gray-700 shadow-lg"
+          className="absolute right-0 top-14 min-w-44 rounded p-5 text-gray-700 shadow-lg"
           onMouseLeave={onClickIconMenu}
         >
           <div
             className="hover:text-blue flex cursor-pointer items-center justify-between hover:text-cyan-600"
-            onClick={() => goTo("/profile")}
+            onClick={() => props.goTo("/profile")}
           >
-            <FaRegCircleUser />
+            <FaRegCircleUser className="text-xl" />
             <p>My Profile</p>
           </div>
           <hr className="my-3"></hr>
@@ -44,7 +41,7 @@ export default function HeaderProfileIconMenu() {
             className="flex cursor-pointer items-center justify-between hover:text-cyan-600"
             onClick={logout}
           >
-            <MdOutlineLogout />
+            <MdOutlineLogout className="text-xl" />
             <p>Sign out</p>
           </div>
         </div>
