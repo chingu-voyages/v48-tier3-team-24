@@ -1,4 +1,9 @@
-import type { EventStatus, User } from "@prisma/client";
+import {
+  Prisma,
+  type Event,
+  type EventStatus,
+  type User,
+} from "@prisma/client";
 import type { StaticImageData } from "next/image";
 import type { MouseEventHandler } from "react";
 
@@ -12,8 +17,8 @@ export interface EventItemType {
   id: number;
   name: string;
   description: string;
-  startDateTime: string;
-  endDateTime: string;
+  startDateTime: Date;
+  endDateTime: Date;
   image?: StaticImageData;
   price?: number;
   maxParticipants?: number;
@@ -24,14 +29,21 @@ export interface EventItemType {
   status: EventStatus;
   isPrivate: boolean;
   isFree: boolean;
-  createdAt: string;
-  updatedAt?: string;
-  host: User;
+  createdAt: Date;
+  updatedAt?: Date;
+  createdBy: User;
   eventParticipants: User[];
 }
 
+const eventWithParticipants = Prisma.validator<Prisma.EventDefaultArgs>()({
+  include: { eventParticipants: true, createdBy: true },
+});
+export type EventWithParticipants = Prisma.EventGetPayload<
+  typeof eventWithParticipants
+>;
+
 export interface EventItemProps {
-  event: EventItemType;
+  event: EventWithParticipants | EventItemType;
   onClick?: MouseEventHandler;
 }
 
@@ -51,20 +63,12 @@ const EventItem = (props: EventItemProps) => {
       <div className="p-5 md:p-6 lg:p-10">
         <div className="mb-8 flex flex-wrap items-center justify-between gap-5">
           <div className="flex flex-wrap gap-1">
-            <div className="h-10 w-10 rounded-full border bg-black text-white">
-              <p className="mt-2 text-center">
+            <div className="h-10 w-10 rounded-full border bg-black">
+              <div className="mt-2 text-center text-white">
                 +{props.event.eventParticipants.length}
-              </p>
+              </div>
             </div>
-            {props.event.eventParticipants.map((participant: User) => {
-              return (
-                <div className="h-10 w-10 rounded-full border" key={participant.id}>
-                  <p className="mt-2 text-center first-letter:capitalize">
-                    {participant.username?.charAt(0)}
-                  </p>
-                </div>
-              );
-            })}
+            <div className="self-center text-center">Participants</div>
           </div>
           <div>
             <EventItemStatus status={props.event.status} />
@@ -76,17 +80,19 @@ const EventItem = (props: EventItemProps) => {
         </h1>
         <div className="mb-1 flex items-center">
           <RiGhostSmileLine />
-          <p className="ml-2">{props.event.host.username}</p>
+          <p className="ml-2">
+            {props.event.createdBy?.username ?? "ghost of christmas past"}
+          </p>
         </div>
         <div className="flex flex-wrap items-center gap-2">
           <div className="mb-1 flex items-center">
             <CiCalendarDate />
-            <p className="ml-2">{props.event.startDateTime}</p>
+            <p className="ml-2">{props.event.startDateTime.toLocaleString()}</p>
           </div>
           <p>-</p>
           <div className="mb-1 flex items-center">
             <CiCalendarDate />
-            <p className="ml-2">{props.event.startDateTime}</p>
+            <p className="ml-2">{props.event.startDateTime.toLocaleString()}</p>
           </div>
         </div>
 

@@ -1,11 +1,12 @@
 import React from "react";
 import Button from "../Button";
-import type { EventItemType } from "./EventItem";
+import type { EventItemType, EventWithParticipants } from "./EventItem";
 import { EventList } from "./EventList";
+import { Event } from "@prisma/client";
 
 interface EventContainerProps {
   title: string;
-  events: EventItemType[];
+  events?: EventItemType[] | EventWithParticipants[] | null;
 }
 
 const EventContainer = ({ title, events }: EventContainerProps) => {

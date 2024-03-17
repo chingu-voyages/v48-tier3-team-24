@@ -7,8 +7,8 @@ export const demoStatusData: EventItemType[] = [
     name: "This is an Event Name",
     description:
       "Lorem ipsum dolor sit amet, consectetur adipiscing elitsed do eiusmod.",
-    startDateTime: "2024/03/14 11pm",
-    endDateTime: "2024/03/20 11pm",
+    startDateTime: new Date("2024-03-14T23:00"),
+    endDateTime: new Date("2024-03-14T23:00"),
     image: DemoImage1,
     price: 0,
     maxParticipants: undefined,
@@ -19,9 +19,9 @@ export const demoStatusData: EventItemType[] = [
     status: "UPCOMING",
     isPrivate: false,
     isFree: true,
-    createdAt: "2024/03/13",
-    updatedAt: "2024/03/13",
-    host: {
+    createdAt: new Date("2024/03/13"),
+    updatedAt: new Date("2024/03/13"),
+    createdBy: {
       id: "1",
       name: null,
       username: "Brian Tam",
@@ -77,8 +77,8 @@ export const demoStatusData: EventItemType[] = [
     name: "This is an Event Name",
     description:
       "Lorem ipsum dolor sit amet, consectetur adipiscing elitsed do eiusmod.",
-    startDateTime: "2024/03/14 11pm",
-    endDateTime: "2024/03/20 11pm",
+    startDateTime: new Date("2024-03-14T23:00"),
+    endDateTime: new Date("2024-03-14T23:00"),
     image: DemoImage1,
     price: 0,
     maxParticipants: undefined,
@@ -89,9 +89,9 @@ export const demoStatusData: EventItemType[] = [
     status: "IN_PROGRESS",
     isPrivate: false,
     isFree: true,
-    createdAt: "2024/03/13",
-    updatedAt: "2024/03/13",
-    host: {
+    createdAt: new Date("2024-03-10T23:00"),
+    updatedAt: new Date("2024-03-10T23:00"),
+    createdBy: {
       id: "1",
       name: null,
       username: "Brian Tam",
@@ -147,8 +147,8 @@ export const demoStatusData: EventItemType[] = [
     name: "This is an Event Name",
     description:
       "Lorem ipsum dolor sit amet, consectetur adipiscing elitsed do eiusmod.",
-    startDateTime: "2024/03/14 11pm",
-    endDateTime: "2024/03/20 11pm",
+    startDateTime: new Date("2024-03-14T23:00"),
+    endDateTime: new Date("2024-03-14T23:00"),
     image: DemoImage1,
     price: 0,
     maxParticipants: undefined,
@@ -159,9 +159,9 @@ export const demoStatusData: EventItemType[] = [
     status: "COMPLETED",
     isPrivate: false,
     isFree: true,
-    createdAt: "2024/03/13",
-    updatedAt: "2024/03/13",
-    host: {
+    createdAt: new Date("2024-03-10T23:00"),
+    updatedAt: new Date("2024-03-10T23:00"),
+    createdBy: {
       id: "1",
       name: null,
       username: "Brian Tam",
@@ -217,8 +217,8 @@ export const demoStatusData: EventItemType[] = [
     name: "This is an Event Name",
     description:
       "Lorem ipsum dolor sit amet, consectetur adipiscing elitsed do eiusmod.",
-    startDateTime: "2024/03/14 11pm",
-    endDateTime: "2024/03/20 11pm",
+    startDateTime: new Date("2024-03-14T23:00"),
+    endDateTime: new Date("2024-03-14T23:00"),
     image: DemoImage1,
     price: 0,
     maxParticipants: undefined,
@@ -229,9 +229,9 @@ export const demoStatusData: EventItemType[] = [
     status: "CANCELED",
     isPrivate: false,
     isFree: true,
-    createdAt: "2024/03/13",
-    updatedAt: "2024/03/13",
-    host: {
+    createdAt: new Date("2024-03-10T23:00"),
+    updatedAt: new Date("2024-03-10T23:00"),
+    createdBy: {
       id: "1",
       name: null,
       username: "Brian Tam",
