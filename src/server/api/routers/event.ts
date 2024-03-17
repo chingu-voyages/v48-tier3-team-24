@@ -66,7 +66,9 @@ export const eventRouter = createTRPCRouter({
         orderBy: { createdAt: "desc" },
         where: { createdById: ctx.session.user.id },
         include: {
-          eventParticipants: true,
+          eventParticipants: {
+            include: {user: true}
+          },
           createdBy: true
         },
       });
