@@ -1,3 +1,4 @@
+import { signOut } from "next-auth/react";
 import { useState } from "react";
 import { FaRegCircleUser } from "react-icons/fa6";
 import { MdOutlineLogout } from "react-icons/md";
@@ -12,9 +13,8 @@ export default function HeaderProfileIconMenu(props: HeaderDropDownMenuProps) {
     setOpenIconMenu(!openIconMenu);
     console.log("onclick menu");
   };
-  const logout = () => {
-    /* TODO handle logo */
-    console.log("logout");
+  const logout = async () => {
+    await signOut();
   };
   return (
     <div className="relative">
