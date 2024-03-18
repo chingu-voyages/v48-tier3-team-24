@@ -1,10 +1,14 @@
 import { signOut, useSession } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import React from "react";
+import React, { useState } from "react";
 import EventContainer from "~/components/Event/EventContainer";
 import { demoStatusData } from "~/utils/demo_data";
 import { api } from "~/utils/api";
+import EventCalendar from "~/components/Event/EventCalendar";
+
+type ValuePiece = Date | null;
+export type Value = ValuePiece | [ValuePiece, ValuePiece];
 
 function UserDash() {
   const { data: sessionData } = useSession();
@@ -14,6 +18,8 @@ function UserDash() {
     api.event.getAllHostedEvents.useQuery();
   const { data: attendingData, isLoading: attendingLoading } =
     api.event.getAllAttendingEvents.useQuery();
+
+  const [selectedDate, selectedDateOnChange] = useState<Value>(new Date());
 
   if (!sessionData) {
     return <div>Access denied.</div>;
@@ -40,13 +46,13 @@ function UserDash() {
           Sign out
         </Link>
       </nav>
+      
+      <div className="w-1/3"><EventCalendar onChange={selectedDateOnChange} /></div>
+      
       <h1>Data from database</h1>
       <section className="flex flex-col gap-6 p-6">
         <EventContainer title="My hosted events" events={hostedData} />
-        <EventContainer
-          title="Upcoming registered events"
-          events={attendingData}
-        />
+        
       </section>
       <h1>Demo data made by Brian</h1>
       <section className="flex flex-col gap-6 p-6">
