@@ -5,7 +5,7 @@ import { type VariantProps, cva } from "class-variance-authority";
 import { cn } from "~/utils/components";
 
 const buttonVariants = cva(
-  "px-10 py-3 cursor-pointer font-bold w-full",
+  "px-10 py-3 cursor-pointer font-bold",
   {
     variants: {
       variant: {
@@ -27,6 +27,9 @@ const buttonVariants = cva(
         danger:
           "border border-[#F20505] text-[#F20505] hover:text-[#FFFFFF] hover:bg-[#F20505]",
         info: "border border-[#8C8C8C] text-[#8C8C8C] hover:text-[#FFFFFF] hover:bg-[#8C8C8C]",
+      },
+      width: {
+        full: "w-full"
       },
       size: {
         default: "text-base",
