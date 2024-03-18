@@ -1,18 +1,20 @@
-import { signOut, useSession } from "next-auth/react";
-import Link from "next/link";
+import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
-import EventContainer from "~/components/Event/EventContainer";
+import EventContainer from "~/components/Event/SuggestedEvents";
 import { demoStatusData } from "~/utils/demo_data";
 import { api } from "~/utils/api";
 import EventCalendar from "~/components/Event/EventCalendar";
+import Header from "~/components/Header";
+import Button from "~/components/Button";
+import { FaPlus } from "react-icons/fa6";
+import SuggestedEvents from "~/components/Event/SuggestedEvents";
 
 type ValuePiece = Date | null;
 export type Value = ValuePiece | [ValuePiece, ValuePiece];
 
 function UserDash() {
   const { data: sessionData } = useSession();
-  const router = useRouter();
 
   const { data: hostedData, isLoading: hostedLoading } =
     api.event.getAllHostedEvents.useQuery();
@@ -32,33 +34,34 @@ function UserDash() {
     return <div>Loading...</div>;
   }
 
+  // get the (Discord) name of the user otherwise use their username.
+  const name = sessionData.user.name ?? sessionData.user.username;
+
   return (
     <>
-      <nav className="flex flex-row gap-8 border-b-4 p-5">
-        <Link href="">Browse Events</Link>
-        <Link href="">My Profile</Link>
-        <Link
-          href="/"
-          onClick={() =>
-            signOut({ redirect: false }).then(() => router.push("/"))
-          }
-        >
-          Sign out
-        </Link>
-      </nav>
-      
-      <div className="w-1/3"><EventCalendar onChange={selectedDateOnChange} /></div>
-      
-      <h1>Data from database</h1>
-      <section className="flex flex-col gap-6 p-6">
-        <EventContainer title="My hosted events" events={hostedData} />
-        
-      </section>
-      <h1>Demo data made by Brian</h1>
-      <section className="flex flex-col gap-6 p-6">
-        <EventContainer title="My hosted events" events={events1} />
-        <EventContainer title="Upcoming registered events" events={events2} />
-      </section>
+      <Header />
+      <div className="flex flex-row gap-10 mx-10">
+        <div className="flex basis-1/3 flex-col gap-10 px-20 py-10">
+          <div className="">
+            <p className="mb-5 text-4xl font-bold">Hello {name},</p>
+            <p className="text-2xl italic">
+              Find or Host an Event <br /> and Connect with Others
+            </p>
+          </div>
+          <div className="w-3/4 self-center">
+            <Button outline="primary" icon={<FaPlus />} width="full">
+              Host a new Event
+            </Button>
+          </div>
+          <div className="">
+            <p className="mb-5 text-4xl font-bold"></p>
+            <EventCalendar onChange={selectedDateOnChange} />
+          </div>
+        </div>
+        <div className="flex basis-2/3 flex-col py-10">
+          <SuggestedEvents title="Sugguested events" events={events2} />
+        </div>
+      </div>
     </>
   );
 }

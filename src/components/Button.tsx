@@ -29,7 +29,11 @@ const buttonVariants = cva(
         info: "border border-[#8C8C8C] text-[#8C8C8C] hover:text-[#FFFFFF] hover:bg-[#8C8C8C]",
       },
       width: {
-        full: "w-full"
+        default: "",
+        full: "w-full",
+        lg: "w-3/4",
+        md: "w-1/2",
+        sm: "w-1/4"
       },
       size: {
         default: "text-base",
@@ -51,6 +55,7 @@ const buttonVariants = cva(
       outline: "default",
       size: "default",
       rounded: "default",
+      width: "default"
     },
   },
 );
