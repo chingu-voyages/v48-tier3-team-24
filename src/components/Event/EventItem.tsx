@@ -59,7 +59,7 @@ const EventItem = (props: EventItemProps) => {
     >
       {props.event.image && (
         <Image
-          className="rounded-t-lg"
+          className="rounded-t-lg w-full"
           src={props.event.image}
           alt="Event Image"
         />

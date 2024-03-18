@@ -40,8 +40,8 @@ function UserDash() {
   return (
     <>
       <Header />
-      <div className="flex flex-row gap-10 mx-10">
-        <div className="flex basis-1/3 flex-col gap-10 px-20 py-10">
+      <div className="flex lg:flex-row flex-col gap-10 mx-10">
+        <div className="flex basis-1/3 flex-col gap-10 sm:px-20 py-10">
           <div className="">
             <p className="mb-5 text-4xl font-bold">Hello {name},</p>
             <p className="text-2xl italic">
