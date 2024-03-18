@@ -6,6 +6,7 @@ import { api } from "~/utils/api";
 import { useRouter } from "next/router";
 import HeaderProfileIconMenu from "./HeaderProfileIconMenu";
 import HeaderDropDownMenu from "./HeaderDropDownMenu";
+import SearchBar from "./SearchBar";
 
 const Header = () => {
   const router = useRouter();
@@ -20,9 +21,13 @@ const Header = () => {
     await router.push(route);
   };
 
+  const searchEvents = async () => {
+    await goTo("event-search");
+  };
+
   return (
     <div className="fixed min-h-10 w-full items-center px-20 py-10">
-      <div className="flex justify-between">
+      <div className="flex justify-between gap-5">
         <div className="flex items-center gap-5">
           <div>
             <Image
@@ -32,8 +37,11 @@ const Header = () => {
               alt="Logo of EventSync"
             />
           </div>
-          {/* TODO Search Bar component */}
-          <div>Search Bar</div>
+          <SearchBar
+            id="event-search"
+            className="hidden sm:block"
+            onClick={searchEvents}
+          />
         </div>
 
         {sessionData ? (
