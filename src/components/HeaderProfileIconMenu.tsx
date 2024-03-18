@@ -19,7 +19,7 @@ export default function HeaderProfileIconMenu(props: HeaderDropDownMenuProps) {
   return (
     <div className="relative">
       <div
-        className="h-10 w-10 cursor-pointer rounded-full border bg-black text-white hover:shadow-lg"
+        className="h-10 w-10 cursor-pointer rounded-full border bg-es-primary-light text-white hover:shadow-lg"
         onMouseEnter={onClickIconMenu}
       >
         <p className="mt-2 text-center">W</p>
