@@ -1,4 +1,3 @@
-import { Event } from "@prisma/client";
 import EventListItem from "./EventItem";
 import type { EventItemType, EventWithParticipants } from "./EventItem";
 

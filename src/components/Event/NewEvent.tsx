@@ -2,7 +2,7 @@ import React from "react";
 import Button from "../Button";
 
 const NewEvent = () => {
-  const createNewEvent = () => {};
+  const createNewEvent = () => {alert('new event')};
   return (
     <form
       onSubmit={createNewEvent}
@@ -22,7 +22,7 @@ const NewEvent = () => {
 
 interface TextInputProps {
   inputType: "text" | "textArea";
-  label: String;
+  label: string;
   id: string;
 }
 

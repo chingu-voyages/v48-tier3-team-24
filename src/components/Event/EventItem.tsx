@@ -1,6 +1,5 @@
 import {
   Prisma,
-  type Event,
   type EventStatus,
   type User,
 } from "@prisma/client";

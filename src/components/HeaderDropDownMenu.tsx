@@ -5,7 +5,7 @@ import { BiJoystick } from "react-icons/bi";
 import { MdOutlineEvent } from "react-icons/md";
 import { IoMdNotificationsOutline } from "react-icons/io";
 
-import { Session } from "next-auth";
+import type { Session } from "next-auth";
 import { useState } from "react";
 import HeaderDropDownMenuItem from "./HeaderDropDownMenuItem";
 import { signOut } from "next-auth/react";

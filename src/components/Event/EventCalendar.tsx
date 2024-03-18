@@ -1,6 +1,6 @@
-import React, { Dispatch, SetStateAction } from "react";
+import React, { type Dispatch, type SetStateAction } from "react";
 import Calendar from "react-calendar";
-import { Value } from "~/pages/dash";
+import { type Value } from "~/pages/dash";
 import 'react-calendar/dist/Calendar.css';
 
 interface EventCalendarProps {

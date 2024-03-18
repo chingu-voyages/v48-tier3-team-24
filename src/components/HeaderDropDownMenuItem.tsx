@@ -1,4 +1,4 @@
-import { MouseEventHandler, ReactNode } from "react";
+import type { ReactNode } from "react";
 
 interface itemProps {
   icon: ReactNode;

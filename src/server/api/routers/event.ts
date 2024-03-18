@@ -94,7 +94,7 @@ export const eventRouter = createTRPCRouter({
     .input(EventSchema)
     .mutation(async ({ ctx, input }) => {
       // has all data passed by the form except the User object
-      let event: Prisma.EventCreateWithoutCreatedByInput = input;
+      const event: Prisma.EventCreateWithoutCreatedByInput = input;
 
       // creates the event and connects it to the session's user
       return await ctx.db.event.create({

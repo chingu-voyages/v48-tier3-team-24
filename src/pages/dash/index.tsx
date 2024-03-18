@@ -1,7 +1,5 @@
 import { useSession } from "next-auth/react";
-import { useRouter } from "next/router";
 import React, { useState } from "react";
-import EventContainer from "~/components/Event/SuggestedEvents";
 import { demoStatusData } from "~/utils/demo_data";
 import { api } from "~/utils/api";
 import EventCalendar from "~/components/Event/EventCalendar";
@@ -17,9 +15,9 @@ function UserDash() {
   const { data: sessionData } = useSession();
 
   const { data: hostedData, isLoading: hostedLoading } =
-    api.event.getAllHostedEvents.useQuery();
+    api.event.getAllHostedEvents.useQuery(undefined, {refetchInterval: false, refetchOnReconnect: false, refetchOnWindowFocus: false});
   const { data: attendingData, isLoading: attendingLoading } =
-    api.event.getAllAttendingEvents.useQuery();
+    api.event.getAllAttendingEvents.useQuery(undefined, {refetchInterval: false, refetchOnReconnect: false, refetchOnWindowFocus: false});
 
   const [selectedDate, selectedDateOnChange] = useState<Value>(new Date());
 
