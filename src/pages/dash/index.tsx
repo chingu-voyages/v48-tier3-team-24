@@ -15,9 +15,17 @@ function UserDash() {
   const { data: sessionData } = useSession();
 
   const { data: hostedData, isLoading: hostedLoading } =
-    api.event.getAllHostedEvents.useQuery(undefined, {refetchInterval: false, refetchOnReconnect: false, refetchOnWindowFocus: false});
+    api.event.getAllHostedEvents.useQuery(undefined, {
+      refetchInterval: false,
+      refetchOnReconnect: false,
+      refetchOnWindowFocus: false,
+    });
   const { data: attendingData, isLoading: attendingLoading } =
-    api.event.getAllAttendingEvents.useQuery(undefined, {refetchInterval: false, refetchOnReconnect: false, refetchOnWindowFocus: false});
+    api.event.getAllAttendingEvents.useQuery(undefined, {
+      refetchInterval: false,
+      refetchOnReconnect: false,
+      refetchOnWindowFocus: false,
+    });
 
   const [selectedDate, selectedDateOnChange] = useState<Value>(new Date());
 
@@ -38,23 +46,21 @@ function UserDash() {
   return (
     <>
       <Header />
-      <div className="flex lg:flex-row flex-col gap-10 mx-10">
-        <div className="flex basis-1/3 flex-col gap-10 sm:px-20 py-10">
-          <div className="">
-            <p className="mb-5 text-4xl font-bold">Hello {name},</p>
-            <p className="text-2xl italic">
-              Find or Host an Event <br /> and Connect with Others
-            </p>
-          </div>
-          <div className="w-3/4 self-center">
-            <Button outline="primary" icon={<FaPlus />} width="full">
-              Host a new Event
-            </Button>
-          </div>
-          <div className="">
-            <p className="mb-5 text-4xl font-bold"></p>
+      <div className="mx-10 flex flex-col lg:flex-row">
+        <div className="flex basis-1/3 flex-col gap-8 py-10 sm:px-20">
+          <p className="text-4xl font-bold">Hello {name},</p>
+          <p className="text-2xl italic">
+            Find or Host an Event <br /> and Connect with Others
+          </p>
+          <Button variant="primary" icon={<FaPlus />} width="full">
+            Host a new Event
+          </Button>
+          <p className="text-4xl font-bold"></p>
+          <span className="self-center mb-5">
             <EventCalendar onChange={selectedDateOnChange} />
-          </div>
+          </span>
+          <Button outline="info">Events I'm hosting</Button>
+          <Button outline="info">Events I'm attending</Button>
         </div>
         <div className="flex basis-2/3 flex-col py-10">
           <SuggestedEvents title="Sugguested events" events={events2} />
