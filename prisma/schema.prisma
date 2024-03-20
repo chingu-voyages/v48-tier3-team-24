@@ -6,8 +6,9 @@ generator client {
 }
 
 generator zod {
-    provider = "npx zod-prisma-types"
-    output = "../schemas"
+    provider         = "npx zod-prisma-types"
+    output           = "../schemas"
+    useMultipleFiles = true
     createInputTypes = false
 }
 
@@ -20,7 +21,7 @@ datasource db {
 }
 
 model Event {
-    id              String         @id @default(cuid())
+    id              String      @id @default(cuid())
     name            String // event title
     description     String      @db.Text
     startDateTime   DateTime
@@ -29,18 +30,21 @@ model Event {
     price           Float       @default(0)
     maxParticipants Int?        @default(0)
     inviteLink      String?
-    address         String
+    streetAddress   String?
+    city            String?
+    state           String?
+    zip             String?
     lat             Float? // for google map api
     lng             Float? // for google map api
     status          EventStatus @default(UPCOMING)
     isPrivate       Boolean     @default(false) // flag for private event or public event
     isFree          Boolean     @default(true) // flag for free or fee required
 
-    createdAt       DateTime @default(now())
-    updatedAt       DateTime @updatedAt
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
 
-    createdBy       User   @relation(fields: [createdById], references: [id])
-    createdById     String
+    createdBy   User   @relation(fields: [createdById], references: [id])
+    createdById String
 
     eventParticipants EventParticipants[]
 
@@ -60,7 +64,7 @@ model EventParticipants {
     user   User   @relation(fields: [userId], references: [id])
     userId String
 
-    event   Event @relation(fields: [eventId], references: [id])
+    event   Event  @relation(fields: [eventId], references: [id])
     eventId String
 
     createdAt DateTime @default(now()) // record when they join

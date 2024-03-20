@@ -1,12 +1,10 @@
-import { Prisma } from "@prisma/client";
-import { createInputMiddleware } from "@trpc/server";
-import { EventSchema } from "schemas";
 import { z } from "zod";
 
 import {
   createTRPCRouter,
   protectedProcedure,
   publicProcedure,
+  verifiedUserProcedure,
 } from "~/server/api/trpc";
 
 export const eventRouter = createTRPCRouter({
@@ -18,7 +16,7 @@ export const eventRouter = createTRPCRouter({
       };
     }),
 
-  create: protectedProcedure
+  create: verifiedUserProcedure
     .input(
       z
         .object({
@@ -26,7 +24,7 @@ export const eventRouter = createTRPCRouter({
           description: z.string().min(1),
           startDateTime: z.date().min(new Date()),
           endDateTime: z.date(),
-          address: z.string().min(1),
+          streetAddress: z.string().min(1),
         })
         .refine((data) => {
           data.endDateTime > data.startDateTime,
@@ -47,7 +45,7 @@ export const eventRouter = createTRPCRouter({
           description: input.description,
           startDateTime: input.startDateTime,
           endDateTime: input.endDateTime,
-          address: input.address,
+          streetAddress: input.streetAddress,
           createdBy: { connect: { id: ctx.session.user.id } },
         },
       });
@@ -60,47 +58,22 @@ export const eventRouter = createTRPCRouter({
     });
   }),
 
-  getAllHostedEvents: protectedProcedure.query(({ ctx }) => {
+  getUpcomingEvents: protectedProcedure.query(({ ctx }) => {
     return ctx.db.event.findMany({
       orderBy: { createdAt: "desc" },
       where: { createdById: ctx.session.user.id },
-      include: {
-        eventParticipants: {
-          include: { user: true },
-        },
-        createdBy: true,
+      select: {
+        id: true,
+        startDateTime: true,
+        name: true,
+        description: true,
+        image: true,
+        isPrivate: true,
+        city: true,
+        state: true,
       },
     });
   }),
-
-  getAllAttendingEvents: protectedProcedure.query(({ ctx }) => {
-    return ctx.db.event.findMany({
-      orderBy: { createdAt: "desc" },
-      where: {
-        eventParticipants: {
-          some: {
-            id: ctx.session.user.id,
-          },
-        },
-      },
-      include: {
-        eventParticipants: true,
-        createdBy: true,
-      },
-    });
-  }),
-
-  createEvent: protectedProcedure
-    .input(EventSchema)
-    .mutation(async ({ ctx, input }) => {
-      // has all data passed by the form except the User object
-      const event: Prisma.EventCreateWithoutCreatedByInput = input;
-
-      // creates the event and connects it to the session's user
-      return await ctx.db.event.create({
-        data: { ...event, createdBy: { connect: { id: ctx.session.user.id } } },
-      });
-    }),
 
   // adds a user to an existing event
   addUserToEvent: protectedProcedure
