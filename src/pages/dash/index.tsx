@@ -7,6 +7,7 @@ import Header from "~/components/Header";
 import Button from "~/components/Button";
 import { FaPlus } from "react-icons/fa6";
 import SuggestedEvents from "~/components/Event/SuggestedEvents";
+import UpcomingEvents from "~/components/Event/UpcomingEvents";
 
 type ValuePiece = Date | null;
 export type Value = ValuePiece | [ValuePiece, ValuePiece];
@@ -14,30 +15,13 @@ export type Value = ValuePiece | [ValuePiece, ValuePiece];
 function UserDash() {
   const { data: sessionData } = useSession();
 
-  const { data: hostedData, isLoading: hostedLoading } =
-    api.event.getAllHostedEvents.useQuery(undefined, {
-      refetchInterval: false,
-      refetchOnReconnect: false,
-      refetchOnWindowFocus: false,
-    });
-  const { data: attendingData, isLoading: attendingLoading } =
-    api.event.getAllAttendingEvents.useQuery(undefined, {
-      refetchInterval: false,
-      refetchOnReconnect: false,
-      refetchOnWindowFocus: false,
-    });
+  
 
+  // for calendar picker
   const [selectedDate, selectedDateOnChange] = useState<Value>(new Date());
 
   if (!sessionData) {
     return <div>Access denied.</div>;
-  }
-
-  const events1 = demoStatusData.slice(0, 1);
-  const events2 = demoStatusData.slice(1, 3);
-
-  if (hostedLoading || attendingLoading) {
-    return <div>Loading...</div>;
   }
 
   // get the (Discord) name of the user otherwise use their username.
@@ -63,7 +47,7 @@ function UserDash() {
           <Button outline="info">Events I'm attending</Button>
         </div>
         <div className="flex basis-2/3 flex-col py-10">
-          <SuggestedEvents title="Sugguested events" events={events2} />
+          <UpcomingEvents />          
         </div>
       </div>
     </>

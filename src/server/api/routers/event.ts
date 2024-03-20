@@ -62,7 +62,7 @@ export const eventRouter = createTRPCRouter({
   getUpcomingEvents: protectedProcedure.output(EventUpcomingSchema).query(({ ctx }) => {
     return ctx.db.event.findMany({
       orderBy: { createdAt: "desc" },
-      where: { createdById: ctx.session.user.id, status: "UPCOMING" },
+      where: { status: "UPCOMING" },
       select: {
         id: true,
         startDateTime: true,
