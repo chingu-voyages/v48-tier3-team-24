@@ -1,8 +1,4 @@
-import {
-  Prisma,
-  type EventStatus,
-  type User,
-} from "@prisma/client";
+import { Prisma, type EventStatus, type User } from "@prisma/client";
 import type { StaticImageData } from "next/image";
 import type { MouseEventHandler } from "react";
 
@@ -35,11 +31,11 @@ export interface EventItemType {
 }
 
 interface EventParticipants {
-  user: User
+  user: User;
 }
 
 const eventWithParticipants = Prisma.validator<Prisma.EventDefaultArgs>()({
-  include: { eventParticipants: { include: {user: true}}, createdBy: true },
+  include: { eventParticipants: { include: { user: true } }, createdBy: true },
 });
 export type EventWithParticipants = Prisma.EventGetPayload<
   typeof eventWithParticipants
@@ -58,7 +54,7 @@ const EventItem = (props: EventItemProps) => {
     >
       {props.event.image && (
         <Image
-          className="rounded-t-lg w-full"
+          className="w-full rounded-t-lg"
           src={props.event.image}
           alt="Event Image"
         />
@@ -72,16 +68,17 @@ const EventItem = (props: EventItemProps) => {
               </div>
             </div>
             {props.event.eventParticipants.map((participant) => {
-                return (
-                  <>
-                    <div className="h-10 w-10 rounded-full border">
-                      <p className="mt-2 text-center first-letter:capitalize">
-                        {participant.user?.username?.charAt(0)}
-                      </p>
-                    </div>
-                  </>
-                );
-              })}
+              return (
+                <div
+                  className="h-10 w-10 rounded-full border"
+                  key={participant.user.id}
+                >
+                  <p className="mt-2 text-center first-letter:capitalize">
+                    {participant.user?.username?.charAt(0)}
+                  </p>
+                </div>
+              );
+            })}
           </div>
           <div>
             <EventItemStatus status={props.event.status} />
@@ -132,22 +129,22 @@ const EventItem = (props: EventItemProps) => {
 
 const formatDateTime = (dt: Date) => {
   const year = dt.getFullYear();
-  const month = dt.getMonth()+1;
+  const month = dt.getMonth() + 1;
   const day = dt.getDate();
 
   let hour = dt.getHours();
   let minutes: number | string = dt.getMinutes();
-  let timeSuffix = "AM"
-  
+  let timeSuffix = "AM";
+
   if (hour > 12) {
     hour = hour - 12;
-    timeSuffix = "PM"
+    timeSuffix = "PM";
   }
 
   if (minutes === 0) {
-    minutes = "00"
+    minutes = "00";
   }
-  return `${year}/${month}/${day} at ${hour}:${minutes} ${timeSuffix}`
-}
+  return `${year}/${month}/${day} at ${hour}:${minutes} ${timeSuffix}`;
+};
 
 export default EventItem;

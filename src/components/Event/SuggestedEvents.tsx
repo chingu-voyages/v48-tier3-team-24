@@ -10,7 +10,6 @@ interface SuggestedEventsProps {
 
 const SuggestedEvents = ({ title, events }: SuggestedEventsProps) => {
   const isViewAllHidden = events.length > 0;
-  console.log(isViewAllHidden);
   return (
     <>
       <div className="align-center inline-flex h-12 w-full items-end justify-between border-b-2 border-black pb-4 text-2xl">
