@@ -12,44 +12,73 @@ const LoginForm = () => {
     const formData = new FormData(event.currentTarget);
     const username = formData.get("username");
     const password = formData.get("password");
-    
-    const res = await signIn("credentials", { username, password, redirect: false, callbackUrl: "/" /* @TODO Replace with dashboard route */ });
-    if(res?.ok) toast.success("Login successful");
+
+    const res = await signIn("credentials", {
+      username,
+      password,
+      redirect: false,
+      callbackUrl: "/dash",
+    });
+    if (res?.ok) toast.success("Login successful");
     else toast.error("Login failed");
   };
 
-  const loginWithDiscord = async () => { 
-    await signIn("discord", { callbackUrl: "/" /* @TODO Replace with dashboard route */ });
+  const loginWithDiscord = async () => {
+    await signIn("discord", { callbackUrl: "/dash" });
   };
 
   return (
-    <form onSubmit={loginWithCredentials} className="h-full flex flex-col items-center gap-5 w-full sm:w-2/5">
-      <h1 className="text-blue-800 text-3xl font-bold">EventSync</h1>
-      <div className="flex flex-col relative">
+    <form
+      onSubmit={loginWithCredentials}
+      className="flex h-full w-full flex-col items-center gap-5 sm:w-2/5"
+    >
+      <h1 className="text-3xl font-bold text-blue-800">EventSync</h1>
+      <div className="relative flex flex-col">
         <label htmlFor="username" className="text-sm">
           Username
         </label>
-        <FaRegCircleUser className="absolute top-9 left-4 text-blue-800" />
-        <input id="username" type="text" name="username" required className="pl-10 pr-5 py-3 text-base border w-full sm:w-96" />
+        <FaRegCircleUser className="absolute left-4 top-9 text-blue-800" />
+        <input
+          id="username"
+          type="text"
+          name="username"
+          required
+          className="w-full border py-3 pl-10 pr-5 text-base sm:w-96"
+        />
       </div>
-      <div className="flex flex-col relative">
+      <div className="relative flex flex-col">
         <label htmlFor="password" className="text-sm">
           Password
         </label>
-        <FiLock className="absolute top-9 left-4 text-blue-800" />
-        <input id="password" type="password" name="password" required className="pl-10 pr-5 py-3 text-base border w-full sm:w-96" />
+        <FiLock className="absolute left-4 top-9 text-blue-800" />
+        <input
+          id="password"
+          type="password"
+          name="password"
+          required
+          className="w-full border py-3 pl-10 pr-5 text-base sm:w-96"
+        />
       </div>
-      <button type="submit" className="rounded border border-blue-800 px-10 py-3 text-blue-800 font-bold w-full sm:w-96 hover:bg-blue-800 hover:text-white cursor-pointer">
+      <button
+        type="submit"
+        className="w-full cursor-pointer rounded border border-blue-800 px-10 py-3 font-bold text-blue-800 hover:bg-blue-800 hover:text-white sm:w-96"
+      >
         Login
       </button>
-      <button type="button" onClick={loginWithDiscord} className="rounded border border-[#5865F2] px-10 py-3 text-[#5865F2] font-bold w-full sm:w-96 hover:bg-[#5865F2] hover:text-white cursor-pointer">
-        <span className="flex flex-row justify-center items-center gap-3 text-xs sm:text-base">
+      <button
+        type="button"
+        onClick={loginWithDiscord}
+        className="w-full cursor-pointer rounded border border-[#5865F2] px-10 py-3 font-bold text-[#5865F2] hover:bg-[#5865F2] hover:text-white sm:w-96"
+      >
+        <span className="flex flex-row items-center justify-center gap-3 text-xs sm:text-base">
           <FaDiscord className="text-3xl" /> Sign in with Discord
         </span>
       </button>
-      <Link href="/register" className="text-lg hover:text-blue-800">Register</Link>
+      <Link href="/register" className="text-lg hover:text-blue-800">
+        Register
+      </Link>
     </form>
   );
-}
+};
 
 export default LoginForm;

@@ -2,7 +2,6 @@ import Button from "./Button";
 import { IoMdNotificationsOutline } from "react-icons/io";
 import Image from "next/image";
 import { useSession } from "next-auth/react";
-import { api } from "~/utils/api";
 import { useRouter } from "next/router";
 import HeaderProfileIconMenu from "./HeaderProfileIconMenu";
 import HeaderDropDownMenu from "./HeaderDropDownMenu";
@@ -11,11 +10,6 @@ import SearchBar from "./SearchBar";
 const Header = () => {
   const router = useRouter();
   const { data: sessionData } = useSession();
-
-  const { data: secretMessage } = api.post.getSecretMessage.useQuery(
-    undefined, // no input
-    { enabled: sessionData?.user !== undefined },
-  );
 
   const goTo = async (route: string) => {
     await router.push(route);
@@ -26,7 +20,7 @@ const Header = () => {
   };
 
   return (
-    <div className="fixed min-h-10 w-full items-center px-20 py-10">
+    <div className="min-h-10 w-full items-center px-20 py-10">
       <div className="flex justify-between gap-5">
         <div className="flex items-center gap-5">
           <div>

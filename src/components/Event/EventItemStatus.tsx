@@ -1,4 +1,4 @@
-import { EventStatus } from "@prisma/client";
+import type { EventStatus } from "@prisma/client";
 import { MdOutlinePublic } from "react-icons/md";
 
 interface EventItemStatusProps {
@@ -7,6 +7,7 @@ interface EventItemStatusProps {
 
 export const EventItemStatus = (props: EventItemStatusProps) => {
   let bgColor = "rounded-lg px-5 py-2 text-sm text-white ";
+
   switch (props.status) {
     case "UPCOMING":
       bgColor += "bg-yellow-600";
@@ -21,14 +22,13 @@ export const EventItemStatus = (props: EventItemStatusProps) => {
       bgColor += "bg-blue-600";
       break;
   }
+
   return (
-    <>
-      <div className={bgColor}>
-        <div className="flex items-center">
-          <MdOutlinePublic />
-          <p className="ml-2">{props.status}</p>
-        </div>
+    <div className={bgColor}>
+      <div className="flex items-center">
+        <MdOutlinePublic />
+        <p className="ml-2">{props.status}</p>
       </div>
-    </>
+    </div>
   );
 };

@@ -14,7 +14,7 @@ export default function HeaderProfileIconMenu(props: HeaderDropDownMenuProps) {
     setOpenIconMenu(!openIconMenu);
   };
   const logout = async () => {
-    await signOut();
+    await signOut({redirect: true, callbackUrl: "/"});
   };
   return (
     <div className="relative">
