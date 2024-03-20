@@ -1,1 +1,1 @@
-export { EventUpcomingSchema } from '../outputTypeSchemas/EventUpcomingSchema'
+export * from './EventUpcomingSchema'

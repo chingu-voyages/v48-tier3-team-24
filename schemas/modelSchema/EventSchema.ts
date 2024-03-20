@@ -12,7 +12,7 @@ export const EventSchema = z.object({
   description: z.string(),
   startDateTime: z.coerce.date(),
   endDateTime: z.coerce.date(),
-  image: z.string().nullable(),
+  image: z.string(),
   price: z.number(),
   maxParticipants: z.number().int().nullable(),
   inviteLink: z.string().nullable(),

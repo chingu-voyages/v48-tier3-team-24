@@ -26,7 +26,7 @@ model Event {
     description     String      @db.Text
     startDateTime   DateTime
     endDateTime     DateTime
-    image           String?
+    image           String      @default("")
     price           Float       @default(0)
     maxParticipants Int?        @default(0)
     inviteLink      String?
