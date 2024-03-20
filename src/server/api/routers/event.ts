@@ -1,3 +1,4 @@
+import { EventUpcomingSchema } from "schemas";
 import { z } from "zod";
 
 import {
@@ -58,10 +59,10 @@ export const eventRouter = createTRPCRouter({
     });
   }),
 
-  getUpcomingEvents: protectedProcedure.query(({ ctx }) => {
+  getUpcomingEvents: protectedProcedure.output(EventUpcomingSchema).query(({ ctx }) => {
     return ctx.db.event.findMany({
       orderBy: { createdAt: "desc" },
-      where: { createdById: ctx.session.user.id },
+      where: { createdById: ctx.session.user.id, status: "UPCOMING" },
       select: {
         id: true,
         startDateTime: true,
