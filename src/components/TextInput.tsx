@@ -1,8 +1,9 @@
 interface TextInputProps {
-  type: "text" | "textArea";
+  type: "text" | "textArea" | "number";
   label: string;
   id: string;
   required?: boolean
+  min?: number
 }
 
 export const TextInput = (props: TextInputProps) => {
@@ -12,7 +13,7 @@ export const TextInput = (props: TextInputProps) => {
         {props.label}
       </label>
       {/* <FiLock className="absolute left-4 top-9 text-blue-800" /> */}
-      {props.type === "text" ? (
+      {props.type !== "textArea" ? (
         <input
           name={props.id}
           {...props}
