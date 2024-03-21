@@ -1,9 +1,5 @@
 export const MyProfile = () => {
-  return (
-    <>
-      <div>My Profile</div>
-    </>
-  );
+  return <div>My Profile</div>;
 };
 
 export default MyProfile;
