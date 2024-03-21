@@ -24,7 +24,7 @@ const MyApp: AppType<{ session: Session | null }> = ({
   const getLayout = Component.getLayout ?? ((page) => page);
   const component = getLayout(<Component {...pageProps} />);
   return (
-    <SessionProvider session={session as Session}>
+    <SessionProvider session={session as Session} refetchOnWindowFocus={false}>
       <Toaster />
       <main className={`font-sans ${josefin_sans.variable}`}>
         {component}
