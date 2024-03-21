@@ -1,4 +1,4 @@
-import { MouseEventHandler } from "react";
+import type { MouseEventHandler } from "react";
 import { IoSearch } from "react-icons/io5";
 
 interface SearchBarProps {

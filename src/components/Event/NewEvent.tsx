@@ -1,8 +1,8 @@
-import React, { FormEvent } from "react";
+import React, { type FormEvent } from "react";
 import Button from "../Button";
 import { TextInput } from "../TextInput";
 import Datetime from "react-datetime";
-import moment, { Moment } from "moment";
+import moment, { type Moment } from "moment";
 
 const NewEvent = () => {
   const createNewEvent = (e: FormEvent) => {
@@ -15,7 +15,7 @@ const NewEvent = () => {
   const blockDays = (current: Moment) => current.isAfter(yesterday);
 
   // set up the props to modify the datepicker input box
-  let datePickerInputProps = {
+  const datePickerInputProps = {
     className: "border-2 rounded-md p-2 hover:shadow",
   };
 

@@ -1,12 +1,9 @@
 import { useSession } from "next-auth/react";
 import React, { useState } from "react";
-import { demoStatusData } from "~/utils/demo_data";
-import { api } from "~/utils/api";
 import EventCalendar from "~/components/Event/EventCalendar";
 import Header from "~/components/Header";
 import Button from "~/components/Button";
 import { FaPlus } from "react-icons/fa6";
-import SuggestedEvents from "~/components/Event/SuggestedEvents";
 import UpcomingEvents from "~/components/Event/UpcomingEvents";
 import { useRouter } from "next/navigation";
 
@@ -47,8 +44,8 @@ function UserDash() {
           <span className="self-center mb-5">
             <EventCalendar onChange={selectedDateOnChange} />
           </span>
-          <Button outline="info">Events I'm hosting</Button>
-          <Button outline="info">Events I'm attending</Button>
+          <Button outline="info">Events I&apos;m hosting</Button>
+          <Button outline="info">Events I&apos;m attending</Button>
         </div>
         <UpcomingEvents />          
       </div>
