@@ -1,7 +1,8 @@
-import React, { Dispatch, SetStateAction } from "react";
+import React from "react";
 import Image from "next/image";
+import moment from "moment";
 import { SingleUpcomingEventType } from "schemas";
-import { CiBookmark, CiSaveUp2 } from "react-icons/ci";
+import { CiBookmark, CiImageOff, CiSaveUp2 } from "react-icons/ci";
 
 interface UpcomingEventTileProps {
   data: SingleUpcomingEventType;
@@ -23,11 +24,9 @@ const UpcomingEventTile = ({
   }
 
   return (
-    <div
-      className="flex flex-row p-2"
-    >
-      <div className="basis-1/5">
-        {data.image && (
+    <div className="flex flex-row p-2">
+      <div className="container flex basis-1/5">
+        {data.image ? (
           <Image
             className="w-full rounded-lg"
             width={150}
@@ -35,11 +34,18 @@ const UpcomingEventTile = ({
             src={data.image}
             alt="Event Image"
           />
+        ) : (
+          <CiImageOff
+            className="flex grow place-self-center text-gray-400"
+            size={40}
+          />
         )}
       </div>
       <div className="ml-16 flex basis-4/5 flex-col justify-between">
         <p className="font-slate-100 text-xl">
-          {formatDateTime(data.startDateTime)}
+          {moment(data.startDateTime)
+            .format("ddd, MMMM D [\u2022] h:mm a")
+            .toUpperCase()}
         </p>
         <p className="text-xl font-bold">{data.name}</p>
         <p className="text-l">
@@ -47,12 +53,16 @@ const UpcomingEventTile = ({
         </p>
         <div className="flex flex-row justify-between">
           {data.isPrivate ? (
-            <div className="bg-es-secondary-light-100 rounded-sm px-8 py-2">
-              <span className="text-es-secondary">Private Event</span>
+            <div className="bg-es-secondary-light-100 max-h-7 rounded-lg px-8">
+              <span className="text-xl font-bold text-es-secondary">
+                Private Event
+              </span>
             </div>
           ) : (
-            <div className="bg-es-warning-light-100 rounded-lg px-8 py-2">
-              <span className="text-es-warning">Public Event</span>
+            <div className="bg-es-warning-light-100 max-h-7 rounded-lg px-6">
+              <span className="text-xl font-bold text-es-warning">
+                Public Event
+              </span>
             </div>
           )}
           <div className="mr-10 flex flex-row gap-4">
@@ -71,57 +81,6 @@ const UpcomingEventTile = ({
       </div>
     </div>
   );
-};
-
-const formatDateTime = (dt: Date) => {
-  const daysOfTheWeek = [
-    "Sunday",
-    "Monday",
-    "Tuesday",
-    "Wednesday",
-    "Thursday",
-    "Friday",
-    "Saturday",
-  ];
-  const monthsOfTheYear = [
-    "January",
-    "February",
-    "March",
-    "April",
-    "May",
-    "June",
-    "July",
-    "August",
-    "September",
-    "October",
-    "November",
-    "December",
-  ];
-
-  const month = monthsOfTheYear.at(dt.getMonth());
-  const date = dt.getDate();
-  const day = daysOfTheWeek.at(dt.getDay());
-  const now = new Date(Date.now());
-
-  let year = 0;
-  let hour = dt.getHours();
-  let minutes: number | string = dt.getMinutes();
-  let timeSuffix = "AM";
-
-  if (hour >= 12) {
-    hour = hour - 12;
-    timeSuffix = "PM";
-  }
-
-  if (minutes === 0) {
-    minutes = "00";
-  }
-
-  if (dt.getFullYear() > now.getFullYear()) {
-    year = dt.getFullYear();
-  }
-
-  return `${day}, ${month} ${date} - ${hour}:${minutes} ${timeSuffix}`;
 };
 
 export default UpcomingEventTile;

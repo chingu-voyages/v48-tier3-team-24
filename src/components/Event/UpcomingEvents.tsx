@@ -3,53 +3,56 @@ import { api } from "~/utils/api";
 import UpcomingEventTile from "./UpcomingEventTile";
 
 const UpcomingEvents = () => {
-  const upcomingEventsQuery =
-    api.event.getUpcomingEvents.useQuery(undefined, {
-      refetchInterval: false,
-      refetchOnReconnect: false,
-      refetchOnWindowFocus: false,
-    });
+  const upcomingEventsQuery = api.event.getUpcomingEvents.useQuery(undefined, {
+    refetchInterval: false,
+    refetchOnReconnect: false,
+    refetchOnWindowFocus: false,
+  });
 
-    const handleOnClickDetailsEvent = (eventId: string) => {
-        alert(`details: ${eventId}`)
-    }
+  // pagination: store the page cursor
+  const [pageCursor, setPageCursor] = useState(0)
+  
 
-    const handleOnClickBookmarkEvent = (eventId: string) => {
-        alert(`bookmark: ${eventId}`)
-    }
+  // these handle functions would eventually reroute to different pages
+  const handleOnClickDetailsEvent = (eventId: string) => {
+    alert(`details: ${eventId}`);
+  };
+
+  const handleOnClickBookmarkEvent = (eventId: string) => {
+    alert(`bookmark: ${eventId}`);
+  };
 
   if (upcomingEventsQuery.isLoading && !upcomingEventsQuery.data) {
     return <div>Loading...Please wait</div>;
   }
 
   if (!upcomingEventsQuery.data) {
-    return <div>No Upcoming Events</div>;
+    return <div>Error loading upcoming events</div>;
   }
 
-  return upcomingEventsQuery.data.map((event, index) => {
-    let divider;
-
-    if (index === 0) {
-      divider = (
-        <div className="border-b-2 border-gray-300 pb-2 mb-10">
-          <span className="text-3xl font-bold">Upcoming Events</span>
-        </div>
-      );
-    } else {
-      divider = <div className="border-b-2 border-gray-200 my-10"></div>;
-    }
-
-    return (
-      <div key={event.id}>
-        {divider}
-        <UpcomingEventTile
-          data={event}
-          handleOnClickDetails={handleOnClickDetailsEvent}
-          handleOnClickBookmark={handleOnClickBookmarkEvent}
-        />
+  return (
+    <div className="flex basis-2/3 flex-col grow">
+      <div className="mb-4 border-b-2 border-gray-300 pb-2">
+        <span className="text-3xl font-bold">Upcoming Events near you</span>
       </div>
-    );
-  });
+      <div>
+        {upcomingEventsQuery.data.map((event, index) => {
+          return (
+            <div key={event.id}>
+              {index !== 0 && (
+                <div className="my-8 border-b-2 border-gray-200"></div>
+              )}
+              <UpcomingEventTile
+                data={event}
+                handleOnClickDetails={handleOnClickDetailsEvent}
+                handleOnClickBookmark={handleOnClickBookmarkEvent}
+              />
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
 };
 
 export default UpcomingEvents;
