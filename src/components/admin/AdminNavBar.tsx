@@ -1,5 +1,6 @@
 import type { Session } from "next-auth";
-import { useState } from "react";
+import { useState, useRef } from "react";
+import { useClickOutside } from "~/utils/hooks";
 import { FaUser } from "react-icons/fa";
 import { RxHamburgerMenu } from "react-icons/rx";
 import { signOut } from "next-auth/react";
@@ -8,8 +9,12 @@ import AdminHamburgerMenu from "./AdminHamburgerMenu";
 
 const AdminNavBar = ({session}:{session:Session|null}) => {
   const profileName = session?.user.name ? session?.user.name : session?.user.username;
+  const profileMenuRef = useRef(null);
+  const hamburgerMenuRef = useRef(null);
   const [profileMenuOpen, setProfileMenuOpen] = useState<boolean> (false);
   const [hamburgerMenuOpen, setHamburgerMenuOpen] = useState<boolean> (false);
+  useClickOutside(profileMenuRef, () => setProfileMenuOpen(false));
+  useClickOutside(hamburgerMenuRef, () => setHamburgerMenuOpen(false));
 
   const onProfileBtnClick = () => {
     setProfileMenuOpen(value => !value);
@@ -35,8 +40,14 @@ const AdminNavBar = ({session}:{session:Session|null}) => {
           <span className="font-bold">{profileName}</span>
         </div>
       </button>
-      {profileMenuOpen && <AdminProfileMenu logout={logout} />}
-      {hamburgerMenuOpen && <AdminHamburgerMenu logout={logout} /> }
+      {profileMenuOpen && <AdminProfileMenu reference={profileMenuRef} logout={logout} />}
+      {hamburgerMenuOpen &&
+        <AdminHamburgerMenu
+          reference={hamburgerMenuRef}
+          toggle={setHamburgerMenuOpen}
+          logout={logout}
+        />
+      }
     </nav>
   );
 };
