@@ -1,13 +1,11 @@
-import { Session } from "next-auth";
+import { useSession } from "next-auth/react";
 import { FormEvent } from "react";
 import Button from "~/components/Button";
 import { TextInput } from "~/components/TextInput";
 
-interface myProfileFormProps {
-  sessionData: Session | null;
-}
+const MyProfileForm = () => {
+  const { data: sessionData } = useSession();
 
-const MyProfileForm = (props: myProfileFormProps) => {
   const onUpdateAccount = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
@@ -41,12 +39,14 @@ const MyProfileForm = (props: myProfileFormProps) => {
               label="First Name"
               inputType="text"
               required={true}
+              defaultValue={sessionData?.user.firstName ?? ""}
             />
             <TextInput
               id="last_name"
               label="Last Name"
               inputType="text"
               required={true}
+              defaultValue={sessionData?.user.lastName ?? ""}
             />
             <TextInput
               id="name"
@@ -54,6 +54,7 @@ const MyProfileForm = (props: myProfileFormProps) => {
               inputType="text"
               disable={true}
               readonly={true}
+              defaultValue={sessionData?.user.name ?? ""}
             />
             <div className="col-span-2">
               <h1 className="text-lg">Account Info</h1>
@@ -66,6 +67,7 @@ const MyProfileForm = (props: myProfileFormProps) => {
                 inputType="text"
                 disable={true}
                 readonly={true}
+                defaultValue={sessionData?.user.email ?? ""}
               />
             </div>
             <TextInput
@@ -73,6 +75,7 @@ const MyProfileForm = (props: myProfileFormProps) => {
               label="Username"
               inputType="text"
               required={true}
+              defaultValue={sessionData?.user.username ?? ""}
             />
             <TextInput id="password" label="Password" inputType="text" />
             <div className="col-span-2">

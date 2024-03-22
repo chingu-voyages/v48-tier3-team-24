@@ -2,9 +2,10 @@ interface TextInputProps {
   inputType: "text" | "textArea";
   label?: string;
   id: string;
+  defaultValue?: string | undefined;
   readonly?: boolean;
   disable?: boolean;
-  required? :boolean;
+  required?: boolean;
 }
 
 export const TextInput = (props: TextInputProps) => {
@@ -19,6 +20,7 @@ export const TextInput = (props: TextInputProps) => {
           id={props.id}
           type={props.inputType}
           name={props.id}
+          defaultValue={props.defaultValue}
           readOnly={props.readonly}
           disabled={props.disable}
           required={props.required}
@@ -28,6 +30,7 @@ export const TextInput = (props: TextInputProps) => {
         <textarea
           id={props.id}
           name={props.id}
+          defaultValue={props.defaultValue}
           readOnly={props.readonly}
           disabled={props.disable}
           required={props.required}
