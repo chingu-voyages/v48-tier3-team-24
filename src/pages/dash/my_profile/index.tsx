@@ -14,7 +14,7 @@ function MyProfile() {
     <>
       <Header />
       <div className="grid justify-center gap-5 px-20">
-        <MyProfileForm />
+        {sessionData && <MyProfileForm sessionData={sessionData} />}
       </div>
     </>
   );

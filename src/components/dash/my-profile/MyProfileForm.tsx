@@ -1,7 +1,12 @@
+import { Session } from "next-auth";
 import Button from "~/components/Button";
 import { TextInput } from "~/components/TextInput";
 
-const MyProfileForm = () => {
+interface myProfileFormProps {
+  sessionData: Session | null;
+}
+
+const MyProfileForm = (props: myProfileFormProps) => {
   const onUpdateAccount = () => {
     console.log("update");
   };
