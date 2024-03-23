@@ -55,13 +55,13 @@ const UpcomingEventTile = ({
           {data.isPrivate ? (
             <div className="bg-es-secondary-light-100 max-h-7 rounded-lg px-8">
               <span className="text-xl font-bold text-es-secondary">
-                Private Event
+                Private
               </span>
             </div>
           ) : (
             <div className="bg-es-warning-light-100 max-h-7 rounded-lg px-6">
               <span className="text-xl font-bold text-es-warning">
-                Public Event
+                Public
               </span>
             </div>
           )}

@@ -9,7 +9,6 @@ import type { ReactElement, ReactNode } from "react";
 
 import "~/styles/globals.css";
 import "react-datetime/css/react-datetime.css";
-import "react-calendar/dist/Calendar.css";
 
 export type NextPageWithLayout<P = NonNullable<unknown>, IP = P> = NextPage<
   PageTransitionEvent,

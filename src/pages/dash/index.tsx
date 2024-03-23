@@ -32,7 +32,7 @@ function UserDash() {
     <>
       <Header />
       <div className="mx-10 flex flex-col lg:flex-row">
-        <div className="flex basis-1/3 flex-row lg:flex-col gap-8 sm:px-20">
+        <div className="flex basis-1/3 flex-col gap-8 sm:px-12 mb-16">
           <p className="text-4xl font-bold">Hello {name},</p>
           <p className="text-2xl italic">
             Find or Host an Event <br /> and Connect with Others
@@ -42,7 +42,7 @@ function UserDash() {
           </Button>
           <p className="text-4xl font-bold"></p>
           <span className="self-center mb-5">
-            <EventCalendar onChange={selectedDateOnChange} />
+            <EventCalendar onChange={selectedDateOnChange}/>
           </span>
           <Button outline="info">Events I&apos;m hosting</Button>
           <Button outline="info">Events I&apos;m attending</Button>
