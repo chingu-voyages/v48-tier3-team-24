@@ -6,6 +6,7 @@ import Button from "~/components/Button";
 import { FaPlus } from "react-icons/fa6";
 import UpcomingEvents from "~/components/Event/UpcomingEvents";
 import { useRouter } from "next/navigation";
+import { api } from "~/utils/api";
 
 type ValuePiece = Date | null;
 export type Value = ValuePiece | [ValuePiece, ValuePiece];
@@ -14,9 +15,19 @@ function UserDash() {
   const { data: sessionData } = useSession();
   const router = useRouter();
 
+  const {
+    data: upcomingEvents,
+    isLoading: eventsIsLoading,
+    isError: eventsIsError,
+  } = api.event.getUpcomingEvents.useQuery(undefined, {
+    refetchInterval: false,
+    refetchOnReconnect: false,
+    refetchOnWindowFocus: false,
+  });
+
   const handleHostNewEvent = () => {
-    return router.push("/dash/new")
-  }
+    return router.push("/dash/new");
+  };
 
   // for calendar picker
   const [selectedDate, selectedDateOnChange] = useState<Value>(new Date());
@@ -32,22 +43,27 @@ function UserDash() {
     <>
       <Header />
       <div className="mx-10 flex flex-col lg:flex-row">
-        <div className="flex basis-1/3 flex-col gap-8 sm:px-12 mb-16">
+        <div className="mb-16 flex basis-1/3 flex-col gap-8 sm:px-12">
           <p className="text-4xl font-bold">Hello {name},</p>
           <p className="text-2xl italic">
             Find or Host an Event <br /> and Connect with Others
           </p>
-          <Button variant="primary" icon={<FaPlus />} width="full" onClick={handleHostNewEvent}>
+          <Button
+            variant="primary"
+            icon={<FaPlus />}
+            width="full"
+            onClick={handleHostNewEvent}
+          >
             Host a new Event
           </Button>
           <p className="text-4xl font-bold"></p>
-          <span className="self-center mb-5">
-            <EventCalendar onChange={selectedDateOnChange}/>
+          <span className="mb-5 self-center">
+            <EventCalendar onChange={selectedDateOnChange} />
           </span>
           <Button outline="info">Events I&apos;m hosting</Button>
           <Button outline="info">Events I&apos;m attending</Button>
         </div>
-        <UpcomingEvents />          
+        <UpcomingEvents data={upcomingEvents} isLoading={eventsIsLoading} isError={eventsIsError}/>
       </div>
     </>
   );

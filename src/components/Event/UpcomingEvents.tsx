@@ -1,18 +1,18 @@
 import React, { useState } from "react";
 import { api } from "~/utils/api";
 import UpcomingEventTile from "./UpcomingEventTile";
+import { EventUpcomingType } from "schemas";
 
-const UpcomingEvents = () => {
-  const upcomingEventsQuery = api.event.getUpcomingEvents.useQuery(undefined, {
-    refetchInterval: false,
-    refetchOnReconnect: false,
-    refetchOnWindowFocus: false,
-  });
+interface UpcomingEventsProps {
+  data: EventUpcomingType | undefined
+  isLoading: boolean
+  isError: boolean
+}
 
+const UpcomingEvents = ({data, isLoading, isError}: UpcomingEventsProps) => {
   // pagination: store the page cursor
   const [pageCursor, setPageCursor] = useState(0)
   
-
   // these handle functions would eventually reroute to different pages
   const handleOnClickDetailsEvent = (eventId: string) => {
     alert(`details: ${eventId}`);
@@ -22,11 +22,11 @@ const UpcomingEvents = () => {
     alert(`bookmark: ${eventId}`);
   };
 
-  if (upcomingEventsQuery.isLoading && !upcomingEventsQuery.data) {
+  if (isLoading && !data) {
     return <div>Loading...Please wait</div>;
   }
 
-  if (!upcomingEventsQuery.data) {
+  if (!data) {
     return <div>Error loading upcoming events</div>;
   }
 
@@ -36,7 +36,7 @@ const UpcomingEvents = () => {
         <span className="text-3xl font-bold">Upcoming Events near you</span>
       </div>
       <div>
-        {upcomingEventsQuery.data.map((event, index) => {
+        {data.map((event, index) => {
           return (
             <div key={event.id}>
               {index !== 0 && (
