@@ -5,7 +5,7 @@ export const SingleUpcomingEventSchema = z.object({
   startDateTime: z.date(),
   name: z.string(),
   description: z.string(),
-  image: z.string(),
+  image: z.string().default(""),
   isPrivate: z.boolean(),
   city: z.string().nullish(),
   state: z.string().nullish(),

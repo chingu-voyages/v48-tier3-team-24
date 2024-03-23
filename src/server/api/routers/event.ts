@@ -1,4 +1,6 @@
-import { EventUpcomingSchema } from "schemas";
+import { TRPCError } from "@trpc/server";
+import Error from "next/error";
+import { EventUpcomingSchema, NewEventSchema } from "schemas";
 import { z } from "zod";
 
 import {
@@ -17,39 +19,27 @@ export const eventRouter = createTRPCRouter({
       };
     }),
 
-  create: verifiedUserProcedure
-    .input(
-      z
-        .object({
-          name: z.string().min(1),
-          description: z.string().min(1),
-          startDateTime: z.date().min(new Date()),
-          endDateTime: z.date(),
-          streetAddress: z.string().min(1),
-        })
-        .refine((data) => {
-          data.endDateTime > data.startDateTime,
-            {
-              message:
-                "The event end datetime cannot be earlier than the event start datetime.",
-              path: ["endDateTime"],
-            };
-        }),
-    )
+  create: protectedProcedure
+    .input(NewEventSchema)
     .mutation(async ({ ctx, input }) => {
-      // simulate a slow db call
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-
-      return ctx.db.event.create({
-        data: {
-          name: input.name,
-          description: input.description,
-          startDateTime: input.startDateTime,
-          endDateTime: input.endDateTime,
-          streetAddress: input.streetAddress,
-          createdBy: { connect: { id: ctx.session.user.id } },
-        },
-      });
+      return await ctx.db.event
+        .create({
+          data: {
+            ...input,
+            price: Number.parseInt(input.price),
+            createdBy: { connect: { id: ctx.session.user.id } },
+            eventParticipants: {
+              create: [
+                {
+                  createdAt: new Date(),
+                  userId: ctx.session.user.id,
+                },
+              ],
+            },
+          },
+        })
+        .then((data) => data.id)
+        .catch((e: TRPCError) => console.error(e.message));
     }),
 
   getLatest: protectedProcedure.query(({ ctx }) => {
@@ -59,22 +49,24 @@ export const eventRouter = createTRPCRouter({
     });
   }),
 
-  getUpcomingEvents: protectedProcedure.output(EventUpcomingSchema).query(({ ctx }) => {
-    return ctx.db.event.findMany({
-      orderBy: { createdAt: "desc" },
-      where: { status: "UPCOMING" },
-      select: {
-        id: true,
-        startDateTime: true,
-        name: true,
-        description: true,
-        image: true,
-        isPrivate: true,
-        city: true,
-        state: true,
-      },
-    });
-  }),
+  getUpcomingEvents: protectedProcedure
+    .output(EventUpcomingSchema)
+    .query(({ ctx }) => {
+      return ctx.db.event.findMany({
+        orderBy: { createdAt: "desc" },
+        where: { status: "UPCOMING" },
+        select: {
+          id: true,
+          startDateTime: true,
+          name: true,
+          description: true,
+          image: true,
+          isPrivate: true,
+          city: true,
+          state: true,
+        },
+      });
+    }),
 
   // adds a user to an existing event
   addUserToEvent: protectedProcedure

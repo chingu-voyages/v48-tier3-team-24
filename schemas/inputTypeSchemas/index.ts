@@ -9,3 +9,4 @@ export { SortOrderSchema } from './SortOrderSchema';
 export { NullsOrderSchema } from './NullsOrderSchema';
 export { EventStatusSchema } from './EventStatusSchema';
 export { RoleSchema } from './RoleSchema';
+export * from './NewEventSchema';

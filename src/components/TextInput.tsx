@@ -4,6 +4,9 @@ interface TextInputProps {
   id: string;
   required?: boolean
   min?: number
+  max?: number
+  placeholder?: string
+  onChange?: (event: any) => void
 }
 
 export const TextInput = (props: TextInputProps) => {
@@ -13,18 +16,19 @@ export const TextInput = (props: TextInputProps) => {
         {props.label}
       </label>
       {/* <FiLock className="absolute left-4 top-9 text-blue-800" /> */}
-      {props.type !== "textArea" ? (
+      {props.type === "textArea" ? (
+        <textarea
+          name={props.id}
+          {...props}
+          className="w-full border-b-2 border-r-2 p-3 rounded-lg text-base sm:w-96 resize-none overflow-hidden"
+          
+        ></textarea>
+      ) : (
         <input
           name={props.id}
           {...props}
           className="w-full border p-3 text-base sm:w-96"
         />
-      ) : (
-        <textarea
-          name={props.id}
-          {...props}
-          className="w-full border p-3 text-base sm:w-96"
-        ></textarea>
       )}
     </div>
   );
