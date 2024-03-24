@@ -1,11 +1,11 @@
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { FormEvent, useEffect } from "react";
+import { FormEvent } from "react";
 import toast from "react-hot-toast";
 import Button from "~/components/Button";
 import { TextInput } from "~/components/TextInput";
-import { db } from "~/server/db";
 import { api } from "~/utils/api";
+import { PiPasswordFill } from "react-icons/pi";
 
 function MyProfileForm() {
   const router = useRouter();
@@ -47,7 +47,7 @@ function MyProfileForm() {
     <>
       <form className="grid grid-cols-1 gap-5" onSubmit={onUpdateAccount}>
         <div className="rounded p-10 shadow">
-          <div className="grid grid-cols-2 grid-rows-1 gap-5">
+          <div className="grid grid-cols-2 grid-rows-1 items-end gap-5">
             <div className="col-span-2">
               <h1 className="text-lg">Your Info</h1>
               <hr className="mt-2"></hr>
@@ -78,16 +78,6 @@ function MyProfileForm() {
               <h1 className="text-lg">Account Info</h1>
               <hr className="mt-2"></hr>
             </div>
-            <div className="col-span-2">
-              <TextInput
-                id="email"
-                label="Email"
-                inputType="text"
-                disable={true}
-                readonly={true}
-                defaultValue={user?.email ?? ""}
-              />
-            </div>
             <TextInput
               id="username"
               label="Username"
@@ -95,8 +85,19 @@ function MyProfileForm() {
               required={true}
               defaultValue={user?.username ?? ""}
             />
+            <TextInput
+              id="email"
+              label="Email"
+              inputType="text"
+              disable={true}
+              readonly={true}
+              defaultValue={user?.email ?? ""}
+            />
+            {/* <Button outline="primary">Update Email</Button> */}
+
+            <Button outline="warning">Click here to update password</Button>
             {/* <TextInput id="password" label="Password" inputType="text" /> */}
-            <div className="col-span-2">
+            <div className="col-span-2 mt-10">
               <div className="flex w-full flex-wrap justify-between">
                 <Button variant="primary" type="submit">
                   Update
