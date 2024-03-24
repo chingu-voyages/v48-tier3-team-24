@@ -1,6 +1,6 @@
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { FormEvent } from "react";
+import { FormEvent, useState } from "react";
 import toast from "react-hot-toast";
 import Button from "~/components/Button";
 import { TextInput } from "~/components/TextInput";
@@ -25,6 +25,8 @@ function MyProfileForm() {
     },
   });
   const { data: user } = api.user.getCurrentUser.useQuery();
+  const [updatePasswordModalOpen, setUpdatePasswordModalOpen] =
+    useState<boolean>(false);
 
   const onUpdateAccount = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -39,9 +41,21 @@ function MyProfileForm() {
     userUpdateMutation.mutate(postData);
   };
 
-  const onUpdatePassword = () => {
+  const setPasswordUpdateModalOpen = () => {
+    setUpdatePasswordModalOpen(!updatePasswordModalOpen);
+  };
+
+  const onUpdatePassword = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const formData = new FormData(event.currentTarget);
+    const postData = {
+      password: String(formData.get("password")),
+      confirmPassword: String(formData.get("confirmPassword")),
+    };
+    console.log(postData);
     // TODO handle update password
     console.log("update password");
+    return true;
   };
 
   const onDeleteAccount = () => {
@@ -100,14 +114,9 @@ function MyProfileForm() {
               defaultValue={user?.email ?? ""}
             />
             {/* <Button outline="primary">Update Email</Button> */}
-            <Model
-              buttonColor="warning"
-              buttonType="outline"
-              buttonText="Click here to update password"
-            />
-            {/* <Button outline="warning" onClick={onUpdatePassword}>
+            <Button outline="warning" onClick={setPasswordUpdateModalOpen}>
               Click here to update password
-            </Button> */}
+            </Button>
             {/* <TextInput id="password" label="Password" inputType="text" /> */}
             <div className="col-span-2 mt-10">
               <div className="flex w-full flex-wrap justify-between">
@@ -126,6 +135,35 @@ function MyProfileForm() {
           </div>
         </div>
       </form>
+      <Model
+        modalOpen={updatePasswordModalOpen}
+        onCloseModal={setPasswordUpdateModalOpen}
+      >
+        <p className="mb-5 text-lg">Update Password</p>
+        <form className="grid grid-cols-1 gap-5" onSubmit={onUpdatePassword}>
+          <TextInput
+            id="password"
+            label="New Password"
+            inputType="text"
+            required={true}
+          />
+          <TextInput
+            id="confirmPassword"
+            label="Confirm Password"
+            inputType="text"
+            required={true}
+          />
+          <hr />
+          <div className="flex w-full justify-between gap-5">
+            <Button outline="info" onClick={setPasswordUpdateModalOpen}>
+              Cancel
+            </Button>
+            <Button variant="primary" type="submit">
+              Confirm
+            </Button>
+          </div>
+        </form>
+      </Model>
     </>
   );
 }
