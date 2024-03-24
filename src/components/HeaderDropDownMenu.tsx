@@ -42,7 +42,7 @@ export default function HeaderDropDownMenu(props: HeaderDropDownMenuProps) {
                 <HeaderDropDownMenuItem
                   icon={<FaRegCircleUser className="text-xl" />}
                   label="My Profile"
-                  onClick={() => props.goTo("/profile")}
+                  onClick={() => props.goTo("/dash/my-profile")}
                 />
                 <hr className="my-3"></hr>
                 <HeaderDropDownMenuItem
