@@ -6,6 +6,7 @@ import Button from "~/components/Button";
 import { TextInput } from "~/components/TextInput";
 import { api } from "~/utils/api";
 import { PiPasswordFill } from "react-icons/pi";
+import Model from "~/components/Modal";
 
 function MyProfileForm() {
   const router = useRouter();
@@ -40,8 +41,8 @@ function MyProfileForm() {
 
   const onUpdatePassword = () => {
     // TODO handle update password
-    console.log("update password")
-  }
+    console.log("update password");
+  };
 
   const onDeleteAccount = () => {
     // TODO handle delete account
@@ -99,8 +100,14 @@ function MyProfileForm() {
               defaultValue={user?.email ?? ""}
             />
             {/* <Button outline="primary">Update Email</Button> */}
-
-            <Button outline="warning" onClick={onUpdatePassword}>Click here to update password</Button>
+            <Model
+              buttonColor="warning"
+              buttonType="outline"
+              buttonText="Click here to update password"
+            />
+            {/* <Button outline="warning" onClick={onUpdatePassword}>
+              Click here to update password
+            </Button> */}
             {/* <TextInput id="password" label="Password" inputType="text" /> */}
             <div className="col-span-2 mt-10">
               <div className="flex w-full flex-wrap justify-between">
