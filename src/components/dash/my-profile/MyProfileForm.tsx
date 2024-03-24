@@ -1,24 +1,42 @@
 import { useSession } from "next-auth/react";
-import { FormEvent } from "react";
+import { useRouter } from "next/navigation";
+import { FormEvent, useEffect } from "react";
+import toast from "react-hot-toast";
 import Button from "~/components/Button";
 import { TextInput } from "~/components/TextInput";
+import { db } from "~/server/db";
+import { api } from "~/utils/api";
 
-const MyProfileForm = () => {
-  const { data: sessionData } = useSession();
+function MyProfileForm() {
+  const router = useRouter();
+  useSession({
+    required: true,
+    onUnauthenticated() {
+      router.push("/login");
+    },
+  });
+  const userUpdateMutation = api.user.update.useMutation({
+    onSuccess: async () => {
+      toast.success("Updated Successfully");
+    },
+    onError: (error, variables) => {
+      toast.error(error.message);
+    },
+  });
+  const { data: user } = api.user.getCurrentUser.useQuery();
 
-  const onUpdateAccount = (event: FormEvent<HTMLFormElement>) => {
+  const onUpdateAccount = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
     const postData = {
-      first_name: formData.get("first_name"),
-      last_name: formData.get("last_name"),
-      name: formData.get("name"),
-      email: formData.get("email"),
-      username: formData.get("username"),
-      password: formData.get("password"),
+      firstName: String(formData.get("firstName")),
+      lastName: String(formData.get("lastName")),
+      username: String(formData.get("username")),
+      password: String(formData.get("password")),
     };
-    // TODO call api
-    console.log("update", postData);
+
+    // update user
+    userUpdateMutation.mutate(postData);
   };
 
   const onDeleteAccount = () => {
@@ -35,18 +53,18 @@ const MyProfileForm = () => {
               <hr className="mt-2"></hr>
             </div>
             <TextInput
-              id="first_name"
+              id="firstName"
               label="First Name"
               inputType="text"
               required={true}
-              defaultValue={sessionData?.user.firstName ?? ""}
+              defaultValue={user?.firstName ?? ""}
             />
             <TextInput
-              id="last_name"
+              id="lastName"
               label="Last Name"
               inputType="text"
               required={true}
-              defaultValue={sessionData?.user.lastName ?? ""}
+              defaultValue={user?.lastName ?? ""}
             />
             <TextInput
               id="name"
@@ -54,7 +72,7 @@ const MyProfileForm = () => {
               inputType="text"
               disable={true}
               readonly={true}
-              defaultValue={sessionData?.user.name ?? ""}
+              defaultValue={user?.name ?? ""}
             />
             <div className="col-span-2">
               <h1 className="text-lg">Account Info</h1>
@@ -67,7 +85,7 @@ const MyProfileForm = () => {
                 inputType="text"
                 disable={true}
                 readonly={true}
-                defaultValue={sessionData?.user.email ?? ""}
+                defaultValue={user?.email ?? ""}
               />
             </div>
             <TextInput
@@ -75,9 +93,9 @@ const MyProfileForm = () => {
               label="Username"
               inputType="text"
               required={true}
-              defaultValue={sessionData?.user.username ?? ""}
+              defaultValue={user?.username ?? ""}
             />
-            <TextInput id="password" label="Password" inputType="text" />
+            {/* <TextInput id="password" label="Password" inputType="text" /> */}
             <div className="col-span-2">
               <div className="flex w-full flex-wrap justify-between">
                 <Button variant="primary" type="submit">
@@ -97,6 +115,6 @@ const MyProfileForm = () => {
       </form>
     </>
   );
-};
+}
 
 export default MyProfileForm;
