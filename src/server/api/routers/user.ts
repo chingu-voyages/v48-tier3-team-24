@@ -59,12 +59,6 @@ export const userRouter = createTRPCRouter({
     confirmPassword: z.string().min(8).max(20).transform(async (val) => await hash(val))
   })).mutation(async({ctx, input})=>{
     try {
-      if ( input.password != input.confirmPassword) {
-        throw new TRPCError({
-          code: "BAD_REQUEST",
-          message: "Confirm password does not match with password"
-        });
-      }
       return await ctx.db.user.update({
         where: {
           id: ctx.session.user.id

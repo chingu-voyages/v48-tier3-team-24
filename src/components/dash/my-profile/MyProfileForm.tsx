@@ -5,7 +5,6 @@ import toast from "react-hot-toast";
 import Button from "~/components/Button";
 import { TextInput } from "~/components/TextInput";
 import { api } from "~/utils/api";
-import { PiPasswordFill } from "react-icons/pi";
 import Model from "~/components/Modal";
 
 function MyProfileForm() {
@@ -20,7 +19,15 @@ function MyProfileForm() {
     onSuccess: async () => {
       toast.success("Updated Successfully");
     },
-    onError: (error, variables) => {
+    onError: (error) => {
+      toast.error(error.message);
+    },
+  });
+  const userUpdatePasswordMutation = api.user.updatePassword.useMutation({
+    onSuccess: async () => {
+      toast.success("Updated Successfully");
+    },
+    onError: (error) => {
       toast.error(error.message);
     },
   });
@@ -48,14 +55,17 @@ function MyProfileForm() {
   const onUpdatePassword = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
+    const password = String(formData.get("password"));
+    const confirmPassowrd = String(formData.get("confirmPassword"));
+    if (password != confirmPassowrd) {
+      toast.error("Confirm password does not match with password");
+      return;
+    }
     const postData = {
       password: String(formData.get("password")),
       confirmPassword: String(formData.get("confirmPassword")),
     };
-    console.log(postData);
-    // TODO handle update password
-    console.log("update password");
-    return true;
+    userUpdatePasswordMutation.mutate(postData);
   };
 
   const onDeleteAccount = () => {
