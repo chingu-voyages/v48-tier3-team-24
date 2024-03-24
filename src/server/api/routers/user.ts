@@ -47,11 +47,40 @@ export const userRouter = createTRPCRouter({
       } )
     } catch(error) {
       if(error instanceof TRPCError) throw error;
-        throw new TRPCError({
-          code: "INTERNAL_SERVER_ERROR",
-          message: "An unexpected error occurred.",
-          cause: error
-        });
+      throw new TRPCError({
+        code: "INTERNAL_SERVER_ERROR",
+        message: "An unexpected error occurred.",
+        cause: error
+      });
     }
+  }),
+  updatePassword: protectedProcedure.input(z.object({
+    password: z.string().min(8).max(20).transform(async (val) => await hash(val)),
+    confirmPassword: z.string().min(8).max(20).transform(async (val) => await hash(val))
+  })).mutation(async({ctx, input})=>{
+    try {
+      if ( input.password != input.confirmPassword) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Confirm password does not match with password"
+        });
+      }
+      return await ctx.db.user.update({
+        where: {
+          id: ctx.session.user.id
+        },
+        data : {
+          password: input.password
+        }
+      })
+    } catch (error) {
+      if(error instanceof TRPCError) throw error;
+      throw new TRPCError({
+        code: "INTERNAL_SERVER_ERROR",
+        message: "An unexpected error occurred.",
+        cause: error
+      });
+    }
+    
   })
 });
