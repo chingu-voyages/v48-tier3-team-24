@@ -145,10 +145,7 @@ function MyProfileForm() {
           </div>
         </div>
       </form>
-      <Model
-        modalOpen={updatePasswordModalOpen}
-        onCloseModal={setPasswordUpdateModalOpen}
-      >
+      <Model modalOpen={updatePasswordModalOpen}>
         <p className="mb-5 text-lg">Update Password</p>
         <form className="grid grid-cols-1 gap-5" onSubmit={onUpdatePassword}>
           <TextInput
