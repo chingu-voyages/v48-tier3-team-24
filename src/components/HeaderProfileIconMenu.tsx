@@ -14,7 +14,7 @@ export default function HeaderProfileIconMenu(props: HeaderDropDownMenuProps) {
     setOpenIconMenu(!openIconMenu);
   };
   const logout = async () => {
-    await signOut({redirect: true, callbackUrl: "/"});
+    await signOut({ redirect: true, callbackUrl: "/" });
   };
   return (
     <div className="relative">
@@ -32,7 +32,7 @@ export default function HeaderProfileIconMenu(props: HeaderDropDownMenuProps) {
           <HeaderDropDownMenuItem
             icon={<FaRegCircleUser className="text-xl" />}
             label="My Profile"
-            onClick={() => props.goTo("/profile")}
+            onClick={() => props.goTo("/dash/my-profile")}
           />
           <hr className="my-3"></hr>
           <HeaderDropDownMenuItem
