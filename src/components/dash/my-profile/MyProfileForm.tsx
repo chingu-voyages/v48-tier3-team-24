@@ -34,12 +34,17 @@ function MyProfileForm() {
       username: String(formData.get("username")),
       password: String(formData.get("password")),
     };
-
-    // update user
+    // update user info
     userUpdateMutation.mutate(postData);
   };
 
+  const onUpdatePassword = () => {
+    // TODO handle update password
+    console.log("update password")
+  }
+
   const onDeleteAccount = () => {
+    // TODO handle delete account
     console.log("delete");
   };
 
@@ -95,7 +100,7 @@ function MyProfileForm() {
             />
             {/* <Button outline="primary">Update Email</Button> */}
 
-            <Button outline="warning">Click here to update password</Button>
+            <Button outline="warning" onClick={onUpdatePassword}>Click here to update password</Button>
             {/* <TextInput id="password" label="Password" inputType="text" /> */}
             <div className="col-span-2 mt-10">
               <div className="flex w-full flex-wrap justify-between">
