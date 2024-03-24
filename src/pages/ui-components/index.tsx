@@ -17,6 +17,9 @@ const UiComponents = () => {
       <Link href="ui-components/header-demo">
         <p className="text-[#2245c6]">3. Go to Header Demo</p>
       </Link>
+      <Link href="ui-components/modal-demo">
+        <p className="text-[#2245c6]">4. Go to Modal demo</p>
+      </Link>
     </div>
   );
 };

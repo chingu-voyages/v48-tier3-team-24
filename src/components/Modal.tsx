@@ -3,10 +3,7 @@ import Button from "./Button";
 
 interface ModalProps {
   children?: ReactNode;
-  header?: ReactNode;
-  modalOpen?: boolean;
-  onModalConfirm?: () => void;
-  onCloseModal?: () => void;
+  modalOpen: boolean;
 }
 
 export default function Model(props: ModalProps) {
