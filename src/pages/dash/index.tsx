@@ -8,6 +8,7 @@ import UpcomingEvents from "~/components/Event/UpcomingEvents";
 import { useRouter } from "next/navigation";
 import { api } from "~/utils/api";
 import { SingleUpcomingEventType } from "schemas";
+import moment from "moment";
 
 export type EventsWithDatesAndPrivacy = {
   startDateTime: Date;
@@ -37,7 +38,21 @@ function UserDash() {
 
   // if the user clicks on a day, open a popup to pick the event on that date
   const handleOnClickedDay = (clickedDate: Date) => {
-    alert(clickedDate);
+    const clickedMoment = moment(clickedDate);
+    if (upcomingEvents) {
+      const clickedEvents = upcomingEvents.filter(
+        (event) =>
+          clickedMoment.isSameOrAfter(event.startDateTime, "days") &&
+          clickedMoment.isSameOrBefore(event.endDateTime, "days"),
+      );
+      // pass the the event id to either the event details page or a modal displaying all evnets on that date
+      if (clickedEvents?.length === 1) {
+        alert(clickedEvents.at(0)?.id);
+      } else {
+        const eventIdsOnDate = clickedEvents.map((event) => event.id)
+        alert(`ids on this date: ${eventIdsOnDate}`);
+      }
+    }
   };
 
   if (upcomingEvents && !eventsIsLoading && !eventsHasError) {
