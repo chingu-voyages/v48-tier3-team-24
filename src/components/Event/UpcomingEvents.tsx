@@ -4,6 +4,7 @@ import { EventUpcomingType } from "schemas";
 import Spinner from "../Spinner";
 import Button from "../Button";
 import { GrNext, GrPrevious, GrRewind, GrFastForward } from "react-icons/gr";
+import { number } from "zod";
 
 interface UpcomingEventsProps {
   data: EventUpcomingType | undefined;
@@ -92,30 +93,61 @@ const UpcomingEvents = ({ data, isLoading, isError }: UpcomingEventsProps) => {
         })}
       </div>
       {numberOfEvents > step && (
-        <div className="flex justify-center gap-4 my-8 border-t-2 border-gray-300 pt-4">
-          <button className={buttonStyles(eventIndex === 0)} onClick={() => setIndexBeginning()}>
-            <GrRewind />
-          </button>
-          <button className={buttonStyles(eventIndex < step)} onClick={() => moveIndexBack()}>
-            <GrPrevious />
-          </button>
-          <span className="my-auto text-xl">
-            {eventIndex + 1} ...{" "}
-            {eventIndex + step > numberOfEvents
-              ? numberOfEvents
-              : eventIndex + step}{" "}
-            of {numberOfEvents}
-          </span>
-          <button className={buttonStyles(eventIndex + step > numberOfEvents)} onClick={() => moveIndexForward()}>
-            <GrNext />
-          </button>
-          <button className={buttonStyles(eventIndex >= numberOfEvents-1)} onClick={() => setIndexEnd()}>
-            <GrFastForward />
-          </button>
-        </div>
+        <PaginationControl
+          index={eventIndex}
+          step={step}
+          total={numberOfEvents}
+          style={buttonStyles}
+          first={setIndexBeginning}
+          next={moveIndexForward}
+          prev={moveIndexBack}
+          last={setIndexEnd}
+        />
       )}
     </div>
   );
 };
+
+interface PaginationControlProps {
+  index: number;
+  step: number;
+  total: number;
+  style: (predicate: boolean) => string;
+  first: () => void;
+  next: () => void;
+  prev: () => void;
+  last: () => void;
+}
+
+const PaginationControl = ({
+  index,
+  step,
+  total,
+  style,
+  first,
+  next,
+  prev,
+  last,
+}: PaginationControlProps) => (
+  <div className="my-8 flex justify-center gap-4 border-t-2 border-gray-300 pt-4">
+    <button className={style(index === 0)} onClick={() => first()}>
+      <GrRewind />
+    </button>
+    <button className={style(index < step)} onClick={() => prev()}>
+      <GrPrevious />
+    </button>
+    <span className="my-auto text-xl">
+      {index + 1}
+      {index + step < total ? ` ... ${index + step}` : ""}
+      {` of ${total}`}
+    </span>
+    <button className={style(index + step > total)} onClick={() => next()}>
+      <GrNext />
+    </button>
+    <button className={style(index >= total - 1)} onClick={() => last()}>
+      <GrFastForward />
+    </button>
+  </div>
+);
 
 export default UpcomingEvents;
