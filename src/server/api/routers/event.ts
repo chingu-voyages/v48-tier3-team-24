@@ -1,5 +1,4 @@
 import { TRPCError } from "@trpc/server";
-import Error from "next/error";
 import { EventUpcomingSchema, NewEventSchema } from "schemas";
 import { z } from "zod";
 
@@ -19,10 +18,9 @@ export const eventRouter = createTRPCRouter({
       };
     }),
 
-  create: protectedProcedure
-    .input(NewEventSchema)
-    .mutation(async ({ ctx, input }) => {
-      return await ctx.db.event
+  create: protectedProcedure.input(NewEventSchema).mutation(
+    async ({ ctx, input }) =>
+      await ctx.db.event
         .create({
           data: {
             ...input,
@@ -39,15 +37,14 @@ export const eventRouter = createTRPCRouter({
           },
         })
         .then((data) => data.id)
-        .catch((e: TRPCError) => console.error(e.message));
-    }),
-
-  getLatest: protectedProcedure.query(({ ctx }) => {
-    return ctx.db.event.findFirst({
-      orderBy: { createdAt: "desc" },
-      where: { createdBy: { id: ctx.session.user.id } },
-    });
-  }),
+        .catch((e) => {
+          if (e instanceof TRPCError) throw e;
+          throw new TRPCError({
+            code: "INTERNAL_SERVER_ERROR",
+            message: "you dun goofed",
+          });
+        }),
+  ),
 
   getUpcomingEvents: protectedProcedure
     .output(EventUpcomingSchema)
