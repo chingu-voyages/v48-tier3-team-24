@@ -1,9 +1,5 @@
 import { z } from 'zod';
-import { EventStatusSchema } from '../inputTypeSchemas/EventStatusSchema'
-
-/////////////////////////////////////////
-// EVENT SCHEMA
-/////////////////////////////////////////
+import { EventStatusSchema } from 'generated/schemas';
 
 export const NewEventSchema = z.object({
   status: EventStatusSchema.default("UPCOMING"),

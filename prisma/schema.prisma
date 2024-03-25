@@ -7,7 +7,7 @@ generator client {
 
 generator zod {
     provider         = "npx zod-prisma-types"
-    output           = "../schemas"
+    output           = "../generated/schemas"
     useMultipleFiles = true
     createInputTypes = false
 }
