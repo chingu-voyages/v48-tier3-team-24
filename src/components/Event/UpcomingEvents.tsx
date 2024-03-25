@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { api } from "~/utils/api";
 import UpcomingEventTile from "./UpcomingEventTile";
 import { EventUpcomingType } from "schemas";
+import Spinner from "../Spinner";
 
 interface UpcomingEventsProps {
   data: EventUpcomingType | undefined
@@ -23,11 +24,15 @@ const UpcomingEvents = ({data, isLoading, isError}: UpcomingEventsProps) => {
   };
 
   if (isLoading && !data) {
-    return <div>Loading...Please wait</div>;
+    return <Spinner message="Loading...Please wait"/>;
+  }
+
+  if (isError) {
+    return <div>An error occurred while loading upcoming events</div>;
   }
 
   if (!data) {
-    return <div>Error loading upcoming events</div>;
+    return <div>No upcoming events.</div>;
   }
 
   return (

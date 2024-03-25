@@ -1,6 +1,6 @@
 import React from "react";
 import Calendar from "react-calendar";
-import { EventsWithDatesAndPrivacy } from "~/pages/dash";
+import type { EventsWithDatesAndPrivacy } from "~/pages/dash";
 
 interface EventCalendarProps {
   onChange: (clickedDate: Date) => void;
@@ -34,8 +34,8 @@ const EventCalendar = (props: EventCalendarProps) => {
           eventDate.startDateTime.getMonth() === date.getMonth() &&
           eventDate.startDateTime.getDate() === date.getDate(),
       );
-      let bullets: React.JSX.Element[] = [];
       if (eventsOnDate) {
+        let bullets: React.JSX.Element[] = [];
         eventsOnDate.map((event) => {
           if (event.isPrivate) {
             bullets.push(
@@ -47,9 +47,8 @@ const EventCalendar = (props: EventCalendarProps) => {
             );
           }
         });
+        return <div className="absolute inset-x-0 bottom-0">{bullets}</div>;
       }
-
-      return <div className="absolute inset-x-0 bottom-0">{bullets}</div>;
     }
   };
 
