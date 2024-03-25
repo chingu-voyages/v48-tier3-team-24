@@ -1,5 +1,5 @@
 import { useSession } from "next-auth/react";
-import React, { useState } from "react";
+import React from "react";
 import EventCalendar from "~/components/Event/EventCalendar";
 import Header from "~/components/Header";
 import Button from "~/components/Button";
@@ -7,18 +7,24 @@ import { FaPlus } from "react-icons/fa6";
 import UpcomingEvents from "~/components/Event/UpcomingEvents";
 import { useRouter } from "next/navigation";
 import { api } from "~/utils/api";
+import { SingleUpcomingEventType } from "schemas";
 
-type ValuePiece = Date | null;
-export type Value = ValuePiece | [ValuePiece, ValuePiece];
+export type EventsWithDatesAndPrivacy = {
+  startDateTime: Date;
+  endDateTime: Date;
+  isPrivate: boolean;
+};
 
 function UserDash() {
+  let enabledCalendarDays: EventsWithDatesAndPrivacy[] = [];
   const { data: sessionData } = useSession();
   const router = useRouter();
 
+  // pull out the bare minimum from the return object
   const {
     data: upcomingEvents,
     isLoading: eventsIsLoading,
-    isError: eventsIsError,
+    isError: eventsHasError,
   } = api.event.getUpcomingEvents.useQuery(undefined, {
     refetchInterval: false,
     refetchOnReconnect: false,
@@ -29,8 +35,23 @@ function UserDash() {
     return router.push("/dash/new");
   };
 
-  // for calendar picker
-  const [selectedDate, selectedDateOnChange] = useState<Value>(new Date());
+  // if the user clicks on a day, open a popup to pick the event on that date
+  const handleOnClickedDay = (clickedDate: Date) => {
+    alert(clickedDate);
+  };
+
+  if (upcomingEvents && !eventsIsLoading && !eventsHasError) {
+    // get the dates from any and all events returned
+    enabledCalendarDays = upcomingEvents.map(
+      (event: SingleUpcomingEventType): EventsWithDatesAndPrivacy => {
+        return {
+          startDateTime: event.startDateTime,
+          endDateTime: event.endDateTime,
+          isPrivate: event.isPrivate,
+        };
+      },
+    );
+  }
 
   if (!sessionData) {
     return <div>Access denied.</div>;
@@ -43,10 +64,10 @@ function UserDash() {
     <>
       <Header />
       <div className="mx-10 flex flex-col lg:flex-row">
-        <div className="mb-16 flex basis-1/3 flex-col gap-8 sm:px-12">
+        <div className="mb-16 flex basis-1/3 flex-col gap-4 sm:px-12">
           <p className="text-4xl font-bold">Hello {name},</p>
           <p className="text-2xl italic">
-            Find or Host an Event <br /> and Connect with Others
+            Find or Host an Event and Connect with Others
           </p>
           <Button
             variant="primary"
@@ -58,12 +79,19 @@ function UserDash() {
           </Button>
           <p className="text-4xl font-bold"></p>
           <span className="mb-5 self-center">
-            <EventCalendar onChange={selectedDateOnChange} />
+            <EventCalendar
+              onChange={handleOnClickedDay}
+              enabledDays={enabledCalendarDays}
+            />
           </span>
           <Button outline="info">Events I&apos;m hosting</Button>
           <Button outline="info">Events I&apos;m attending</Button>
         </div>
-        <UpcomingEvents data={upcomingEvents} isLoading={eventsIsLoading} isError={eventsIsError}/>
+        <UpcomingEvents
+          data={upcomingEvents}
+          isLoading={eventsIsLoading}
+          isError={eventsHasError}
+        />
       </div>
     </>
   );

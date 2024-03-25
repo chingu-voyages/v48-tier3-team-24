@@ -3,6 +3,7 @@ import { z } from "zod";
 export const SingleUpcomingEventSchema = z.object({
   id: z.string(),
   startDateTime: z.date(),
+  endDateTime: z.date(),
   name: z.string(),
   description: z.string(),
   image: z.string().default(""),
