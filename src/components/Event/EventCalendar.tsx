@@ -28,26 +28,28 @@ const EventCalendar = (props: EventCalendarProps) => {
 
   const tileContent = ({ date, view }: { date: Date; view: string }) => {
     if (view === "month") {
-      const matchingEventDate = props.enabledDays.find(
+      const eventsOnDate = props.enabledDays.filter(
         (eventDate) =>
           eventDate.startDateTime.getFullYear() === date.getFullYear() &&
           eventDate.startDateTime.getMonth() === date.getMonth() &&
           eventDate.startDateTime.getDate() === date.getDate(),
       );
-      if (matchingEventDate && matchingEventDate.isPrivate) {
-        return (
-          <span className="text-es-secondary absolute inset-x-0 bottom-0 text-3xl">
-            &bull;
-          </span>
-        );
+      let bullets: React.JSX.Element[] = [];
+      if (eventsOnDate) {
+        eventsOnDate.map((event) => {
+          if (event.isPrivate) {
+            bullets.push(
+              <span className="text-3xl text-es-secondary">&bull;</span>,
+            );
+          } else {
+            bullets.push(
+              <span className="text-3xl text-es-warning">&bull;</span>,
+            );
+          }
+        });
       }
-      else if ( matchingEventDate ){
-        return (
-          <span className="text-es-warning absolute inset-x-0 bottom-0 text-3xl">
-            &bull;
-          </span>
-        );
-      }
+
+      return <div className="absolute inset-x-0 bottom-0">{bullets}</div>;
     }
   };
 
