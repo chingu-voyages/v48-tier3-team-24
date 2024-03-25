@@ -7,10 +7,10 @@ import { api } from "~/utils/api";
 import { NewEventSchema, type NewEvent } from "schemas";
 
 interface NewEventProps {
-  reRoute: (path: string) => void
+  reRoute: (path: string) => void;
 }
 
-const NewEvent = ({reRoute}: NewEventProps) => {
+const NewEvent = ({ reRoute }: NewEventProps) => {
   const newEventMutation = api.event.create.useMutation();
 
   // to set up default values for the datetime pickers
@@ -34,9 +34,13 @@ const NewEvent = ({reRoute}: NewEventProps) => {
 
   const createNewEvent = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    console.log(formData)
-    await newEventMutation.mutateAsync(formData);
-    if (newEventMutation.isSuccess) reRoute("/dash")
+    let payload = formData;
+    payload["startDateTime"] = startDate
+    payload["endDateTime"] = startDate
+    await newEventMutation
+      .mutateAsync(payload)
+      .then(() => reRoute("/dash"))
+      .catch((e) => console.error(e));
   };
 
   // set up the props to modify the datepicker input box
