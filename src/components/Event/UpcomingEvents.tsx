@@ -136,13 +136,13 @@ const PaginationControl = ({
     </button>
     <span className="my-auto text-xl">
       {index + 1}
-      {index + step < total ? ` ... ${index + step}` : ""}
+      {index + step <= total ? ` ... ${index + step}` : ""}
       {` of ${total}`}
     </span>
-    <button className={style(index + step > total)} onClick={() => next()}>
+    <button className={style(index + step >= total)} onClick={() => next()}>
       <GrNext />
     </button>
-    <button className={style(index >= total - 1)} onClick={() => last()}>
+    <button className={style(index + step >= total)} onClick={() => last()}>
       <GrFastForward />
     </button>
   </div>
