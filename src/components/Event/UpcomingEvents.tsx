@@ -1,10 +1,8 @@
 import React, { useState } from "react";
 import UpcomingEventTile from "./UpcomingEventTile";
-import { EventUpcomingType } from "schemas";
+import type { EventUpcomingType } from "schemas";
 import Spinner from "../Spinner";
-import Button from "../Button";
 import { GrNext, GrPrevious, GrRewind, GrFastForward } from "react-icons/gr";
-import { number } from "zod";
 
 interface UpcomingEventsProps {
   data: EventUpcomingType | undefined;

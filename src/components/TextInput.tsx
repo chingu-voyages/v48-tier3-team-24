@@ -1,12 +1,16 @@
+import type { ChangeEvent } from "react";
+
 interface TextInputProps {
   type: "text" | "textArea" | "number";
   label: string;
   id: string;
-  required?: boolean
-  min?: number
-  max?: number
-  placeholder?: string
-  onChange?: (event: any) => void
+  required?: boolean;
+  min?: number;
+  max?: number;
+  placeholder?: string;
+  onChange?: (
+    event: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>,
+  ) => void;
 }
 
 export const TextInput = (props: TextInputProps) => {
@@ -20,8 +24,7 @@ export const TextInput = (props: TextInputProps) => {
         <textarea
           name={props.id}
           {...props}
-          className="w-full border-b-2 border-r-2 p-3 rounded-lg text-base sm:w-96 resize-none overflow-hidden"
-          
+          className="w-full resize-none overflow-hidden rounded-lg border-b-2 border-r-2 p-3 text-base sm:w-96"
         ></textarea>
       ) : (
         <input

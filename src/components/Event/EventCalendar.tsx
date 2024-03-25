@@ -35,7 +35,7 @@ const EventCalendar = (props: EventCalendarProps) => {
           eventDate.startDateTime.getDate() === date.getDate(),
       );
       if (eventsOnDate) {
-        let bullets: React.JSX.Element[] = [];
+        const bullets: React.JSX.Element[] = [];
         eventsOnDate.map((event) => {
           if (event.isPrivate) {
             bullets.push(

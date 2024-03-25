@@ -1,4 +1,4 @@
-import React, { useState, type FormEvent } from "react";
+import React, { useState, type ChangeEvent, type FormEvent } from "react";
 import Button from "../Button";
 import { TextInput } from "../TextInput";
 import Datetime from "react-datetime";
@@ -27,16 +27,18 @@ const NewEvent = ({ reRoute }: NewEventProps) => {
   // set up initial form state
   const [formData, setFormData] = useState<NewEvent>(NewEventSchema.parse({}));
 
-  const onFieldChange = (event: any) => {
-    const value = event.target.value;
-    setFormData({ ...formData, [event.target.id]: value });
+  const onFieldChange = (
+    event: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>,
+  ) => {
+    const value = event.currentTarget.value;
+    setFormData({ ...formData, [event.currentTarget.id]: value });
   };
 
   const createNewEvent = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    let payload = formData;
-    payload["startDateTime"] = startDate
-    payload["endDateTime"] = startDate
+    const payload = formData;
+    payload.startDateTime = startDate;
+    payload.endDateTime = startDate;
     await newEventMutation
       .mutateAsync(payload)
       .then(() => reRoute("/dash"))

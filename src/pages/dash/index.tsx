@@ -7,8 +7,8 @@ import { FaPlus } from "react-icons/fa6";
 import UpcomingEvents from "~/components/Event/UpcomingEvents";
 import { useRouter } from "next/navigation";
 import { api } from "~/utils/api";
-import { SingleUpcomingEventType } from "schemas";
 import moment from "moment";
+import type { SingleUpcomingEventType } from "schemas";
 
 export type EventsWithDatesAndPrivacy = {
   startDateTime: Date;
@@ -49,8 +49,8 @@ function UserDash() {
       if (clickedEvents?.length === 1) {
         alert(clickedEvents.at(0)?.id);
       } else {
-        const eventIdsOnDate = clickedEvents.map((event) => event.id)
-        alert(`ids on this date: ${eventIdsOnDate}`);
+        const eventIdsOnDate = clickedEvents.map((event) => event.id);
+        alert(`ids on this date: ${eventIdsOnDate.toString()}`);
       }
     }
   };
