@@ -1,122 +1,27 @@
 "use client";
-import { FaDiscord } from "react-icons/fa";
-import Button from "~/components/Button";
 
-export default function UiComponents(props) {
-  const onClick = () => {
-    console.log("I do nothing");
-  };
+import Link from "next/link";
+
+const UiComponents = () => {
   return (
-    <>
-      <div className="p-20">
-        <h1 className="mb-10 text-3xl font-bold">Components</h1>
-        <h2 className="mb-2 text-xl font-bold">Button</h2>
-        <div className="mb-5 flex flex-wrap gap-5">
-          <Button variant="primary">This is a button</Button>
-          <Button variant="warning">This is a button</Button>
-          <Button variant="danger">This is a button</Button>
-          <Button variant="info">This is a button</Button>
-        </div>
-
-        <h2 className="mb-2 text-xl font-bold">Button with Icon</h2>
-        <div className="mb-5 flex flex-wrap gap-5">
-          <Button variant="primary" icon={<FaDiscord className="text-3xl" />}>
-            This is a button
-          </Button>
-        </div>
-
-        <h2 className="mb-2 text-xl font-bold">Outline Button</h2>
-        <div className="mb-5 flex flex-wrap gap-5">
-          <Button outline="primary" icon={<FaDiscord className="text-3xl" />}>
-            This is a button
-          </Button>
-          <Button outline="warning" icon={<FaDiscord className="text-3xl" />}>
-            This is a button
-          </Button>
-          <Button outline="danger" icon={<FaDiscord className="text-3xl" />}>
-            This is a button
-          </Button>
-          <Button outline="info" icon={<FaDiscord className="text-3xl" />}>
-            This is a button
-          </Button>
-        </div>
-
-        <h2 className="mb-2 text-xl font-bold">Button with Text Size</h2>
-        <div className="mb-5 flex flex-wrap gap-5">
-          <Button
-            outline="primary"
-            size="sm"
-            icon={<FaDiscord className="text-3xl" />}
-          >
-            This is a button
-          </Button>
-          <Button
-            outline="primary"
-            size="md"
-            icon={<FaDiscord className="text-3xl" />}
-          >
-            This is a button
-          </Button>
-          <Button
-            outline="primary"
-            size="lg"
-            icon={<FaDiscord className="text-3xl" />}
-          >
-            This is a button
-          </Button>
-          <Button
-            outline="primary"
-            size="xl"
-            icon={<FaDiscord className="text-3xl" />}
-          >
-            This is a button
-          </Button>
-        </div>
-
-        <h2 className="mb-2 text-xl font-bold">Button with Border Radio</h2>
-        <div className="mb-5 flex flex-wrap gap-5">
-          <Button
-            outline="primary"
-            rounded="sm"
-            icon={<FaDiscord className="text-3xl" />}
-          >
-            This is a button
-          </Button>
-          <Button
-            outline="primary"
-            rounded="md"
-            icon={<FaDiscord className="text-3xl" />}
-          >
-            This is a button
-          </Button>
-          <Button
-            outline="primary"
-            rounded="lg"
-            icon={<FaDiscord className="text-3xl" />}
-          >
-            This is a button
-          </Button>
-          <Button
-            outline="primary"
-            rounded="xl"
-            icon={<FaDiscord className="text-3xl" />}
-          >
-            This is a button
-          </Button>
-        </div>
-
-        <h2 className="mb-2 text-xl font-bold">Button OnClick</h2>
-        <div className="mb-5 flex flex-wrap gap-5">
-          <Button
-            outline="primary"
-            rounded="sm"
-            icon={<FaDiscord className="text-3xl" />}
-            onClick={onClick}
-          >
-            This is a button
-          </Button>
-        </div>
-      </div>
-    </>
+    <div className="p-20">
+      <h1 className="mb-5 text-xl font-bold">Components List</h1>
+      <Link href="ui-components/button-demo">
+        <p className="text-[#2245c6]">1. Go to Button Component Demo</p>
+      </Link>
+      <Link href="ui-components/event-components-demo">
+        <p className="text-[#2245c6]">
+          2. Go to Event List & Event Card Component Demo
+        </p>
+      </Link>
+      <Link href="ui-components/header-demo">
+        <p className="text-[#2245c6]">3. Go to Header Demo</p>
+      </Link>
+      <Link href="ui-components/modal-demo">
+        <p className="text-[#2245c6]">4. Go to Modal demo</p>
+      </Link>
+    </div>
   );
-}
+};
+
+export default UiComponents;

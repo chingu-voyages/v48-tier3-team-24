@@ -9,7 +9,7 @@ const Login = () => {
   if(session.status === 'loading') return <>Loading</>;
 
   // If user is already logged in, redirect them to dashboard.
-  if(session.status === 'authenticated') router.push('/' /* @TODO change the route to actual dashboard */);
+  if(session.status === 'authenticated') router.push('/dash');
 
   return (
     <section className="flex flex-col items-center justify-center min-h-screen p-3">

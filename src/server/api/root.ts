@@ -1,4 +1,6 @@
 import { eventRouter } from "~/server/api/routers/event";
+import { authRouter } from "./routers/auth";
+import { userRouter } from "./routers/user";
 import { createTRPCRouter } from "~/server/api/trpc";
 
 /**
@@ -7,7 +9,9 @@ import { createTRPCRouter } from "~/server/api/trpc";
  * All routers added in /api/routers should be manually added here.
  */
 export const appRouter = createTRPCRouter({
-  post: eventRouter,
+  event: eventRouter,
+  auth: authRouter,
+  user: userRouter,
 });
 
 // export type definition of API

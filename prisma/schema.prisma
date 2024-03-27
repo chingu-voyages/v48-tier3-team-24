@@ -5,6 +5,12 @@ generator client {
     provider = "prisma-client-js"
 }
 
+generator zod {
+    provider = "npx zod-prisma-types"
+    output = "../schemas"
+    createInputTypes = false
+}
+
 datasource db {
     provider = "mysql"
     // Further reading:
@@ -14,7 +20,7 @@ datasource db {
 }
 
 model Event {
-    id              Int         @id @default(autoincrement())
+    id              String         @id @default(cuid())
     name            String // event title
     description     String      @db.Text
     startDateTime   DateTime
@@ -49,13 +55,13 @@ enum EventStatus {
 }
 
 model EventParticipants {
-    id Int @id @default(autoincrement())
+    id String @id @default(cuid())
 
     user   User   @relation(fields: [userId], references: [id])
     userId String
 
     event   Event @relation(fields: [eventId], references: [id])
-    eventId Int
+    eventId String
 
     createdAt DateTime @default(now()) // record when they join
 }
