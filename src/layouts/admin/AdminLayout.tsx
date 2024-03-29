@@ -28,7 +28,7 @@ export const AdminLayout = ({page}:AdminLayoutProps) => {
     <>
       <AdminNavBar session={session.data} />
       <AdminSideBar />
-      <section className="px-3 pt-14 md:pl-[300px]">
+      <section className="px-3 pt-14 pb-14 md:pl-[300px]">
         {page}
       </section>
       <AdminFooter />

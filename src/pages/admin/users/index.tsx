@@ -91,6 +91,7 @@ const AdminUserManagement = (
 
   return (
     <div className="flex flex-col gap-3">
+      <h1 className="text-center font-bold text-lg">User Accounts</h1>
       <UserAdminContext.Provider value={{
         page, setPage,
         total, setTotal,
