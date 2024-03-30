@@ -125,7 +125,7 @@ function MyProfileForm() {
             />
             {/* <Button outline="primary">Update Email</Button> */}
             <Button outline="warning" onClick={setPasswordUpdateModalOpen}>
-              Click here to update password
+              Change Password
             </Button>
             {/* <TextInput id="password" label="Password" inputType="text" /> */}
             <div className="col-span-2 mt-10">
