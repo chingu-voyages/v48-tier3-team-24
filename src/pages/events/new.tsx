@@ -1,6 +1,6 @@
 import React, { useState, type ChangeEvent, type FormEvent } from "react";
-import Button from "../Button";
-import { TextInput } from "../TextInput";
+import Button from "../../components/Button";
+import { TextInput } from "../../components/TextInput";
 import Datetime from "react-datetime";
 import moment, { type Moment } from "moment";
 import { api } from "~/utils/api";
@@ -36,9 +36,12 @@ const NewEvent = ({ reRoute }: NewEventProps) => {
 
   const createNewEvent = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+
     const payload = formData;
+    // overwrite the form dates with our current state. Not the correct type.
     payload.startDateTime = startDate;
     payload.endDateTime = startDate;
+    
     await newEventMutation
       .mutateAsync(payload)
       .then(() => reRoute("/dash"))

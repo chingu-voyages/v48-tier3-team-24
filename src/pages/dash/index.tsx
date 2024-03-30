@@ -1,14 +1,15 @@
 import { useSession } from "next-auth/react";
 import React from "react";
-import EventCalendar from "~/components/Event/EventCalendar";
 import Header from "~/components/Header";
 import Button from "~/components/Button";
 import { FaPlus } from "react-icons/fa6";
-import UpcomingEvents from "~/components/Event/UpcomingEvents";
 import { useRouter } from "next/navigation";
 import { api } from "~/utils/api";
 import moment from "moment";
 import type { SingleUpcomingEventType } from "schemas";
+import EventCalendar from "~/components/dash/EventCalendar";
+import UpcomingEvents from "~/components/dash/UpcomingEvents";
+import Link from "next/link";
 
 export type EventsWithDatesAndPrivacy = {
   startDateTime: Date;
@@ -33,7 +34,7 @@ function UserDash() {
   });
 
   const handleHostNewEvent = () => {
-    return router.push("/dash/new");
+    return router.push("/events/new");
   };
 
   // if the user clicks on a day, open a popup to pick the event on that date
@@ -69,7 +70,11 @@ function UserDash() {
   }
 
   if (!sessionData) {
-    return <div>Access denied.</div>;
+    return (
+      <>
+        Access denied.<Link href="/login">Go to login page.</Link>
+      </>
+    );
   }
 
   // get the (Discord) name of the user otherwise use their username.

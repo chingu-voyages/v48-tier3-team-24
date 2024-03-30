@@ -1,6 +1,6 @@
 import React from "react";
 import Calendar from "react-calendar";
-import type { EventsWithDatesAndPrivacy } from "~/pages/dash";
+import type { EventsWithDatesAndPrivacy } from "../../pages/dash";
 
 interface EventCalendarProps {
   onChange: (clickedDate: Date) => void;

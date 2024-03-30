@@ -1,8 +1,8 @@
 import React from "react";
 import Image from "next/image";
 import moment from "moment";
-import type { SingleUpcomingEventType } from "schemas";
 import { CiBookmark, CiImageOff, CiSaveUp2 } from "react-icons/ci";
+import type { SingleUpcomingEventType } from "schemas";
 
 interface UpcomingEventTileProps {
   data: SingleUpcomingEventType;
