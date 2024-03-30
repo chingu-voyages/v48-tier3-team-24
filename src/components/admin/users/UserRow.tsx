@@ -13,7 +13,7 @@ const UserRow = ({user}:{user:ClientUser}) => {
       <td className="whitespace-nowrap px-6 py-2">{user.email}</td>
       <td className="whitespace-nowrap px-6 py-2">{user.emailVerified?.toLocaleString()}</td>
       <td className="whitespace-nowrap px-6 py-2">
-        <div className="flex flex-row gap-5 text-es-primary">
+        <div className="flex flex-row gap-5 text-es-primary text-lg">
           <MdEdit className="cursor-pointer hover:text-es-warning" />
           <MdDelete className="cursor-pointer hover:text-es-danger" />
         </div>
