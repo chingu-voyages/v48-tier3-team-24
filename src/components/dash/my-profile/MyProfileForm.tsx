@@ -98,7 +98,7 @@ function MyProfileForm() {
             />
             <TextInput
               id="name"
-              label="Name (Discord)"
+              label="Discord Name"
               inputType="text"
               disable={true}
               readonly={true}
