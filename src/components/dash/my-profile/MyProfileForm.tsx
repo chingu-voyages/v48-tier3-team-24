@@ -6,6 +6,8 @@ import Button from "~/components/Button";
 import { TextInput } from "~/components/TextInput";
 import { api } from "~/utils/api";
 import Model from "~/components/Modal";
+import Link from "next/link";
+import { IoMdArrowBack } from "react-icons/io";
 
 function MyProfileForm() {
   const router = useRouter();
@@ -78,6 +80,12 @@ function MyProfileForm() {
       <form className="grid grid-cols-1 gap-5" onSubmit={onUpdateAccount}>
         <div className="rounded p-10 shadow">
           <div className="grid grid-cols-2 grid-rows-1 items-end gap-5">
+            <Link href="/dash" className="text-gray-500">
+              <div className="flex items-center gap-2">
+                <IoMdArrowBack />
+                Back
+              </div>
+            </Link>
             <div className="col-span-2">
               <h1 className="text-lg">Your Info</h1>
               <hr className="mt-2"></hr>
