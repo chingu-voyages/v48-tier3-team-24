@@ -42,7 +42,7 @@ const UserFilter = () => {
       <div className="flex flex-col relative">
         <label htmlFor="search" className="text-xs">Filter By</label>
         <input id="search" type="text" name="search" value={value} onChange={onInputChange} className="border border-es-primary px-3 py-1 pr-10" />
-        <button type="submit" className="absolute flex justify-center items-center right-0 top-4 text-white bg-es-primary w-[34px] h-[34px]">
+        <button type="submit" className="absolute flex justify-center items-center right-0 top-4 text-white bg-es-primary hover:bg-es-primary-light w-[34px] h-[34px]">
           <IoMdSearch />
         </button>
       </div>

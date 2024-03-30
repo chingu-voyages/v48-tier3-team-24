@@ -5,6 +5,8 @@ import { useState, createContext, useContext } from "react";
 import { AdminLayout } from "~/layouts/admin/AdminLayout";
 import { createCaller } from "~/utils/trpcCaller";
 import { getServerAuthSession } from "~/server/auth";
+import UserAddButton from "~/components/admin/users/UserAddButton";
+import UserAddEditModal from "~/components/admin/users/UserAddEditModal";
 import UserFilter from "~/components/admin/users/UserFilter";
 import UserPaginator from "~/components/admin/users/UserPaginator";
 import UserTable from "~/components/admin/users/UserTable";
@@ -32,6 +34,10 @@ interface UserAdminContext {
   setTotal: Dispatch<SetStateAction<number>>;
   search: string | null;
   setSearch: Dispatch<SetStateAction<string | null>>;
+  userModalOpen: boolean;
+  setUserModalOpen: Dispatch<SetStateAction<boolean>>;
+  modalUser: ClientUser | null;
+  setModalUser: Dispatch<SetStateAction<ClientUser | null>>;
 };
 
 const initialUserAdminContext:UserAdminContext = {
@@ -46,7 +52,11 @@ const initialUserAdminContext:UserAdminContext = {
   total: 0,
   setTotal: () => {return;},
   search: null,
-  setSearch: () => {return;}
+  setSearch: () => {return;},
+  userModalOpen: false,
+  setUserModalOpen: () => {return;},
+  modalUser: null,
+  setModalUser: () => {return;}
 };
 
 const UserAdminContext = createContext(initialUserAdminContext);
@@ -88,7 +98,14 @@ const AdminUserManagement = (
   const [ pages, setPages ] = useState<number> (Math.ceil(initialUsersState.total / initialUsersState.perPage));
   const [ search, setSearch ] = useState<string | null> (null);
   const [ users, setUsers ] = useState<ClientUser[]> (initialUsersState.users);
+  const [ userModalOpen, setUserModalOpen ] = useState<boolean> (false);
+  const [ modalUser, setModalUser ] = useState<ClientUser | null> (null);
 
+  const openUserAddModal = () => {
+    setModalUser(null);
+    setUserModalOpen(true);
+  };
+  
   return (
     <div className="flex flex-col gap-3">
       <h1 className="text-center font-bold text-lg">User Accounts</h1>
@@ -98,9 +115,15 @@ const AdminUserManagement = (
         perPage, setPerPage,
         pages, setPages,
         search, setSearch,
-        users, setUsers
+        users, setUsers,
+        userModalOpen, setUserModalOpen,
+        modalUser, setModalUser
       }}>
+        { (userModalOpen) &&
+          <UserAddEditModal user={modalUser}/>
+        }
         <UserFilter />
+        <UserAddButton onClick={openUserAddModal} />
         <UserTable />
         <UserPaginator />
       </UserAdminContext.Provider>
