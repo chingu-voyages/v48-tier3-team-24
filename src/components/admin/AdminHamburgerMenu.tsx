@@ -1,10 +1,10 @@
 import Link from "next/link";
-import type { Dispatch, MutableRefObject, SetStateAction } from "react";
+import type { Dispatch, SetStateAction } from "react";
 import { useRouter } from "next/router";
 
 const AdminHamburgerMenu = (
-  {reference, toggle, logout}:
-  {reference:MutableRefObject<null>, toggle:Dispatch<SetStateAction<boolean>>, logout:()=>void}
+  {toggle, logout}:
+  {toggle:Dispatch<SetStateAction<boolean>>, logout:()=>void}
 ) => {
   const router = useRouter();
   const selectedRoute = router.pathname.replace("/admin", "");
@@ -13,7 +13,7 @@ const AdminHamburgerMenu = (
   };
 
   return (
-    <ul ref={reference} onClick={closeMenu} className="md:hidden absolute top-12 left-0 right-0 bg-es-primary text-white">
+    <ul onClick={closeMenu} className="md:hidden absolute top-12 left-0 right-0 bg-es-primary text-white">
       <li className={`cursor-pointer ${selectedRoute === "/users" ? "bg-es-primary-light font-bold" : "hover:bg-es-primary-light"}`}>
         <Link href="/admin/users" className="block px-5 py-2">
           User Management
