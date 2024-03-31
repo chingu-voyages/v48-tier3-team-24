@@ -28,6 +28,18 @@ function MyProfileForm() {
   const userUpdatePasswordMutation = api.user.updatePassword.useMutation({
     onSuccess: async () => {
       toast.success("Updated Successfully");
+      onSetPasswordUpdateModalOpen();
+    },
+    onError: (error) => {
+      toast.error(error.message);
+    },
+  });
+  const userUpdateEmailMutation = api.user.updateEmail.useMutation({
+    onSuccess: async () => {
+      toast.success(
+        "Updated Successfully. Please check you email and verify your account .",
+      );
+      onSetEmailUpdateModalOpen();
     },
     onError: (error) => {
       toast.error(error.message);
@@ -35,6 +47,8 @@ function MyProfileForm() {
   });
   const { data: user } = api.user.getCurrentUser.useQuery();
   const [updatePasswordModalOpen, setUpdatePasswordModalOpen] =
+    useState<boolean>(false);
+  const [updateEmailModalOpen, setUpdateEmailModalOpen] =
     useState<boolean>(false);
 
   const onUpdateAccount = async (event: FormEvent<HTMLFormElement>) => {
@@ -50,7 +64,7 @@ function MyProfileForm() {
     userUpdateMutation.mutate(postData);
   };
 
-  const setPasswordUpdateModalOpen = () => {
+  const onSetPasswordUpdateModalOpen = () => {
     setUpdatePasswordModalOpen(!updatePasswordModalOpen);
   };
 
@@ -58,16 +72,30 @@ function MyProfileForm() {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
     const password = String(formData.get("password"));
-    const confirmPassowrd = String(formData.get("confirmPassword"));
-    if (password != confirmPassowrd) {
+    const confirmPassword = String(formData.get("confirmPassword"));
+    if (password != confirmPassword) {
       toast.error("Confirm password does not match with password");
       return;
     }
     const postData = {
-      password: String(formData.get("password")),
-      confirmPassword: String(formData.get("confirmPassword")),
+      password,
+      confirmPassword,
     };
     userUpdatePasswordMutation.mutate(postData);
+  };
+
+  const onSetEmailUpdateModalOpen = () => {
+    setUpdateEmailModalOpen(!updateEmailModalOpen);
+  };
+
+  const onUpdateEmail = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const formData = new FormData(event.currentTarget);
+    const email = String(formData.get("email"));
+    const postData = {
+      email,
+    };
+    userUpdateEmailMutation.mutate(postData);
   };
 
   const onDeleteAccount = () => {
@@ -132,8 +160,11 @@ function MyProfileForm() {
               defaultValue={user?.email ?? ""}
             />
             {/* <Button outline="primary">Update Email</Button> */}
-            <Button outline="warning" onClick={setPasswordUpdateModalOpen}>
+            <Button outline="warning" onClick={onSetPasswordUpdateModalOpen}>
               Change Password
+            </Button>
+            <Button outline="primary" onClick={onSetEmailUpdateModalOpen}>
+              Change Email
             </Button>
             {/* <TextInput id="password" label="Password" inputType="text" /> */}
             <div className="col-span-2 mt-10">
@@ -170,7 +201,27 @@ function MyProfileForm() {
           />
           <hr />
           <div className="flex w-full justify-between gap-5">
-            <Button outline="info" onClick={setPasswordUpdateModalOpen}>
+            <Button outline="info" onClick={onSetPasswordUpdateModalOpen}>
+              Cancel
+            </Button>
+            <Button variant="primary" type="submit">
+              Confirm
+            </Button>
+          </div>
+        </form>
+      </Model>
+      <Model modalOpen={updateEmailModalOpen}>
+        <p className="mb-5 text-lg">Update Email</p>
+        <form className="grid grid-cols-1 gap-5" onSubmit={onUpdateEmail}>
+          <TextInput
+            id="email"
+            label="New Email"
+            inputType="text"
+            required={true}
+          />
+          <hr />
+          <div className="flex w-full justify-between gap-5">
+            <Button outline="info" onClick={onSetEmailUpdateModalOpen}>
               Cancel
             </Button>
             <Button variant="primary" type="submit">
