@@ -4,6 +4,9 @@ interface TextInputProps {
   type: "text" | "textArea" | "number";
   label: string;
   id: string;
+  defaultValue?: string | undefined;
+  readonly?: boolean;
+  disable?: boolean;
   required?: boolean;
   min?: number;
   max?: number;

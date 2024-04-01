@@ -1,3 +1,4 @@
+import { TRPCError } from "@trpc/server";
 import { CalendarEventsSchema, EventUpcomingSchema } from "schemas";
 
 import {
@@ -28,23 +29,27 @@ export const dashRouter = createTRPCRouter({
     }),
   getUsersEvents: protectedProcedure
     .output(CalendarEventsSchema)
-    .query(({ ctx }) => {
-      return ctx.db.user.findFirst({
-        select: {
-          events: {
-            select: {
-              id: true,
-              startDateTime: true,
-              endDateTime: true,
-              isPrivate: true,
-              name: true,
-              image: true,
-              description: true,
+    .query(async ({ ctx }) => {
+      try {
+        return await ctx.db.user.findFirstOrThrow({
+          select: {
+            events: {
+              select: {
+                id: true,
+                startDateTime: true,
+                endDateTime: true,
+                isPrivate: true,
+                name: true,
+                image: true,
+                description: true,
+              },
+              orderBy: { startDateTime: "asc" },
             },
-            orderBy: { startDateTime: "asc" },
           },
-        },
-        where: { id: ctx.session.user.id },
-      });
+          where: { id: ctx.session.user.id },
+        });
+      } catch {
+        throw new TRPCError({ code: "NOT_FOUND" });
+      }
     }),
 });

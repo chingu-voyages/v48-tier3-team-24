@@ -121,21 +121,21 @@ function MyProfileForm() {
             <TextInput
               id="firstName"
               label="First Name"
-              inputType="text"
+              type="text"
               required={true}
               defaultValue={user?.firstName ?? ""}
             />
             <TextInput
               id="lastName"
               label="Last Name"
-              inputType="text"
+              type="text"
               required={true}
               defaultValue={user?.lastName ?? ""}
             />
             <TextInput
               id="name"
               label="Discord Name"
-              inputType="text"
+              type="text"
               disable={true}
               readonly={true}
               defaultValue={user?.name ?? ""}
@@ -147,26 +147,24 @@ function MyProfileForm() {
             <TextInput
               id="username"
               label="Username"
-              inputType="text"
+              type="text"
               required={true}
               defaultValue={user?.username ?? ""}
             />
             <TextInput
               id="email"
               label="Email"
-              inputType="text"
+              type="text"
               disable={true}
               readonly={true}
               defaultValue={user?.email ?? ""}
             />
-            {/* <Button outline="primary">Update Email</Button> */}
             <Button outline="warning" onClick={onSetPasswordUpdateModalOpen}>
               Change Password
             </Button>
             <Button outline="primary" onClick={onSetEmailUpdateModalOpen}>
               Change Email
             </Button>
-            {/* <TextInput id="password" label="Password" inputType="text" /> */}
             <div className="col-span-2 mt-10">
               <div className="flex w-full flex-wrap justify-between">
                 <Button variant="primary" type="submit">
@@ -190,13 +188,13 @@ function MyProfileForm() {
           <TextInput
             id="password"
             label="New Password"
-            inputType="text"
+            type="text"
             required={true}
           />
           <TextInput
             id="confirmPassword"
             label="Confirm Password"
-            inputType="text"
+            type="text"
             required={true}
           />
           <hr />
@@ -216,7 +214,7 @@ function MyProfileForm() {
           <TextInput
             id="email"
             label="New Email"
-            inputType="text"
+            type="text"
             required={true}
           />
           <hr />

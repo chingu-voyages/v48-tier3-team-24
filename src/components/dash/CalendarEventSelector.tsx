@@ -11,7 +11,7 @@ const CalendarEventSelector = ({
 }) => {
   return (
     <Modal modalOpen={toggle}>
-      {events.events.map((event) => (
+      {events!.events.map((event) => (
         <div></div>
       ))}
     </Modal>

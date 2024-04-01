@@ -27,7 +27,7 @@ function UserDash() {
     data: upcomingEvents,
     isLoading: eventsIsLoading,
     isError: eventsHasError,
-  } = api.event.getUpcomingEvents.useQuery(undefined, {
+  } = api.dash.getUpcomingEvents.useQuery(undefined, {
     refetchInterval: false,
     refetchOnReconnect: false,
     refetchOnWindowFocus: false,
@@ -41,14 +41,19 @@ function UserDash() {
   const handleOnClickedDay = (clickedDate: Date) => {
     const clickedMoment = moment(clickedDate);
     if (upcomingEvents) {
+      // get the events on the clicked date
       const clickedEvents = upcomingEvents.filter(
-        (event) =>
+        (event: SingleUpcomingEventType) =>
           clickedMoment.isSameOrAfter(event.startDateTime, "days") &&
           clickedMoment.isSameOrBefore(event.endDateTime, "days"),
       );
+
+      if (!clickedEvents) return;
+
       // pass the the event id to either the event details page or a modal displaying all evnets on that date
-      if (clickedEvents?.length === 1) {
-        alert(clickedEvents.at(0)?.id);
+      if (clickedEvents.length === 1) {
+        // alert(clickedEvents.at(0)?.id);
+        return router.push(`/events/${clickedEvents[0]!.id}`);
       } else {
         const eventIdsOnDate = clickedEvents.map((event) => event.id);
         alert(`ids on this date: ${eventIdsOnDate.toString()}`);
@@ -77,15 +82,12 @@ function UserDash() {
     );
   }
 
-  // get the (Discord) name of the user otherwise use their username.
-  const name = sessionData.user.name ?? sessionData.user.username;
-
   return (
     <>
       <Header />
       <div className="mx-10 flex flex-col lg:flex-row">
         <div className="mb-16 flex basis-1/3 flex-col gap-4 sm:px-12">
-          <p className="text-4xl font-bold">Hello {name},</p>
+          <p className="text-4xl font-bold">Hello {sessionData.user.name ?? sessionData.user.username},</p>
           <p className="text-2xl italic">
             Find or Host an Event and Connect with Others
           </p>

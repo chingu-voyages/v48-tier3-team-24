@@ -13,8 +13,7 @@ export const CalendarEventSchema = z.object({
 export const CalendarEventsSchema = z
   .object({
     events: z.array(CalendarEventSchema),
-  })
-  .nullable();
+  });
 
 export type CalendarEventsType = z.infer<typeof CalendarEventsSchema>;
 
