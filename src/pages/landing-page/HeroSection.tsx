@@ -7,27 +7,26 @@ import Image from "next/image";
 export default function HeroSection() {
   const router = useRouter();
   const session = useSession();
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
  
   const goTo = async (route: string) => {
     await router.push(route);
   };
   return (
     <>
-      <div className="grid grid-cols-2 grid-rows-2 gap-x-7 p-20 pt-36">
+      <div className="grid md:grid-cols-2 grid-rows-1 p-20 pt-36">
         <div className="rounded text-wrap">
-        <h1 className="text-3xl pb-3">Find your tribe, explore interests, and create memorable experiences close to home</h1>
-        <h2 className="grid row-start-1">Connect. Collaborate. Create: Your Community Hub</h2>
+        <h1 className="lg:text-5xl sm:text-3xl sm:pr-0 md:pr-20 pb-3 font-black leading-relaxed">Find your tribe, explore interests, and create memorable experiences close to home</h1>
+        <h2 className="lg:text-2xl italic sm:pb-20">Connect. Collaborate. Create: Your Community Hub</h2>
         </div>
-        <div className="self-center justify-self-center">
+        <div className="self-center justify-self-center sm:pb-20">
           <Image
             src="/img/landing-page.png"
-            width={550}
+            width={750}
             height={150}
             alt="Dashboard example"
           />
         </div>
-        <Button className="grid row-start-2" onClick={() => session.status === "authenticated" ? goTo("/dash") : goTo("/login")} outline="primary">Host an Event</Button>
+        <Button className="bg-gradient-to-r from-blue-900 to-green-500 text-white font-semibold py-2 px-4 rounded-md shadow-md hover:from-blue-600 hover:to-green-600" onClick={() => session.status === "authenticated" ? goTo("/dash") : goTo("/login")} outline="primary">Host an Event</Button>
       </div>
     </>
   );
