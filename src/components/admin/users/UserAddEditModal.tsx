@@ -17,9 +17,14 @@ const UserAddEditModal = ({user}:{user:ClientUser | null}) => {
         <h1 className="text-lg text-center font-bold">
           {!isEdit ? "Create New User" : `Edit User - ${user.username ?? user.name}`}
         </h1>
-        <button type="button" onClick={() => setUserModalOpen(false)}>
-          Cancel
-        </button>
+        <div>
+          <button type="submit">
+            Save
+          </button>
+          <button type="button" onClick={() => setUserModalOpen(false)}>
+            Cancel
+          </button>
+        </div>
       </form>
     </Modal>
   );
