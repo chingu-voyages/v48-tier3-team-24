@@ -15,8 +15,8 @@ export default function HeroSection() {
     <>
       <div className="grid md:grid-cols-2 grid-rows-1 p-20 pt-36">
         <div className="rounded text-wrap">
-        <h1 className="lg:text-5xl sm:text-3xl sm:pr-0 md:pr-20 pb-3 font-black leading-relaxed">Find your tribe, explore interests, and create memorable experiences close to home</h1>
-        <h2 className="lg:text-2xl italic sm:pb-20">Connect. Collaborate. Create: Your Community Hub</h2>
+        <h1 className="lg:text-5xl sm:text-3xl text-3xl sm:pr-0 md:pr-20 pb-3 font-black leading-relaxed">Find your tribe, explore interests, and create memorable experiences close to home</h1>
+        <h2 className="lg:text-2xl italic sm:pb-20 pb-20">Connect. Collaborate. Create: Your Community Hub</h2>
         </div>
         <div className="self-center justify-self-center sm:pb-20">
           <Image
