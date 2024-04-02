@@ -13,12 +13,13 @@ export default function HeroSection() {
   };
   return (
     <>
-      <div className="grid md:grid-cols-2 grid-rows-1 p-20 pt-30">
-        <div className="rounded text-wrap">
+      <div className="grid md:grid-cols-4 grid-rows-1 p-20 pt-30">
+        <div className="rounded text-wrap col-span-1">
           <h1 className="lg:text-5xl sm:text-3xl text-3xl sm:pr-0 md:pr-20 pb-3 font-black leading-relaxed">Find your tribe, explore interests, and create memorable experiences close to home</h1>
           <h2 className="lg:text-2xl italic sm:pb-20 pb-20">Connect. Collaborate. Create: Your Community Hub</h2>
+          <Button className="bg-gradient-to-r from-blue-900 to-green-500 text-white font-semibold py-2 px-4 rounded-md shadow-md hover:from-blue-600 hover:to-green-600" onClick={() => session.status === "authenticated" ? goTo("/dash") : goTo("/login")} outline="primary">Host an Event</Button>
         </div>
-        <div className="self-center justify-self-center sm:pb-20 md:pb-0 lg:pb-0 pb-20">
+        <div className="self-center justify-self-center sm:pb-20 md:pb-0 lg:pb-0 pb-20 col-span-3">
           <Image
             src="/img/landing-page.png"
             width={750}
@@ -26,7 +27,7 @@ export default function HeroSection() {
             alt="Dashboard example"
           />
         </div>
-        <Button className="bg-gradient-to-r from-blue-900 to-green-500 text-white font-semibold py-2 px-4 rounded-md shadow-md hover:from-blue-600 hover:to-green-600" onClick={() => session.status === "authenticated" ? goTo("/dash") : goTo("/login")} outline="primary">Host an Event</Button>
+       
       </div>
     </>
   );
