@@ -25,18 +25,26 @@ function UserDash() {
   const [calendarPickerToggle, setCalendarPickerToggle] =
     useState<boolean>(false);
 
-  // pull out the bare minimum from the return object
-  const {
-    data: upcomingEvents,
-    isLoading: eventsIsLoading,
-    isError: eventsHasError,
-  } = api.dash.getUpcomingEvents.useQuery(undefined, {
-    refetchInterval: false,
-    refetchOnReconnect: false,
-    refetchOnWindowFocus: false,
-  });
-
-  const { data: calendarEvents } = api.dash.getUsersEvents.useQuery();
+  // load the page's data
+  const [
+    {
+      data: upcomingEvents,
+      isLoading: eventsIsLoading,
+      isError: eventsHasError,
+    },
+    { data: calendarEvents },
+  ] = api.useQueries((t) => [
+    t.dash.getUpcomingEvents(undefined, {
+      refetchInterval: false,
+      refetchOnReconnect: false,
+      refetchOnWindowFocus: false,
+    }),
+    t.dash.getUsersEvents(undefined, {
+      refetchInterval: false,
+      refetchOnReconnect: false,
+      refetchOnWindowFocus: false,
+    }),
+  ]);
 
   const handleHostNewEvent = () => {
     return router.push("/events/new");
@@ -66,13 +74,13 @@ function UserDash() {
   };
 
   const handleEventSelected = (id: string) => {
-    setCalendarPickerToggle(false)
-    router.push(`/events/${id}`)
+    setCalendarPickerToggle(false);
+    router.push(`/events/${id}`);
   };
 
   const handleEventCancel = () => {
-    setCalendarPickerToggle(false)
-  }
+    setCalendarPickerToggle(false);
+  };
 
   if (upcomingEvents && !eventsIsLoading && !eventsHasError) {
     // get the dates from any and all events returned
