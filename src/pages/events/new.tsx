@@ -5,13 +5,11 @@ import Datetime from "react-datetime";
 import moment, { type Moment } from "moment";
 import { api } from "~/utils/api";
 import { NewEventSchema, type NewEvent } from "schemas";
+import { useRouter } from "next/navigation";
 
-interface NewEventProps {
-  reRoute: (path: string) => void;
-}
-
-const NewEvent = ({ reRoute }: NewEventProps) => {
+const NewEvent = () => {
   const newEventMutation = api.event.create.useMutation();
+  const router = useRouter();
 
   // to set up default values for the datetime pickers
   const now = moment().minutes(0);
@@ -44,7 +42,7 @@ const NewEvent = ({ reRoute }: NewEventProps) => {
     
     await newEventMutation
       .mutateAsync(payload)
-      .then(() => reRoute("/dash"))
+      .then(() => router.push("/dash"))
       .catch((e) => console.error(e));
   };
 
@@ -97,8 +95,9 @@ const NewEvent = ({ reRoute }: NewEventProps) => {
         </div>
         <div className="flex flex-col justify-start gap-5 px-5">
           <div>
-            <label>What day does your event begin?</label>
+            <label>When does your event begin?</label>
             <Datetime
+              value={startDate}
               initialValue={startDate}
               isValidDate={blockDays}
               inputProps={datePickerInputProps}
@@ -106,6 +105,9 @@ const NewEvent = ({ reRoute }: NewEventProps) => {
                 // if it's a string, it's invalid
                 // TODO: add a toast?
                 if (typeof event === "string") return;
+
+                if (event.toDate() > endDate) setEndDate(event.toDate())
+
                 setStartDate(event.toDate());
               }}
             />
@@ -113,6 +115,7 @@ const NewEvent = ({ reRoute }: NewEventProps) => {
           <div>
             <label>When does your event end?</label>
             <Datetime
+              value={endDate}
               initialValue={endDate}
               isValidDate={blockDays}
               inputProps={datePickerInputProps}
@@ -120,6 +123,7 @@ const NewEvent = ({ reRoute }: NewEventProps) => {
                 // if it's a string, it's invalid
                 // TODO: add a toast?
                 if (typeof event === "string") return;
+
                 setEndDate(event.toDate());
               }}
             />
@@ -147,6 +151,7 @@ const NewEvent = ({ reRoute }: NewEventProps) => {
         <Button type="submit" outline="primary">
           Create
         </Button>
+        <Button type="button" outline="info" onClick={() => router.push("/dash")}>Cancel</Button>
       </form>
     </div>
   );

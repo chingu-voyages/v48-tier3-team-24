@@ -1,5 +1,5 @@
 import { useSession } from "next-auth/react";
-import React from "react";
+import React, { useState } from "react";
 import Header from "~/components/Header";
 import Button from "~/components/Button";
 import { FaPlus } from "react-icons/fa6";
@@ -10,6 +10,7 @@ import type { SingleUpcomingEventType } from "schemas";
 import EventCalendar from "~/components/dash/EventCalendar";
 import UpcomingEvents from "~/components/dash/UpcomingEvents";
 import Link from "next/link";
+import CalendarEventPicker from "~/components/dash/CalendarEventPicker";
 
 export type EventsWithDatesAndPrivacy = {
   startDateTime: Date;
@@ -21,6 +22,8 @@ function UserDash() {
   let enabledCalendarDays: EventsWithDatesAndPrivacy[] = [];
   const { data: sessionData } = useSession();
   const router = useRouter();
+  const [calendarPickerToggle, setCalendarPickerToggle] =
+    useState<boolean>(false);
 
   // pull out the bare minimum from the return object
   const {
@@ -32,6 +35,8 @@ function UserDash() {
     refetchOnReconnect: false,
     refetchOnWindowFocus: false,
   });
+
+  const { data: calendarEvents } = api.dash.getUsersEvents.useQuery();
 
   const handleHostNewEvent = () => {
     return router.push("/events/new");
@@ -55,11 +60,19 @@ function UserDash() {
         // alert(clickedEvents.at(0)?.id);
         return router.push(`/events/${clickedEvents[0]!.id}`);
       } else {
-        const eventIdsOnDate = clickedEvents.map((event) => event.id);
-        alert(`ids on this date: ${eventIdsOnDate.toString()}`);
+        setCalendarPickerToggle(true);
       }
     }
   };
+
+  const handleEventSelected = (id: string) => {
+    setCalendarPickerToggle(false)
+    router.push(`/events/${id}`)
+  };
+
+  const handleEventCancel = () => {
+    setCalendarPickerToggle(false)
+  }
 
   if (upcomingEvents && !eventsIsLoading && !eventsHasError) {
     // get the dates from any and all events returned
@@ -87,7 +100,9 @@ function UserDash() {
       <Header />
       <div className="mx-10 flex flex-col lg:flex-row">
         <div className="mb-16 flex basis-1/3 flex-col gap-4 sm:px-12">
-          <p className="text-4xl font-bold">Hello {sessionData.user.name ?? sessionData.user.username},</p>
+          <p className="text-4xl font-bold">
+            Hello {sessionData.user.name ?? sessionData.user.username},
+          </p>
           <p className="text-2xl italic">
             Find or Host an Event and Connect with Others
           </p>
@@ -115,6 +130,12 @@ function UserDash() {
           isError={eventsHasError}
         />
       </div>
+      <CalendarEventPicker
+        events={calendarEvents}
+        toggle={calendarPickerToggle}
+        handleEventSelected={handleEventSelected}
+        handleEventCancel={handleEventCancel}
+      />
     </>
   );
 }

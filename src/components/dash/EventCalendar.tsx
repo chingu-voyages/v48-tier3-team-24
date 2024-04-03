@@ -36,14 +36,14 @@ const EventCalendar = (props: EventCalendarProps) => {
       );
       if (eventsOnDate) {
         const bullets: React.JSX.Element[] = [];
-        eventsOnDate.map((event) => {
+        eventsOnDate.map((event, index) => {
           if (event.isPrivate) {
             bullets.push(
-              <span className="text-3xl text-es-secondary">&bull;</span>,
+              <span key={index} className="text-3xl text-es-secondary">&bull;</span>,
             );
           } else {
             bullets.push(
-              <span className="text-3xl text-es-warning">&bull;</span>,
+              <span key={index} className="text-3xl text-es-warning">&bull;</span>,
             );
           }
         });

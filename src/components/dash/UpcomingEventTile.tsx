@@ -3,6 +3,7 @@ import Image from "next/image";
 import moment from "moment";
 import { CiBookmark, CiImageOff, CiSaveUp2 } from "react-icons/ci";
 import type { SingleUpcomingEventType } from "schemas";
+import IconTooltip from "../IconTooltip";
 
 interface UpcomingEventTileProps {
   data: SingleUpcomingEventType;
@@ -53,29 +54,31 @@ const UpcomingEventTile = ({
         </p>
         <div className="flex flex-row justify-between">
           {data.isPrivate ? (
-            <div className="bg-es-secondary-light-100 max-h-7 rounded-lg px-8">
+            <div className="max-h-7 rounded-lg bg-es-secondary-light-100 px-8">
               <span className="text-xl font-bold text-es-secondary">
                 Private
               </span>
             </div>
           ) : (
-            <div className="bg-es-warning-light-100 max-h-7 rounded-lg px-6">
-              <span className="text-xl font-bold text-es-warning">
-                Public
-              </span>
+            <div className="max-h-7 rounded-lg bg-es-warning-light-100 px-6">
+              <span className="text-xl font-bold text-es-warning">Public</span>
             </div>
           )}
           <div className="mr-10 flex flex-row gap-4">
-            <CiSaveUp2
-              className="cursor-pointer hover:shadow-lg"
-              size={40}
-              onClick={() => handleOnClickDetails(data.id)}
-            />
-            <CiBookmark
-              className="cursor-pointer hover:shadow-lg"
-              size={40}
-              onClick={() => handleOnClickBookmark(data.id)}
-            />
+            <IconTooltip tooltip="Details">
+              <CiSaveUp2
+                className="cursor-pointer hover:shadow-lg"
+                size={40}
+                onClick={() => handleOnClickDetails(data.id)}
+              />
+            </IconTooltip>
+            <IconTooltip tooltip="Bookmark">
+              <CiBookmark
+                className="cursor-pointer hover:shadow-lg"
+                size={40}
+                onClick={() => handleOnClickBookmark(data.id)}
+              />
+            </IconTooltip>
           </div>
         </div>
       </div>

@@ -1,9 +1,14 @@
+import { useRouter } from "next/router";
 import React from "react";
 
-const EventDetails = (params: { id: string }) => {
+const EventDetails = () => {
+  const router = useRouter()
+  // use the id to query the DB for the full dataset for this event
+  const id = router.query.id
+
   return (
     <div>
-      EventDetails<br>{params.id}</br>
+      EventDetails<br/>{id}
     </div>
   );
 };

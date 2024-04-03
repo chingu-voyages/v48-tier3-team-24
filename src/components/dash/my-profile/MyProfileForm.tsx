@@ -1,6 +1,6 @@
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { FormEvent, useState } from "react";
+import { type FormEvent, useState } from "react";
 import toast from "react-hot-toast";
 import Button from "~/components/Button";
 import { TextInput } from "~/components/TextInput";
