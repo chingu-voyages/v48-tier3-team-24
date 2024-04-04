@@ -5,9 +5,16 @@ import {
   protectedProcedure,
 } from "~/server/api/trpc";
 import { TRPCError } from "@trpc/server";
+<<<<<<< HEAD
 import toast from "react-hot-toast";
 
 
+=======
+import { getBaseUrl } from "~/utils/base";
+import { randomUUID } from "crypto";
+import { sendChangeEmailVerification } from "~/server/mail";
+import { User } from '../../../../schemas/index';
+>>>>>>> 0dc4531d6d70344407a3e3846b7ff110a10f36f0
 
 export const userRouter = createTRPCRouter({
   getCurrentUser: protectedProcedure.query(({ctx})=>{
@@ -21,7 +28,10 @@ export const userRouter = createTRPCRouter({
     firstName: z.string().min(1).max(20),
     lastName: z.string().min(1).max(20),
     username: z.string().min(3).max(20),
+<<<<<<< HEAD
     // password: z.string().min(8).max(20).transform(async (val) => await hash(val)),
+=======
+>>>>>>> 0dc4531d6d70344407a3e3846b7ff110a10f36f0
   })).mutation(async({ ctx, input }) => {
     try {
       const findUserByUsername = await ctx.db.user.findUnique({
@@ -75,6 +85,54 @@ export const userRouter = createTRPCRouter({
         cause: error
       });
     }
+<<<<<<< HEAD
     
+=======
+  }),
+  updateEmail: protectedProcedure.input(z.object({
+    email: z.string().min(1).email()
+  })).mutation(async({ctx, input})=>{
+    try {
+      // Get a datetime that is 30 minutes from now
+      const expires = new Date();
+      expires.setMinutes(expires.getMinutes() + 30);
+      const token = randomUUID();
+      // Email verification URL
+      const verifyUrl = `${getBaseUrl()}/verify-email/${token}`;
+
+      // Create an email verification token
+      await ctx.db.verificationToken.create({
+        data: {
+          identifier: ctx.session.user.id,
+          token: token,
+          expires: expires
+        }
+      });
+       // Mail the email verify url to the email address
+       await sendChangeEmailVerification(input.email, verifyUrl);
+
+       // update user email and emailVerified
+       const user = await ctx.db.user.update({
+        where: {
+          id: ctx.session.user.id
+        },
+        data: {
+          email: input.email,
+          emailVerified: null
+        }
+       })
+
+       return {
+        user
+       }
+    } catch (error) {
+      if(error instanceof TRPCError) throw error;
+      throw new TRPCError({
+        code: "INTERNAL_SERVER_ERROR",
+        message: "An unexpected error occurred.",
+        cause: error
+      });
+    }
+>>>>>>> 0dc4531d6d70344407a3e3846b7ff110a10f36f0
   })
 });

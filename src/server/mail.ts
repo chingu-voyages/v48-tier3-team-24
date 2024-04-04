@@ -38,4 +38,13 @@ export const sendEmailVerification = async (to:string, url:string) => {
     );
 }
 
+export const sendChangeEmailVerification = async (to:string, url:string) => {
+    return await sendEmail(
+        to,
+        "EventSync: Account Verification Requested",
+        `You have successfully changed your email! Please verify your account here: ${url}`,
+        `<p>You have successfully changed your email! Please verify your account <a href="${url}">here</a>.`
+    );
+}
+
 export default transporter;
