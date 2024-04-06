@@ -33,7 +33,7 @@ const LoginForm = () => {
       className="flex h-full w-full flex-col items-center gap-5 sm:w-2/5"
     >
       <h1 className="text-3xl font-bold text-blue-800">EventSync</h1>
-      <div className="relative flex flex-col">
+      <div className="relative flex flex-col w-full sm:w-96">
         <label htmlFor="username" className="text-sm">
           Username
         </label>
@@ -43,10 +43,10 @@ const LoginForm = () => {
           type="text"
           name="username"
           required
-          className="w-full border py-3 pl-10 pr-5 text-base sm:w-96"
+          className="w-full border py-3 pl-10 pr-5 text-base"
         />
       </div>
-      <div className="relative flex flex-col">
+      <div className="relative flex flex-col w-full sm:w-96">
         <label htmlFor="password" className="text-sm">
           Password
         </label>
@@ -56,7 +56,7 @@ const LoginForm = () => {
           type="password"
           name="password"
           required
-          className="w-full border py-3 pl-10 pr-5 text-base sm:w-96"
+          className="w-full border py-3 pl-10 pr-5 text-base"
         />
       </div>
       <button
@@ -76,6 +76,9 @@ const LoginForm = () => {
       </button>
       <Link href="/register" className="text-lg hover:text-blue-800">
         Register
+      </Link>
+      <Link href="/recover" className="text-sm sm:text-lg hover:text-blue-800">
+        Forgot username or password?
       </Link>
     </form>
   );
