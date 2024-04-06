@@ -7,7 +7,6 @@ import { useRouter } from "next/navigation";
 import { api } from "~/utils/api";
 import moment from "moment";
 import type {
-  CalendarEventsType,
   EventUpcomingType,
   SingleUpcomingEventType,
 } from "schemas";
@@ -73,7 +72,7 @@ function UserDash() {
       // pass the the event id to either the event details page or a modal displaying all evnets on that date
       setCalendarPickerToggle(true);
       setEventsOnDay(() =>
-        upcomingEvents.filter((event) =>
+        calendarEvents?.events.filter((event: { startDateTime: moment.MomentInput; }) =>
           clickedMoment.isSame(event.startDateTime, "day"),
         ),
       );

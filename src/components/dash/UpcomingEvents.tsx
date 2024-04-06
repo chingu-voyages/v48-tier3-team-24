@@ -3,7 +3,7 @@ import UpcomingEventTile from "./UpcomingEventTile";
 import type { EventUpcomingType } from "schemas";
 import { GrNext, GrPrevious, GrRewind, GrFastForward } from "react-icons/gr";
 import Spinner from "../Spinner";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 
 interface UpcomingEventsProps {
   data: EventUpcomingType | undefined;
