@@ -40,4 +40,4 @@ coding!
 
 - Teammate name Ivan Alejandre: [GitHub](https://github.com/ialej001)
 
-- Teammate name #n: [GitHub](https://github.com/ghaccountname) / [LinkedIn](https://linkedin.com/in/liaccountname)
+- Teammate name Wendy Kuo: [GitHub](https://github.com/codergirl01)
