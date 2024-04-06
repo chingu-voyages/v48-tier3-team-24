@@ -6,7 +6,11 @@ import { FaPlus } from "react-icons/fa6";
 import { useRouter } from "next/navigation";
 import { api } from "~/utils/api";
 import moment from "moment";
-import type { SingleUpcomingEventType } from "schemas";
+import type {
+  CalendarEventsType,
+  EventUpcomingType,
+  SingleUpcomingEventType,
+} from "schemas";
 import EventCalendar from "~/components/dash/EventCalendar";
 import UpcomingEvents from "~/components/dash/UpcomingEvents";
 import Link from "next/link";
@@ -24,6 +28,9 @@ function UserDash() {
   const router = useRouter();
   const [calendarPickerToggle, setCalendarPickerToggle] =
     useState<boolean>(false);
+  const [eventsOnDay, setEventsOnDay] = useState<EventUpcomingType | undefined>(
+    [],
+  );
 
   // load the page's data
   const [
@@ -64,12 +71,12 @@ function UserDash() {
       if (!clickedEvents) return;
 
       // pass the the event id to either the event details page or a modal displaying all evnets on that date
-      if (clickedEvents.length === 1) {
-        // alert(clickedEvents.at(0)?.id);
-        return router.push(`/events/${clickedEvents[0]!.id}`);
-      } else {
-        setCalendarPickerToggle(true);
-      }
+      setCalendarPickerToggle(true);
+      setEventsOnDay(() =>
+        upcomingEvents.filter((event) =>
+          clickedMoment.isSame(event.startDateTime, "day"),
+        ),
+      );
     }
   };
 
@@ -139,7 +146,7 @@ function UserDash() {
         />
       </div>
       <CalendarEventPicker
-        events={calendarEvents}
+        events={eventsOnDay}
         toggle={calendarPickerToggle}
         handleEventSelected={handleEventSelected}
         handleEventCancel={handleEventCancel}
