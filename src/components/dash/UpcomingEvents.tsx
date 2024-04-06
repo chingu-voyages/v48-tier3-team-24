@@ -3,14 +3,17 @@ import UpcomingEventTile from "./UpcomingEventTile";
 import type { EventUpcomingType } from "schemas";
 import { GrNext, GrPrevious, GrRewind, GrFastForward } from "react-icons/gr";
 import Spinner from "../Spinner";
+import { useRouter } from "next/router";
 
 interface UpcomingEventsProps {
   data: EventUpcomingType | undefined;
   isLoading: boolean;
   isError: boolean;
+  
 }
 
 const UpcomingEvents = ({ data, isLoading, isError }: UpcomingEventsProps) => {
+  const router = useRouter()
   // pagination: store the page cursor
   const [eventIndex, setEventIndex] = useState(0);
   const step = 3;
@@ -50,7 +53,7 @@ const UpcomingEvents = ({ data, isLoading, isError }: UpcomingEventsProps) => {
 
   // these handle functions would eventually reroute to different pages from the parent component
   const handleOnClickDetailsEvent = (eventId: string) => {
-    alert(`details: ${eventId}`);
+    router.push(`/events/${eventId}`);
   };
 
   const handleOnClickBookmarkEvent = (eventId: string) => {
