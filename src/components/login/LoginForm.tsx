@@ -3,7 +3,6 @@ import { FaRegCircleUser } from "react-icons/fa6";
 import { FiLock } from "react-icons/fi";
 import { FaDiscord } from "react-icons/fa";
 import type { FormEvent } from "react";
-import Button from "../Button";
 import toast from "react-hot-toast";
 import Link from "next/link";
 

@@ -3,6 +3,7 @@ import { api } from "~/utils/api";
 import RecoverError from "./RecoverError";
 import RecoverSuccess from "./RecoverSuccess";
 import Button from "~/components/Button";
+import Image from "next/image";
 
 /**
  * This is a password/username recovery form.
@@ -47,30 +48,50 @@ const RecoverForm = () => {
     return <RecoverSuccess />
 
   return (
-    <form onSubmit={onSubmit}>
-      <div>
-        <p>Please select one.</p>
-        <label>
-          <input type="radio" name="mode" value="username" onChange={onModeChanged} required checked={mode === "username"} />
-          Recover my username
-        </label>
-        <label>
-          <input type="radio" name="mode" value="password" onChange={onModeChanged} checked={mode === "password"} />
-          Recover my password
-        </label>
+    <form onSubmit={onSubmit} className="w-full sm:w-2/4 md:w-1/4 flex flex-col gap-5">
+      <div className="flex flex-col gap-5">
+        <Image src="/logo/EventSync.svg" width={230} height={0} alt="EventSync Logo" className="self-center" />
+        <h1 className="self-center font-bold text-xl">
+          You can recover your username or password.
+        </h1>
+        <div>
+          <p className="font-bold">Please select one.</p>
+          <label className="flex flex-row gap-1">
+            <input type="radio" name="mode" value="username" onChange={onModeChanged} required checked={mode === "username"} />
+            Recover my username
+          </label>
+          <label className="flex flex-row gap-1">
+            <input type="radio" name="mode" value="password" onChange={onModeChanged} checked={mode === "password"} />
+            Recover my password
+          </label>
+        </div>
+        <div className="flex flex-col gap-1">
+          { mode === "username" &&
+            <>
+              <label htmlFor="email" className="text-sm">Email</label>
+              <input
+                id="email"
+                type="email"
+                name="email"
+                required
+                className="px-3 py-1 rounded border border-es-primary"
+              />
+            </>
+          }
+          { mode === "password" &&
+            <>
+              <label htmlFor="username" className="text-sm">Username</label>
+              <input
+                id="username"
+                type="text"
+                name="username"
+                required
+                className="px-3 py-1 rounded border border-es-primary"
+              />
+            </>
+          }
+        </div>
       </div>
-      { mode === "username" &&
-        <div>
-          <label>Email</label>
-          <input type="email" name="email" required />
-        </div>
-      }
-      { mode === "password" &&
-        <div>
-          <label>Username</label>
-          <input type="text" name="username" required />
-        </div>
-      }
       <Button type="submit" variant="primary">Submit</Button>
     </form>
   );
