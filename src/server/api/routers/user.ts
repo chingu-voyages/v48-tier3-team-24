@@ -97,6 +97,18 @@ export const userRouter = createTRPCRouter({
     email: z.string().min(1).email()
   })).mutation(async({ctx, input})=>{
     try {
+      const existingEmail = await ctx.db.user.count({
+        where: {
+          email: input.email
+        }
+      }) > 0;
+      if(existingEmail) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Username or email address already exists."
+        });
+      }
+
       // Get a datetime that is 30 minutes from now
       const expires = new Date();
       expires.setMinutes(expires.getMinutes() + 30);
@@ -200,6 +212,116 @@ export const userRouter = createTRPCRouter({
           total
         }
       } catch(error) {
+        if(error instanceof TRPCError) throw error;
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "An unexpected error occurred.",
+          cause: error
+        });
+      }
+    }),
+    adminAddUser: adminProcedure.input(z.object({
+      username: z.string().min(3).max(20),
+      firstName: z.string().min(1).max(20),
+      lastName: z.string().min(1).max(20),
+      email: z.string().min(1).email(),
+      password: z.string().min(1).max(20).transform(async (val) => await hash(val)),
+      confirm_password: z.string().min(1).max(20).transform(async (val) => await hash(val))
+    })).mutation(async({ctx, input})=>{
+      try {
+        const existingUser = await ctx.db.user.count({
+          where: {
+            username: input.username
+          }
+        }) > 0;
+        const existingEmail = await ctx.db.user.count({
+          where: {
+            email: input.email
+          }
+        }) > 0;
+        if(existingUser || existingEmail) {
+          throw new TRPCError({
+            code: "BAD_REQUEST",
+            message: "Username or email address already exists."
+          });
+        }
+        // update user
+        return await ctx.db.user.create( {
+          data: {
+            username: input.username,
+            firstName: input.firstName,
+            lastName: input.lastName,
+            email: input.email,
+            password: input.password
+          }
+        } )
+      } catch (error) {
+        if(error instanceof TRPCError) throw error;
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "An unexpected error occurred.",
+          cause: error
+        });
+      }
+    }),
+    adminEditUser: adminProcedure.input(z.object({
+      username: z.string().min(3).max(20),
+      firstName: z.string().min(1).max(20),
+      lastName: z.string().min(1).max(20),
+      email: z.string().min(1).email(),
+      password: z.string().max(20).transform(async (val) => await hash(val)),
+      confirm_password: z.string().max(20).transform(async (val) => await hash(val))
+    })).mutation(async({ctx, input})=>{
+      try {
+        const findUserByUsername = await ctx.db.user.findUnique({
+          where: {
+            username: input.username
+          }
+        })
+        // check username exists except current user
+        if ( findUserByUsername?.id != ctx.session.user.id ) {
+          throw new TRPCError({
+            code: "BAD_REQUEST",
+            message: "Username already exists."
+          });
+        }
+        // update password if password not null
+        if (input.password != null) {
+          if( input.password.length < 8 ) {
+            throw new TRPCError({
+              code: "BAD_REQUEST",
+              message: "password must more than 8 digital"
+            });
+          }
+          if( input.password != input.confirm_password ) {
+            throw new TRPCError({
+              code: "BAD_REQUEST",
+              message: "Password does not match"
+            });
+          }
+          await ctx.db.user.update({
+            where: {
+              id: ctx.session.user.id
+            },
+            data : {
+              password: input.password
+            }
+          })
+          
+        }
+        // update user
+        return await ctx.db.user.update( {
+          where: {
+            id: ctx.session.user.id
+          },
+          data: {
+            username: input.username,
+            firstName: input.firstName,
+            lastName: input.lastName,
+            email: input.email
+          }
+        } )
+      } catch (error) {
         if(error instanceof TRPCError) throw error;
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
