@@ -33,8 +33,26 @@ export const sendEmailVerification = async (to:string, url:string) => {
     return await sendEmail(
         to,
         "EventSync: Account Verification Requested",
-        `Welcome to EventSync! Please verify your account here: ${url}`,
-        `<p>Welcome to EventSync! Please verify your account <a href="${url}">here</a>.`
+        `Welcome to EventSync! Please verify your account here: ${url}. The url will expire after 30 minutes.`,
+        `<p>Welcome to EventSync! Please verify your account <a href="${url}">here</a>.</p><p>The url will expire after 30 minutes.</p>`
+    );
+};
+
+export const sendUsernameRecovery = async (to:string, username:string) => {
+    return await sendEmail(
+        to,
+        "EventSync: Username Recovery Requested",
+        `Your username is ${username}`,
+        `Your username is ${username}`
+    );
+};
+
+export const sendPasswordRecovery = async (to:string, passwordResetUrl:string) => {
+    return await sendEmail(
+        to,
+        "EventSync: Password Reset Requested",
+        `To reset your password, please visit this URL: ${passwordResetUrl}. If you do not wish to reset your password, you can safely disregard this email. The url will expire in 30 minutes.`,
+        `<p>To reset your password, please click <a href="${passwordResetUrl}">here</a>.<p>If you do not wish to reset your password, you can safely disregard this email. The url will expire in 30 minutes.</p>`
     );
 }
 
