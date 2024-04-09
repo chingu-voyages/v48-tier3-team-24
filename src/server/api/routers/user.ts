@@ -25,19 +25,19 @@ export interface ClientUser {
 };
 
 export const userRouter = createTRPCRouter({
-  getCurrentUser: protectedProcedure.query(({ctx})=>{
+  getCurrentUser: protectedProcedure.query(({ ctx }) => {
     return ctx.db.user.findUnique({
       where: {
         id: ctx.session.user.id
       }
     })
   }),
-  
+
   update: protectedProcedure.input(z.object({
     firstName: z.string().min(1).max(20),
     lastName: z.string().min(1).max(20),
     username: z.string().min(3).max(20),
-  })).mutation(async({ ctx, input }) => {
+  })).mutation(async ({ ctx, input }) => {
     try {
       const findUserByUsername = await ctx.db.user.findUnique({
         where: {
@@ -45,13 +45,13 @@ export const userRouter = createTRPCRouter({
         }
       })
       // check username exists except current user
-      if ( findUserByUsername?.id != ctx.session.user.id ) {
+      if (findUserByUsername?.id != ctx.session.user.id) {
         throw new TRPCError({
           code: "BAD_REQUEST",
           message: "Username already exists."
         });
       }
-      return await ctx.db.user.update( {
+      return await ctx.db.user.update({
         where: {
           id: ctx.session.user.id
         },
@@ -59,9 +59,9 @@ export const userRouter = createTRPCRouter({
           firstName: input.firstName,
           lastName: input.lastName
         }
-      } )
-    } catch(error) {
-      if(error instanceof TRPCError) throw error;
+      })
+    } catch (error) {
+      if (error instanceof TRPCError) throw error;
       throw new TRPCError({
         code: "INTERNAL_SERVER_ERROR",
         message: "An unexpected error occurred.",
@@ -73,18 +73,18 @@ export const userRouter = createTRPCRouter({
   updatePassword: protectedProcedure.input(z.object({
     password: z.string().min(8).max(20).transform(async (val) => await hash(val)),
     confirmPassword: z.string().min(8).max(20).transform(async (val) => await hash(val))
-  })).mutation(async({ctx, input})=>{
+  })).mutation(async ({ ctx, input }) => {
     try {
       return await ctx.db.user.update({
         where: {
           id: ctx.session.user.id
         },
-        data : {
+        data: {
           password: input.password
         }
       })
     } catch (error) {
-      if(error instanceof TRPCError) throw error;
+      if (error instanceof TRPCError) throw error;
       throw new TRPCError({
         code: "INTERNAL_SERVER_ERROR",
         message: "An unexpected error occurred.",
@@ -95,14 +95,14 @@ export const userRouter = createTRPCRouter({
 
   updateEmail: protectedProcedure.input(z.object({
     email: z.string().min(1).email()
-  })).mutation(async({ctx, input})=>{
+  })).mutation(async ({ ctx, input }) => {
     try {
       const existingEmail = await ctx.db.user.count({
         where: {
           email: input.email
         }
       }) > 0;
-      if(existingEmail) {
+      if (existingEmail) {
         throw new TRPCError({
           code: "BAD_REQUEST",
           message: "Username or email address already exists."
@@ -124,11 +124,11 @@ export const userRouter = createTRPCRouter({
           expires: expires
         }
       });
-       // Mail the email verify url to the email address
-       await sendChangeEmailVerification(input.email, verifyUrl);
+      // Mail the email verify url to the email address
+      await sendChangeEmailVerification(input.email, verifyUrl);
 
-       // update user email and emailVerified
-       const user = await ctx.db.user.update({
+      // update user email and emailVerified
+      const user = await ctx.db.user.update({
         where: {
           id: ctx.session.user.id
         },
@@ -136,13 +136,13 @@ export const userRouter = createTRPCRouter({
           email: input.email,
           emailVerified: null
         }
-       })
+      })
 
-       return {
+      return {
         user
-       }
+      }
     } catch (error) {
-      if(error instanceof TRPCError) throw error;
+      if (error instanceof TRPCError) throw error;
       throw new TRPCError({
         code: "INTERNAL_SERVER_ERROR",
         message: "An unexpected error occurred.",
@@ -157,26 +157,26 @@ export const userRouter = createTRPCRouter({
       page: z.number().min(1),
       search: z.string().min(1).max(50).nullable()
     }))
-    .query(async ({ctx, input}) => {
+    .query(async ({ ctx, input }) => {
       try {
         const skip = (input.page - 1) * input.perPage;
         const take = input.perPage;
 
         // Get the total count of the filtered results.
-        const total =  await ctx.db.user.count({
-          ...(input.search && 
+        const total = await ctx.db.user.count({
+          ...(input.search &&
           {
             where: {
               OR: [
-                { username: {contains: input.search} },
-                { firstName: {contains: input.search} },
-                { lastName: {contains: input.search} },
-                { email: {contains: input.search} }
+                { username: { contains: input.search } },
+                { firstName: { contains: input.search } },
+                { lastName: { contains: input.search } },
+                { email: { contains: input.search } }
               ]
             }
           })
         });
-        const users =  await ctx.db.user.findMany({
+        const users = await ctx.db.user.findMany({
           skip,
           take,
           select: {
@@ -190,14 +190,14 @@ export const userRouter = createTRPCRouter({
             role: true,
             image: true
           },
-          ...(input.search && 
+          ...(input.search &&
           {
             where: {
               OR: [
-                { username: {contains: input.search} },
-                { firstName: {contains: input.search} },
-                { lastName: {contains: input.search} },
-                { email: {contains: input.search} }
+                { username: { contains: input.search } },
+                { firstName: { contains: input.search } },
+                { lastName: { contains: input.search } },
+                { email: { contains: input.search } }
               ]
             }
           }),
@@ -211,8 +211,8 @@ export const userRouter = createTRPCRouter({
           users,
           total
         }
-      } catch(error) {
-        if(error instanceof TRPCError) throw error;
+      } catch (error) {
+        if (error instanceof TRPCError) throw error;
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
           message: "An unexpected error occurred.",
@@ -220,7 +220,15 @@ export const userRouter = createTRPCRouter({
         });
       }
     }),
-
+  adminDeleteUser: adminProcedure.input(z.object({
+    username: z.string()
+  })).mutation(async ({ ctx, input }) => {
+    await ctx.db.user.delete({
+      where: {
+        username: input.username
+      }
+    })
+  }),
   adminAddUser: adminProcedure
     .input(z.object({
       username: z.string().min(3).max(20),
@@ -230,7 +238,7 @@ export const userRouter = createTRPCRouter({
       email: z.string().min(1).email(),
       password: z.string().min(1).max(20).transform(async (val) => await hash(val))
     }))
-    .mutation(async({ctx, input})=>{
+    .mutation(async ({ ctx, input }) => {
       try {
         const existingUser = await ctx.db.user.count({
           where: {
@@ -242,14 +250,14 @@ export const userRouter = createTRPCRouter({
             email: input.email
           }
         }) > 0;
-        if(existingUser || existingEmail) {
+        if (existingUser || existingEmail) {
           throw new TRPCError({
             code: "BAD_REQUEST",
             message: "Username or email address already exists."
           });
         }
         // create user
-        return await ctx.db.user.create( {
+        return await ctx.db.user.create({
           data: {
             username: input.username,
             firstName: input.firstName,
@@ -258,9 +266,9 @@ export const userRouter = createTRPCRouter({
             email: input.email,
             password: input.password
           }
-        } )
+        })
       } catch (error) {
-        if(error instanceof TRPCError) throw error;
+        if (error instanceof TRPCError) throw error;
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
           message: "An unexpected error occurred.",
@@ -279,24 +287,24 @@ export const userRouter = createTRPCRouter({
       email: z.string().min(1).email(),
       password: z.string().min(8).max(20).nullable().transform(async (val) => val ? await hash(val) : null),
     }))
-    .mutation(async({ctx, input})=>{
+    .mutation(async ({ ctx, input }) => {
       try {
         const existingUser = await ctx.db.user.findFirst({
           where: {
             id: input.id
           }
         });
-        if(!existingUser) {
+        if (!existingUser) {
           throw new TRPCError({
             code: "BAD_REQUEST",
             message: "User does not exist."
           });
         }
-        if(input.username != null) {
+        if (input.username != null) {
           const existingUsername = await ctx.db.user.count({
             where: {
               username: input.username,
-              NOT: {id: input.id}
+              NOT: { id: input.id }
             }
           })
           // check username exists except current user
@@ -313,7 +321,7 @@ export const userRouter = createTRPCRouter({
             where: {
               id: input.id
             },
-            data : {
+            data: {
               password: input.password
             }
           });
@@ -332,7 +340,7 @@ export const userRouter = createTRPCRouter({
           }
         });
       } catch (error) {
-        if(error instanceof TRPCError) throw error;
+        if (error instanceof TRPCError) throw error;
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
           message: "An unexpected error occurred.",
