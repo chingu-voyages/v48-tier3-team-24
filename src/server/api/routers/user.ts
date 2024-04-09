@@ -220,14 +220,17 @@ export const userRouter = createTRPCRouter({
         });
       }
     }),
-    adminAddUser: adminProcedure.input(z.object({
+
+  adminAddUser: adminProcedure
+    .input(z.object({
       username: z.string().min(3).max(20),
       firstName: z.string().min(1).max(20),
       lastName: z.string().min(1).max(20),
+      role: z.enum(["USER", "ADMIN"]),
       email: z.string().min(1).email(),
-      password: z.string().min(1).max(20).transform(async (val) => await hash(val)),
-      confirm_password: z.string().min(1).max(20).transform(async (val) => await hash(val))
-    })).mutation(async({ctx, input})=>{
+      password: z.string().min(1).max(20).transform(async (val) => await hash(val))
+    }))
+    .mutation(async({ctx, input})=>{
       try {
         const existingUser = await ctx.db.user.count({
           where: {
@@ -245,12 +248,13 @@ export const userRouter = createTRPCRouter({
             message: "Username or email address already exists."
           });
         }
-        // update user
+        // create user
         return await ctx.db.user.create( {
           data: {
             username: input.username,
             firstName: input.firstName,
             lastName: input.lastName,
+            role: input.role,
             email: input.email,
             password: input.password
           }
@@ -264,63 +268,69 @@ export const userRouter = createTRPCRouter({
         });
       }
     }),
-    adminEditUser: adminProcedure.input(z.object({
-      username: z.string().min(3).max(20),
+
+  adminEditUser: adminProcedure
+    .input(z.object({
+      id: z.string().min(1),
+      username: z.string().min(3).max(20).nullable(),
       firstName: z.string().min(1).max(20),
       lastName: z.string().min(1).max(20),
+      role: z.enum(["USER", "ADMIN"]),
       email: z.string().min(1).email(),
-      password: z.string().max(20).transform(async (val) => await hash(val)),
-      confirm_password: z.string().max(20).transform(async (val) => await hash(val))
-    })).mutation(async({ctx, input})=>{
+      password: z.string().min(8).max(20).nullable().transform(async (val) => val ? await hash(val) : null),
+    }))
+    .mutation(async({ctx, input})=>{
       try {
-        const findUserByUsername = await ctx.db.user.findUnique({
+        const existingUser = await ctx.db.user.findFirst({
           where: {
-            username: input.username
+            id: input.id
           }
-        })
-        // check username exists except current user
-        if ( findUserByUsername?.id != ctx.session.user.id ) {
+        });
+        if(!existingUser) {
           throw new TRPCError({
             code: "BAD_REQUEST",
-            message: "Username already exists."
+            message: "User does not exist."
           });
+        }
+        if(input.username != null) {
+          const existingUsername = await ctx.db.user.count({
+            where: {
+              username: input.username,
+              NOT: {id: input.id}
+            }
+          })
+          // check username exists except current user
+          if (existingUsername) {
+            throw new TRPCError({
+              code: "BAD_REQUEST",
+              message: "Username already exists."
+            });
+          }
         }
         // update password if password not null
         if (input.password != null) {
-          if( input.password.length < 8 ) {
-            throw new TRPCError({
-              code: "BAD_REQUEST",
-              message: "password must more than 8 digital"
-            });
-          }
-          if( input.password != input.confirm_password ) {
-            throw new TRPCError({
-              code: "BAD_REQUEST",
-              message: "Password does not match"
-            });
-          }
           await ctx.db.user.update({
             where: {
-              id: ctx.session.user.id
+              id: input.id
             },
             data : {
               password: input.password
             }
-          })
-          
+          });
         }
         // update user
-        return await ctx.db.user.update( {
+        return await ctx.db.user.update({
           where: {
-            id: ctx.session.user.id
+            id: input.id
           },
           data: {
             username: input.username,
             firstName: input.firstName,
             lastName: input.lastName,
+            role: input.role,
             email: input.email
           }
-        } )
+        });
       } catch (error) {
         if(error instanceof TRPCError) throw error;
         throw new TRPCError({

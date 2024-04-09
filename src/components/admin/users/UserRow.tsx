@@ -1,7 +1,6 @@
 import type { ClientUser } from "~/server/api/routers/user"
 import { MdEdit, MdDelete } from "react-icons/md";
 import { useUserAdminContext } from "~/pages/admin/users";
-import { api } from "~/utils/api";
 
 const UserRow = ({user}:{user:ClientUser}) => {
   const { setUserModalOpen, setModalUser } = useUserAdminContext();

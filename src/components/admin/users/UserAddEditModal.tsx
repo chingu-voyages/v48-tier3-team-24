@@ -1,8 +1,13 @@
 import type { ClientUser } from "~/server/api/routers/user";
+import type { ChangeEvent, FormEvent } from "react";
+import type { Role } from "@prisma/client";
 import { useUserAdminContext } from "~/pages/admin/users";
+import { useState } from "react";
+import { api } from "~/utils/api";
+import { useRouter } from "next/router";
+import { toast } from "react-hot-toast";
 import Modal from "~/components/Modal";
 import Button from "~/components/Button";
-import { ChangeEvent, FormEvent, useState } from "react";
 
 /**
  * Dual-purpose user panel. Can be used for adding or editing user.
@@ -11,6 +16,9 @@ import { ChangeEvent, FormEvent, useState } from "react";
  */
 const UserAddEditModal = ({user}:{user:ClientUser | null}) => {
   const isEdit = user != null;
+  const createUserMutation = api.user.adminAddUser.useMutation();
+  const editUserMutation = api.user.adminEditUser.useMutation();
+  const router = useRouter();
   const [ isResetPassword, setIsResetPassword ] = useState<boolean> (false);
   const { setUserModalOpen } = useUserAdminContext();
 
@@ -18,8 +26,48 @@ const UserAddEditModal = ({user}:{user:ClientUser | null}) => {
     setIsResetPassword(event.target.checked);
   };
 
-  const onSubmit = (event:FormEvent) => {
+  const onSubmit = async (event:FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    try {
+      const formData:FormData = new FormData(event.currentTarget);
+      const username = String(formData.get("username"));
+      const email = String(formData.get("email"));
+      const role = formData.get("role") as Role;
+      const firstName = String(formData.get("firstName"));
+      const lastName = String(formData.get("lastName"));
+      const password = String(formData.get("password"));
+      const confirmPassword = String(formData.get("confirmPassword"));
+      if(!isEdit || isResetPassword) {
+        if(password != confirmPassword) {
+          return;
+        }
+      }
+      if(isEdit) {
+        await editUserMutation.mutateAsync({
+          id: user.id,
+          username,
+          email,
+          role,
+          firstName,
+          lastName,
+          password: isResetPassword ? password : null
+        });
+      } else {
+        if(!password) return;
+        await createUserMutation.mutateAsync({
+          username,
+          email,
+          role,
+          firstName,
+          lastName,
+          password
+        });
+      }
+      router.reload();
+    } catch(error:unknown) {
+      if(error instanceof Error) toast.error(error.message);
+      else toast.error("Unexpected error");
+    }
   };
 
   return (
@@ -47,6 +95,22 @@ const UserAddEditModal = ({user}:{user:ClientUser | null}) => {
             required
             defaultValue={isEdit ? user.email ?? undefined : undefined}
             className="px-3 py-1 border" />
+        </div>
+        <div className="flex flex-col gap-1">
+          <label htmlFor="role" className="text-sm">Role</label>
+          <select
+            id="role"
+            name="role"
+            required
+            defaultValue={isEdit ? user.role ?? undefined : undefined}
+            className="px-3 py-1 border bg-white">
+              <option value="ADMIN">
+                Admin
+              </option>
+              <option value="USER">
+                User
+              </option>
+          </select>
         </div>
         <div className="flex flex-col gap-1">
           <label htmlFor="firstName" className="text-sm">First Name</label>
