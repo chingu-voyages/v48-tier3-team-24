@@ -221,11 +221,11 @@ export const userRouter = createTRPCRouter({
       }
     }),
   adminDeleteUser: adminProcedure.input(z.object({
-    username: z.string()
+    id: z.string()
   })).mutation(async ({ ctx, input }) => {
     const user = await ctx.db.user.delete({
       where: {
-        username: input.username
+        id: input.id
       }
     })
   
