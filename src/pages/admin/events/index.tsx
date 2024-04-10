@@ -1,19 +1,36 @@
-import { useState, type ReactNode } from "react";
+import {
+  BaseSyntheticEvent,
+  EventHandler,
+  useState,
+  type ReactNode,
+} from "react";
 import Button from "~/components/Button";
+import { Checkbox } from "~/components/Checkbox";
 import Modal from "~/components/Modal";
 import { NumberInput } from "~/components/NumberInput";
 import { TextInput } from "~/components/TextInput";
 import { AdminLayout } from "~/layouts/admin/AdminLayout";
 import type { NextPageWithLayout } from "~/pages/_app";
+import { MouseEventHandler } from "react";
 
 const AdminEventManagement: NextPageWithLayout = (props) => {
   const [showEventFormModal, setShowEventFormModal] = useState<boolean>(false);
+  const [isFree, setIsFree] = useState<boolean>(true);
+  const [isPrivate, setIsPrivate] = useState<boolean>(true);
 
   const onSetShowEventFormModel = () => {
     setShowEventFormModal(!showEventFormModal);
   };
   const onCreateEvent = async () => {
     return;
+  };
+  const onPriceStatusChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setIsFree(event.target.checked);
+  };
+  const onPrivateStatusChange = (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    setIsPrivate(event.target.checked);
   };
   return (
     <div>
@@ -62,9 +79,31 @@ const AdminEventManagement: NextPageWithLayout = (props) => {
             defaultValue={1}
             required={true}
           />
+          {!isFree ? (
+            <NumberInput
+              id="price"
+              label="Price"
+              min={0}
+              defaultValue={0}
+              required={true}
+            />
+          ) : (
+            ""
+          )}
+
+          <Checkbox
+            id="isFree"
+            label="Free Event"
+            defaultValue={isFree}
+            onChange={onPriceStatusChange}
+          ></Checkbox>
+          <Checkbox
+            id="isPrivate"
+            label="Private Event"
+            defaultValue={isPrivate}
+            onChange={onPrivateStatusChange}
+          ></Checkbox>
           {/* Todo - set status (EventStatus) - create a selection component */}
-          {/* Todo - set is free - create a checkbox component */}
-          {/* Todo - set is private */}
           {/* Todo - set Host (created by) - create a users selection component with search function */}
           {/* Todo - set Participants - create a users selection component with search function */}
           <hr />
