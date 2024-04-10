@@ -220,19 +220,29 @@ export const userRouter = createTRPCRouter({
         });
       }
     }),
+
   adminDeleteUser: adminProcedure.input(z.object({
     id: z.string()
   })).mutation(async ({ ctx, input }) => {
-    const user = await ctx.db.user.delete({
-      where: {
-        id: input.id
-      }
-    })
-  
-    return {
-      user
+    try {
+      const user = await ctx.db.user.delete({
+        where: {
+          id: input.id
+        }
+      });
+      return {
+        user
+      };
+    } catch (error) {
+      if (error instanceof TRPCError) throw error;
+      throw new TRPCError({
+        code: "INTERNAL_SERVER_ERROR",
+        message: "An unexpected error occurred.",
+        cause: error
+      });
     }
   }),
+
   adminAddUser: adminProcedure
     .input(z.object({
       username: z.string().min(3).max(20),
