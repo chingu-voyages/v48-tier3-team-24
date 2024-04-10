@@ -4,6 +4,7 @@ import { EventSchema } from "schemas";
 import { z } from "zod";
 
 import {
+  adminProcedure,
   createTRPCRouter,
   protectedProcedure,
   publicProcedure,
@@ -115,4 +116,32 @@ export const eventRouter = createTRPCRouter({
         },
       });
     }),
+  adminCreateEvent: adminProcedure
+    .input(EventSchema)
+    .mutation(async ({ ctx, input }) => {
+      return await ctx.db.event.create({
+        data: { ...input }
+      })
+    }),
+  adminEditEvent: adminProcedure
+    .input(EventSchema)
+    .mutation(async({ctx, input}) => {
+      return await ctx.db.event.update({
+        data: input,
+        where: {
+          id: input.id
+        }
+      })
+    }),
+  adminDeleteEvent: adminProcedure
+    .input(z.object({
+      eventId: z.string(),
+    }))
+    .mutation(async({ctx, input})=> {
+      return await ctx.db.event.delete({
+        where: {
+          id: input.eventId
+        }
+      })
+    })
 });
