@@ -1,9 +1,4 @@
-import {
-  BaseSyntheticEvent,
-  EventHandler,
-  useState,
-  type ReactNode,
-} from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import Button from "~/components/Button";
 import { Checkbox } from "~/components/Checkbox";
 import Modal from "~/components/Modal";
@@ -11,13 +6,36 @@ import { NumberInput } from "~/components/NumberInput";
 import { TextInput } from "~/components/TextInput";
 import { AdminLayout } from "~/layouts/admin/AdminLayout";
 import type { NextPageWithLayout } from "~/pages/_app";
-import { MouseEventHandler } from "react";
+import { Select, SelectItemProps } from "~/components/Select";
+import { EventStatusType } from "../../../../schemas/index";
+import { EventStatus } from "@prisma/client";
 
 const AdminEventManagement: NextPageWithLayout = (props) => {
   const [showEventFormModal, setShowEventFormModal] = useState<boolean>(false);
   const [isFree, setIsFree] = useState<boolean>(true);
   const [isPrivate, setIsPrivate] = useState<boolean>(true);
+  const [arrStatus, setArrStatus] = useState<SelectItemProps[]>([]);
 
+  useEffect(() => {
+    setArrStatus([
+      {
+        label: EventStatus.UPCOMING,
+        value: EventStatus.UPCOMING,
+      },
+      {
+        label: EventStatus.COMPLETED,
+        value: EventStatus.COMPLETED,
+      },
+      {
+        label: EventStatus.CANCELED,
+        value: EventStatus.CANCELED,
+      },
+      {
+        label: EventStatus.IN_PROGRESS,
+        value: EventStatus.IN_PROGRESS,
+      },
+    ]);
+  }, []);
   const onSetShowEventFormModel = () => {
     setShowEventFormModal(!showEventFormModal);
   };
@@ -90,7 +108,6 @@ const AdminEventManagement: NextPageWithLayout = (props) => {
           ) : (
             ""
           )}
-
           <Checkbox
             id="isFree"
             label="Free Event"
@@ -104,6 +121,13 @@ const AdminEventManagement: NextPageWithLayout = (props) => {
             onChange={onPrivateStatusChange}
           ></Checkbox>
           {/* Todo - set status (EventStatus) - create a selection component */}
+          <Select
+            id="status"
+            name="status"
+            label="Status"
+            defaultValue="UPCOMING"
+            data={arrStatus}
+          ></Select>
           {/* Todo - set Host (created by) - create a users selection component with search function */}
           {/* Todo - set Participants - create a users selection component with search function */}
           <hr />
