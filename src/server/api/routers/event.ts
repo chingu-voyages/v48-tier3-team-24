@@ -116,6 +116,21 @@ export const eventRouter = createTRPCRouter({
         },
       });
     }),
+    adminGetEvents: adminProcedure.input(z.object({
+      search: z.string().min(1),
+    })).query(({ ctx, input }) => {
+      const properties = Object.entries(EventSchema.shape)
+      const output = properties.filter(([key, schema]) => schema instanceof z.ZodString).map(([key, val]) => ({
+        [key]: { contains: input.search, mode: 'insensitive' }
+      }))
+      return ctx.db.event.findMany({
+        orderBy: { createdAt: "desc" },
+        where: { OR: [...output] },
+        include: {
+          createdBy: true
+        }
+      })
+    }),
   adminCreateEvent: adminProcedure
     .input(EventSchema)
     .mutation(async ({ ctx, input }) => {
