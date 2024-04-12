@@ -1,13 +1,13 @@
 import { TRPCError } from "@trpc/server";
 import { EventUpcomingSchema, NewEventSchema } from "schemas";
+import { EventSchema } from "generated/schemas";
 import { z } from "zod";
 
 import {
   adminProcedure,
   createTRPCRouter,
   protectedProcedure,
-  publicProcedure,
-  verifiedUserProcedure,
+  publicProcedure
 } from "~/server/api/trpc";
 
 export const eventRouter = createTRPCRouter({
@@ -80,9 +80,10 @@ export const eventRouter = createTRPCRouter({
         },
       });
     }),
-    adminGetEvents: adminProcedure.input(z.object({
-      search: z.string().min(1),
-    })).query(({ ctx, input }) => {
+
+  adminGetEvents: adminProcedure
+    .input(z.object({search: z.string().min(1),}))
+    .query(({ ctx, input }) => {
       const properties = Object.entries(EventSchema.shape)
       const output = properties.filter(([key, schema]) => schema instanceof z.ZodString).map(([key, val]) => ({
         [key]: { contains: input.search, mode: 'insensitive' }
@@ -95,6 +96,7 @@ export const eventRouter = createTRPCRouter({
         }
       })
     }),
+
   adminCreateEvent: adminProcedure
     .input(EventSchema)
     .mutation(async ({ ctx, input }) => {
@@ -102,6 +104,7 @@ export const eventRouter = createTRPCRouter({
         data: { ...input }
       })
     }),
+
   adminEditEvent: adminProcedure
     .input(EventSchema)
     .mutation(async({ctx, input}) => {
@@ -112,6 +115,7 @@ export const eventRouter = createTRPCRouter({
         }
       })
     }),
+
   adminDeleteEvent: adminProcedure
     .input(z.object({
       eventId: z.string(),

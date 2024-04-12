@@ -7,7 +7,6 @@ import { TextInput } from "~/components/TextInput";
 import { AdminLayout } from "~/layouts/admin/AdminLayout";
 import type { NextPageWithLayout } from "~/pages/_app";
 import { Select, SelectItemProps } from "~/components/Select";
-import { EventStatusType } from "../../../../schemas/index";
 import { EventStatus } from "@prisma/client";
 
 const AdminEventManagement: NextPageWithLayout = (props) => {
@@ -62,32 +61,32 @@ const AdminEventManagement: NextPageWithLayout = (props) => {
           <TextInput
             id="name"
             label="Event Name"
-            inputType="text"
+            type="text"
             required={true}
           />
           <TextInput
             id="description"
             label="Description"
-            inputType="textArea"
+            type="textArea"
             required={true}
           />
           <TextInput
             id="address"
             label="address"
-            inputType="text"
+            type="text"
             required={true}
           />
           {/* Todo - add google map here, click on the map to choose the address, and get lat&lng */}
           <TextInput
             id="lat"
             label="latitude (optional)"
-            inputType="text"
+            type="text"
             required={true}
           />
           <TextInput
             id="lng"
             label="longitude (optional)"
-            inputType="text"
+            type="text"
             required={true}
           />
           <NumberInput
