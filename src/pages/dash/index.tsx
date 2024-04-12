@@ -1,65 +1,155 @@
 import { useSession } from "next-auth/react";
 import React, { useState } from "react";
-import { demoStatusData } from "~/utils/demo_data";
-import { api } from "~/utils/api";
-import EventCalendar from "~/components/Event/EventCalendar";
 import Header from "~/components/Header";
 import Button from "~/components/Button";
 import { FaPlus } from "react-icons/fa6";
-import SuggestedEvents from "~/components/Event/SuggestedEvents";
+import { useRouter } from "next/navigation";
+import { api } from "~/utils/api";
+import moment from "moment";
+import type {
+  EventUpcomingType,
+  SingleUpcomingEventType,
+} from "schemas";
+import EventCalendar from "~/components/dash/EventCalendar";
+import UpcomingEvents from "~/components/dash/UpcomingEvents";
+import Link from "next/link";
+import CalendarEventPicker from "~/components/dash/CalendarEventPicker";
 
-type ValuePiece = Date | null;
-export type Value = ValuePiece | [ValuePiece, ValuePiece];
+export type EventsWithDatesAndPrivacy = {
+  startDateTime: Date;
+  endDateTime: Date;
+  isPrivate: boolean;
+};
 
 function UserDash() {
+  let enabledCalendarDays: EventsWithDatesAndPrivacy[] = [];
   const { data: sessionData } = useSession();
+  const router = useRouter();
+  const [calendarPickerToggle, setCalendarPickerToggle] =
+    useState<boolean>(false);
+  const [eventsOnDay, setEventsOnDay] = useState<EventUpcomingType | undefined>(
+    [],
+  );
 
-  const { data: hostedData, isLoading: hostedLoading } =
-    api.event.getAllHostedEvents.useQuery(undefined, {refetchInterval: false, refetchOnReconnect: false, refetchOnWindowFocus: false});
-  const { data: attendingData, isLoading: attendingLoading } =
-    api.event.getAllAttendingEvents.useQuery(undefined, {refetchInterval: false, refetchOnReconnect: false, refetchOnWindowFocus: false});
+  // load the page's data
+  const [
+    {
+      data: upcomingEvents,
+      isLoading: eventsIsLoading,
+      isError: eventsHasError,
+    },
+    { data: calendarEvents },
+  ] = api.useQueries((t) => [
+    t.dash.getUpcomingEvents(undefined, {
+      refetchInterval: false,
+      refetchOnReconnect: false,
+      refetchOnWindowFocus: false,
+    }),
+    t.dash.getUsersEvents(undefined, {
+      refetchInterval: false,
+      refetchOnReconnect: false,
+      refetchOnWindowFocus: false,
+    }),
+  ]);
 
-  const [selectedDate, selectedDateOnChange] = useState<Value>(new Date());
+  const handleHostNewEvent = () => {
+    return router.push("/events/new");
+  };
+
+  // if the user clicks on a day, open a popup to pick the event on that date
+  const handleOnClickedDay = (clickedDate: Date) => {
+    const clickedMoment = moment(clickedDate);
+    if (upcomingEvents) {
+      // get the events on the clicked date
+      const clickedEvents = upcomingEvents.filter(
+        (event: SingleUpcomingEventType) =>
+          clickedMoment.isSameOrAfter(event.startDateTime, "days") &&
+          clickedMoment.isSameOrBefore(event.endDateTime, "days"),
+      );
+
+      if (!clickedEvents) return;
+
+      // pass the the event id to either the event details page or a modal displaying all evnets on that date
+      setCalendarPickerToggle(true);
+      setEventsOnDay(() =>
+        calendarEvents?.events.filter((event: { startDateTime: moment.MomentInput; }) =>
+          clickedMoment.isSame(event.startDateTime, "day"),
+        ),
+      );
+    }
+  };
+
+  const handleEventSelected = (id: string) => {
+    setCalendarPickerToggle(false);
+    router.push(`/events/${id}`);
+  };
+
+  const handleEventCancel = () => {
+    setCalendarPickerToggle(false);
+  };
+
+  if (upcomingEvents && !eventsIsLoading && !eventsHasError) {
+    // get the dates from any and all events returned
+    enabledCalendarDays = upcomingEvents.map(
+      (event: SingleUpcomingEventType): EventsWithDatesAndPrivacy => {
+        return {
+          startDateTime: event.startDateTime,
+          endDateTime: event.endDateTime,
+          isPrivate: event.isPrivate,
+        };
+      },
+    );
+  }
 
   if (!sessionData) {
-    return <div>Access denied.</div>;
+    return (
+      <>
+        Access denied.<Link href="/login">Go to login page.</Link>
+      </>
+    );
   }
-
-  const events1 = demoStatusData.slice(0, 1);
-  const events2 = demoStatusData.slice(1, 3);
-
-  if (hostedLoading || attendingLoading) {
-    return <div>Loading...</div>;
-  }
-
-  // get the (Discord) name of the user otherwise use their username.
-  const name = sessionData.user.name ?? sessionData.user.username;
 
   return (
     <>
       <Header />
-      <div className="flex lg:flex-row flex-col gap-10 mx-10">
-        <div className="flex basis-1/3 flex-col gap-10 sm:px-20 py-10">
-          <div className="">
-            <p className="mb-5 text-4xl font-bold">Hello {name},</p>
-            <p className="text-2xl italic">
-              Find or Host an Event <br /> and Connect with Others
-            </p>
-          </div>
-          <div className="w-3/4 self-center">
-            <Button outline="primary" icon={<FaPlus />} width="full">
-              Host a new Event
-            </Button>
-          </div>
-          <div className="">
-            <p className="mb-5 text-4xl font-bold"></p>
-            <EventCalendar onChange={selectedDateOnChange} />
-          </div>
+      <div className="mx-10 flex flex-col lg:flex-row">
+        <div className="mb-16 flex basis-1/3 flex-col gap-4 sm:px-12">
+          <p className="text-4xl font-bold">
+            Hello {sessionData.user.name ?? sessionData.user.username},
+          </p>
+          <p className="text-2xl italic">
+            Find or Host an Event and Connect with Others
+          </p>
+          <Button
+            variant="primary"
+            icon={<FaPlus />}
+            width="full"
+            onClick={handleHostNewEvent}
+          >
+            Host a new Event
+          </Button>
+          <p className="text-4xl font-bold"></p>
+          <span className="mb-5 self-center">
+            <EventCalendar
+              onChange={handleOnClickedDay}
+              enabledDays={enabledCalendarDays}
+            />
+          </span>
+          <Button outline="info">Events I&apos;m hosting</Button>
+          <Button outline="info">Events I&apos;m attending</Button>
         </div>
-        <div className="flex basis-2/3 flex-col py-10">
-          <SuggestedEvents title="Sugguested events" events={events2} />
-        </div>
+        <UpcomingEvents
+          data={upcomingEvents}
+          isLoading={eventsIsLoading}
+          isError={eventsHasError}
+        />
       </div>
+      <CalendarEventPicker
+        events={eventsOnDay}
+        toggle={calendarPickerToggle}
+        handleEventSelected={handleEventSelected}
+        handleEventCancel={handleEventCancel}
+      />
     </>
   );
 }

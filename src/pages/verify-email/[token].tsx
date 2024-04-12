@@ -1,6 +1,6 @@
 import VerifyEmailError from "~/components/verify-email/VerifyEmailError";
 import VerifyEmailSuccess from "~/components/verify-email/VerifyEmailSuccess";
-import { GetServerSideProps, InferGetServerSidePropsType } from "next";
+import type { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import { getServerAuthSession } from "~/server/auth";
 import { createCaller } from "~/utils/trpcCaller";
 
