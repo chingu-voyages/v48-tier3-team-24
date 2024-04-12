@@ -45,7 +45,7 @@ const Header = () => {
               size="sm"
               className="rounded-lg px-3 py-1 text-black"
               outline="info"
-              onClick={() => goTo("/my-event")}
+              onClick={() => goTo("/dash")}
             >
               Manage Event
             </Button>
