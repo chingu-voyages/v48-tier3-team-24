@@ -152,11 +152,11 @@ const UserAddEditModal = ({user}:{user:ClientUser | null}) => {
             </div>
           </>
         }
-        <div className="flex flex-row gap-5">
-          <Button type="submit" variant="primary">
+        <div className="flex flex-col sm:flex-row gap-5">
+          <Button type="submit" size="sm" variant="primary">
             Save
           </Button>
-          <Button type="button" variant="warning" onClick={() => setUserModalOpen(false)}>
+          <Button type="button" variant="warning" size="sm" onClick={() => setUserModalOpen(false)}>
             Cancel
           </Button>
         </div>

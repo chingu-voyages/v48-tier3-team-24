@@ -130,7 +130,7 @@ const AdminEventManagement: NextPageWithLayout = (props) => {
           {/* Todo - set Host (created by) - create a users selection component with search function */}
           {/* Todo - set Participants - create a users selection component with search function */}
           <hr />
-          <div className="flex w-full justify-between gap-5">
+          <div className="flex flex-col sm:flex-row w-full justify-between gap-5">
             <Button outline="info" onClick={onSetShowEventFormModel}>
               Cancel
             </Button>
