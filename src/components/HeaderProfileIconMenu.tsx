@@ -1,4 +1,4 @@
-import { signOut } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 import { useState } from "react";
 import { FaRegCircleUser } from "react-icons/fa6";
 import { MdOutlineLogout } from "react-icons/md";
@@ -10,6 +10,7 @@ interface HeaderDropDownMenuProps {
 
 export default function HeaderProfileIconMenu(props: HeaderDropDownMenuProps) {
   const [openIconMenu, setOpenIconMenu] = useState(false);
+  const { data: sessionData } = useSession();
   const onClickIconMenu = () => {
     setOpenIconMenu(!openIconMenu);
   };
@@ -22,7 +23,9 @@ export default function HeaderProfileIconMenu(props: HeaderDropDownMenuProps) {
         className="h-10 w-10 cursor-pointer rounded-full border bg-es-primary-light text-white hover:shadow-lg"
         onMouseEnter={onClickIconMenu}
       >
-        <p className="mt-2 text-center">W</p>
+        <p className="mt-2 text-center">
+          {sessionData?.user.username?.toUpperCase().charAt(0)}
+        </p>
       </div>
       {openIconMenu && (
         <div

@@ -6,6 +6,7 @@ import { useRouter } from "next/router";
 import HeaderProfileIconMenu from "./HeaderProfileIconMenu";
 import HeaderDropDownMenu from "./HeaderDropDownMenu";
 import SearchBar from "./SearchBar";
+import Link from "next/link";
 
 const Header = () => {
   const router = useRouter();
@@ -23,14 +24,14 @@ const Header = () => {
     <div className="min-h-10 w-full items-center px-20 py-10">
       <div className="flex justify-between gap-5">
         <div className="flex items-center gap-5">
-          <div>
+          <Link href="/">
             <Image
               src="/logo/EventSync.svg"
               width={150}
               height={50}
               alt="Logo of EventSync"
             />
-          </div>
+          </Link>
           <SearchBar
             id="event-search"
             className="hidden sm:block"
@@ -44,7 +45,7 @@ const Header = () => {
               size="sm"
               className="rounded-lg px-3 py-1 text-black"
               outline="info"
-              onClick={() => goTo("/my-event")}
+              onClick={() => goTo("/dash")}
             >
               Manage Event
             </Button>
