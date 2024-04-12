@@ -1,26 +1,36 @@
 import { type Session } from "next-auth";
 import { SessionProvider } from "next-auth/react";
-import { type AppType } from "next/app";
-import { Inter } from "next/font/google";
-
+import type { AppProps, AppType } from "next/app";
+import { josefin_sans } from "~/styles/fonts";
+import { Toaster } from "react-hot-toast";
 import { api } from "~/utils/api";
+import type { NextPage } from "next";
+import type { ReactElement, ReactNode } from "react";
 
 import "~/styles/globals.css";
+import "react-datetime/css/react-datetime.css";
 
-const inter = Inter({
-  subsets: ["latin"],
-  variable: "--font-sans",
-});
+export type NextPageWithLayout<P = NonNullable<unknown>, IP = P> = NextPage<
+  PageTransitionEvent,
+  IP
+> & {
+  getLayout?: (page: ReactElement) => ReactNode;
+};
+
+type AppPropsWithLayout = AppProps & {
+  Component: NextPageWithLayout;
+};
 
 const MyApp: AppType<{ session: Session | null }> = ({
   Component,
   pageProps: { session, ...pageProps },
-}) => {
+}: AppPropsWithLayout) => {
+  const getLayout = Component.getLayout ?? ((page) => page);
+  const component = getLayout(<Component {...pageProps} />);
   return (
-    <SessionProvider session={session}>
-      <main className={`font-sans ${inter.variable}`}>
-        <Component {...pageProps} />
-      </main>
+    <SessionProvider session={session as Session} refetchOnWindowFocus={false}>
+      <Toaster />
+      <main className={`font-sans ${josefin_sans.variable}`}>{component}</main>
     </SessionProvider>
   );
 };

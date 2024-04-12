@@ -15,6 +15,7 @@ import { ZodError } from "zod";
 
 import { getServerAuthSession } from "~/server/auth";
 import { db } from "~/server/db";
+import { Role } from "@prisma/client";
 
 /**
  * 1. CONTEXT
@@ -38,7 +39,7 @@ interface CreateContextOptions {
  *
  * @see https://create.t3.gg/en/usage/trpc#-serverapitrpcts
  */
-const createInnerTRPCContext = (opts: CreateContextOptions) => {
+export const createInnerTRPCContext = (opts: CreateContextOptions) => {
   return {
     session: opts.session,
     db,
@@ -84,6 +85,8 @@ const t = initTRPC.context<typeof createTRPCContext>().create({
   },
 });
 
+export const createCallerFactory = t.createCallerFactory;
+
 /**
  * 3. ROUTER & PROCEDURE (THE IMPORTANT BIT)
  *
@@ -125,4 +128,40 @@ export const protectedProcedure = t.procedure.use(({ ctx, next }) => {
       session: { ...ctx.session, user: ctx.session.user },
     },
   });
+});
+
+/**
+ * Protected (authenticated) procedure for verified users
+ * 
+ * If you want a query or mutation to ONLY be accessible to logged in users that have verified
+ * their email address, use this. It verifies the session is valid and guarantees
+ * `ctx.session.user` is not null and emailVerified is not null.
+ */
+export const verifiedUserProcedure = t.procedure.use(({ctx, next}) => {
+  if (!ctx.session || !ctx.session.user || !ctx.session.user.emailVerified) {
+    throw new TRPCError({ code: "UNAUTHORIZED" });
+  }
+  return next({
+    ctx: {
+      // infers the `session` as non-nullable
+      session: { ...ctx.session, user: ctx.session.user },
+    },
+  });
+});
+
+/**
+ * Admin (Platform-Level Administrator) procedure
+ * 
+ * If you want a query or mutation to ONLY be accessible to logged in admins, use this. It verified
+ * the session is valid and guarantees user role is that of ADMIN
+ */
+export const adminProcedure = t.procedure.use(({ ctx, next }) => {
+  if(!ctx.session || !ctx.session.user || ctx.session.user.role !== Role.ADMIN) {
+    throw new TRPCError({ code: "UNAUTHORIZED" });
+  }
+  return next({
+    ctx: {
+      session: { ...ctx.session, user: ctx.session.user }
+    }
+  })
 });
