@@ -8,7 +8,6 @@ import { TRPCError } from "@trpc/server";
 import { getBaseUrl } from "~/utils/base";
 import { randomUUID } from "crypto";
 import { sendChangeEmailVerification } from "~/server/mail";
-import { User } from '../../../../schemas/index';
 
 export const userRouter = createTRPCRouter({
   getCurrentUser: protectedProcedure.query(({ctx})=>{
