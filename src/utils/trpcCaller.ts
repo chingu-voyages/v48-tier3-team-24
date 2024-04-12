@@ -1,7 +1,7 @@
 import { createCallerFactory } from "~/server/api/trpc";
 import { appRouter } from "~/server/api/root";
 import { createInnerTRPCContext } from "~/server/api/trpc";
-import { Session } from "next-auth";
+import type { Session } from "next-auth";
 
 /**
  * Create a trpc caller that can be used to invoke procedures on the server side.

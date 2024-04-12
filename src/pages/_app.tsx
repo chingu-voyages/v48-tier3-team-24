@@ -8,27 +8,29 @@ import type { NextPage } from "next";
 import type { ReactElement, ReactNode } from "react";
 
 import "~/styles/globals.css";
+import "react-datetime/css/react-datetime.css";
 
-export type NextPageWithLayout<P = NonNullable<unknown>, IP = P> = NextPage<PageTransitionEvent, IP> & {
-  getLayout? : (page: ReactElement) => ReactNode
+export type NextPageWithLayout<P = NonNullable<unknown>, IP = P> = NextPage<
+  PageTransitionEvent,
+  IP
+> & {
+  getLayout?: (page: ReactElement) => ReactNode;
 };
 
 type AppPropsWithLayout = AppProps & {
-  Component: NextPageWithLayout
-}
+  Component: NextPageWithLayout;
+};
 
 const MyApp: AppType<{ session: Session | null }> = ({
   Component,
   pageProps: { session, ...pageProps },
-}:AppPropsWithLayout) => {
+}: AppPropsWithLayout) => {
   const getLayout = Component.getLayout ?? ((page) => page);
   const component = getLayout(<Component {...pageProps} />);
   return (
     <SessionProvider session={session as Session} refetchOnWindowFocus={false}>
       <Toaster />
-      <main className={`font-sans ${josefin_sans.variable}`}>
-        {component}
-      </main>
+      <main className={`font-sans ${josefin_sans.variable}`}>{component}</main>
     </SessionProvider>
   );
 };
