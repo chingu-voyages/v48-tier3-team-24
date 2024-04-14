@@ -1,4 +1,4 @@
-import { ChangeEvent, useEffect, useState } from "react";
+import { type ChangeEvent, useState } from "react";
 
 interface SelectProps {
   id: string;
@@ -17,32 +17,21 @@ export interface SelectItemProps {
 }
 
 export const Select = (props: SelectProps) => {
-  const [value, setValue] = useState<string | number | undefined>("");
-  const [options, setOptions] = useState<Array<SelectItemProps>>([]);
+  const [value, setValue] = useState<string | number | undefined>(props.defaultValue);
+  const [options, setOptions] = useState<Array<SelectItemProps>>(props.data);
   const [isShowSelectItems, setIsShowSelectItems] = useState<boolean>(false);
 
-  useEffect(() => {
-    setValue(props.defaultValue);
-    setOptions(props.data);
-    return;
-  }, []);
-
   const onSelectItem = (item: SelectItemProps) => {
-    console.log(item);
     setValue(item.value);
     setIsShowSelectItems(false);
   };
   const onFocusInput = () => {
     setIsShowSelectItems(true);
   };
-  const onFocusOutInput = () => {
-    setIsShowSelectItems(false);
-  };
   const onInputChange = (event: ChangeEvent<HTMLInputElement>) => {
     setValue(event.target.value);
     setOptions(
       props.data.filter((item: SelectItemProps) => {
-        console.log(item, event.target.value);
         return item.label
           .toString()
           .toLowerCase()

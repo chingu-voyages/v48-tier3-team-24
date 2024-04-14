@@ -1,6 +1,6 @@
 import { TRPCError } from "@trpc/server";
-import { EventUpcomingSchema, NewEventSchema } from "schemas";
-import { EventSchema } from "generated/schemas";
+import { EventUpcomingSchema, NewEventSchema, EditEventSchema } from "schemas";
+import type { Event } from "@prisma/client";
 import { z } from "zod";
 
 import {
@@ -9,6 +9,13 @@ import {
   protectedProcedure,
   publicProcedure
 } from "~/server/api/trpc";
+
+export interface ClientEvent extends Omit<Event, "startDateTime" | "endDateTime" | "createdAt" | "updatedAt"> {
+  startDateTime: Date | string;
+  endDateTime: Date | string;
+  createdAt: Date | string;
+  updatedAt: Date | string;
+};
 
 export const eventRouter = createTRPCRouter({
   hello: publicProcedure
@@ -81,50 +88,154 @@ export const eventRouter = createTRPCRouter({
       });
     }),
 
-  adminGetEvents: adminProcedure
-    .input(z.object({search: z.string().min(1),}))
-    .query(({ ctx, input }) => {
-      const properties = Object.entries(EventSchema.shape)
-      const output = properties.filter(([key, schema]) => schema instanceof z.ZodString).map(([key, val]) => ({
-        [key]: { contains: input.search, mode: 'insensitive' }
-      }))
-      return ctx.db.event.findMany({
-        orderBy: { createdAt: "desc" },
-        where: { OR: [...output] },
-        include: {
-          createdBy: true
+  adminGetUserSelectList: adminProcedure
+    .query(async ({ ctx }) => {
+      try {
+        const users = await ctx.db.user.findMany({
+          select: {
+            id: true,
+            username: true,
+            name: true
+          }
+        });
+        return users;
+      } catch(error) {
+        if (error instanceof TRPCError) throw error;
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "An unexpected error occurred.",
+          cause: error
+        });
+      }
+    }),
+
+  adminGetPaginatedEvents: adminProcedure
+    .input(z.object({
+      perPage: z.number().min(1),
+      page: z.number().min(1),
+      search: z.string().min(1).max(50).nullable()
+    }))
+    .query(async ({ ctx, input }) => {
+      try {
+        const skip = (input.page - 1) * input.perPage;
+        const take = input.perPage;
+
+        // Get the total count of the filtered results.
+        const total = await ctx.db.event.count({
+          ...(input.search &&
+          {
+            where: {
+              OR: [
+                { name: { contains: input.search } },
+                { description: { contains: input.search } }
+              ]
+            }
+          })
+        });
+        const events = await ctx.db.event.findMany({
+          skip,
+          take,
+          ...(input.search &&
+          {
+            where: {
+              OR: [
+                { name: { contains: input.search } },
+                { description: { contains: input.search } }
+              ]
+            }
+          }),
+          orderBy: [
+            { name: "asc" }
+          ]
+        });
+        return {
+          events,
+          total
         }
-      })
+      } catch(error) {
+        if (error instanceof TRPCError) throw error;
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "An unexpected error occurred.",
+          cause: error
+        });
+      }
     }),
 
   adminCreateEvent: adminProcedure
-    .input(EventSchema)
+    .input(NewEventSchema)
     .mutation(async ({ ctx, input }) => {
-      return await ctx.db.event.create({
-        data: { ...input }
-      })
+      try {
+        return await ctx.db.event.create({
+          data: {
+            ...input,
+            price: Number(input.price),
+            createdBy: {
+              connect: {
+                id: ctx.session.user.id
+              }
+            }
+          }
+        });
+      } catch(error) {
+        if (error instanceof TRPCError) throw error;
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "An unexpected error occurred.",
+          cause: error
+        });
+      }
     }),
 
   adminEditEvent: adminProcedure
-    .input(EventSchema)
+    .input(EditEventSchema)
     .mutation(async({ctx, input}) => {
-      return await ctx.db.event.update({
-        data: input,
-        where: {
-          id: input.id
-        }
-      })
+      try {
+        return await ctx.db.event.update({
+          data: {
+            ...input,
+            price: Number(input.price),
+            createdBy: {
+              connect: {
+                id: ctx.session.user.id
+              }
+            }
+          },
+          where: {
+            id: input.id
+          }
+        });
+      } catch(error) {
+        if (error instanceof TRPCError) throw error;
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "An unexpected error occurred.",
+          cause: error
+        });
+      }
     }),
 
   adminDeleteEvent: adminProcedure
     .input(z.object({
-      eventId: z.string(),
+      id: z.string(),
     }))
     .mutation(async({ctx, input})=> {
-      return await ctx.db.event.delete({
-        where: {
-          id: input.eventId
-        }
-      })
+      try {
+        await ctx.db.eventParticipants.deleteMany({
+          where: {
+            eventId: input.id
+          }
+        });
+        return await ctx.db.event.delete({
+          where: input
+        });
+      } catch(error) {
+        if (error instanceof TRPCError) throw error;
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "An unexpected error occurred.",
+          cause: error
+        });
+      }
     })
 });

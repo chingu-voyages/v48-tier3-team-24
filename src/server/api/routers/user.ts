@@ -9,7 +9,7 @@ import { TRPCError } from "@trpc/server";
 import { getBaseUrl } from "~/utils/base";
 import { randomUUID } from "crypto";
 import { sendChangeEmailVerification } from "~/server/mail";
-import { Role } from "@prisma/client";
+import type { Role } from "@prisma/client";
 
 // @TODO Move this to output type schema file. This is a custom user type that exclude password
 export interface ClientUser {

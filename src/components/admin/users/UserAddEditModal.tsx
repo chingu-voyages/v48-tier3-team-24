@@ -82,6 +82,7 @@ const UserAddEditModal = ({user}:{user:ClientUser | null}) => {
             id="username"
             name="username"
             type="text"
+            required
             defaultValue={isEdit ? user.username ?? undefined : undefined}
             className="px-3 py-1 border"
           />

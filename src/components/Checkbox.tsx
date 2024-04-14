@@ -5,7 +5,7 @@ interface CheckboxProps {
   name?: string;
   label?: string;
   defaultValue?: boolean;
-  onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 export const Checkbox = (props: CheckboxProps) => {
@@ -15,9 +15,9 @@ export const Checkbox = (props: CheckboxProps) => {
         id={props.id}
         name={props.name}
         type="checkbox"
-        checked={props.defaultValue}
+        defaultChecked={props.defaultValue}
         onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-          props.onChange(event);
+          props.onChange ? props.onChange(event) : undefined;
         }}
       />
       <label htmlFor={props.id}>{props.label}</label>

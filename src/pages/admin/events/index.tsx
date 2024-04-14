@@ -1,151 +1,141 @@
-import { useEffect, useState, type ReactNode } from "react";
-import Button from "~/components/Button";
-import { Checkbox } from "~/components/Checkbox";
-import Modal from "~/components/Modal";
-import { NumberInput } from "~/components/NumberInput";
-import { TextInput } from "~/components/TextInput";
+import type { ClientEvent } from "~/server/api/routers/event";
+import type { GetServerSideProps, InferGetServerSidePropsType } from "next";
+import type { ReactNode, SetStateAction, Dispatch } from "react";
+import { useState, createContext, useContext } from "react";
 import { AdminLayout } from "~/layouts/admin/AdminLayout";
-import type { NextPageWithLayout } from "~/pages/_app";
-import { Select, SelectItemProps } from "~/components/Select";
-import { EventStatus } from "@prisma/client";
+import { createCaller } from "~/utils/trpcCaller";
+import { getServerAuthSession } from "~/server/auth";
+import EventAddButton from "~/components/admin/events/EventAddButton";
+import EventAddEditModal from "~/components/admin/events/EventAddEditModal";
+import EventFilter from "~/components/admin/events/EventFilter";
+import EventPaginator from "~/components/admin/events/EventPaginator";
+import EventTable from "~/components/admin/events/EventTable";
 
-const AdminEventManagement: NextPageWithLayout = (props) => {
-  const [showEventFormModal, setShowEventFormModal] = useState<boolean>(false);
-  const [isFree, setIsFree] = useState<boolean>(true);
-  const [isPrivate, setIsPrivate] = useState<boolean>(true);
-  const [arrStatus, setArrStatus] = useState<SelectItemProps[]>([]);
+const DEFAULT_PAGE = 1;
+const DEFAULT_PER_PAGE = 10;
 
-  useEffect(() => {
-    setArrStatus([
-      {
-        label: EventStatus.UPCOMING,
-        value: EventStatus.UPCOMING,
-      },
-      {
-        label: EventStatus.COMPLETED,
-        value: EventStatus.COMPLETED,
-      },
-      {
-        label: EventStatus.CANCELED,
-        value: EventStatus.CANCELED,
-      },
-      {
-        label: EventStatus.IN_PROGRESS,
-        value: EventStatus.IN_PROGRESS,
-      },
-    ]);
-  }, []);
-  const onSetShowEventFormModel = () => {
-    setShowEventFormModal(!showEventFormModal);
+interface InitialEventsState {
+  events: ClientEvent[];
+  total: number;
+  page: number;
+  perPage: number;
+};
+
+interface EventAdminContext {
+  events: ClientEvent[];
+  setEvents: Dispatch<SetStateAction<ClientEvent[]>>;
+  page: number;
+  setPage: Dispatch<SetStateAction<number>>;
+  perPage: number;
+  setPerPage: Dispatch<SetStateAction<number>>;
+  pages: number,
+  setPages: Dispatch<SetStateAction<number>>;
+  total: number;
+  setTotal: Dispatch<SetStateAction<number>>;
+  search: string | null;
+  setSearch: Dispatch<SetStateAction<string | null>>;
+  eventModalOpen: boolean;
+  setEventModalOpen: Dispatch<SetStateAction<boolean>>;
+  modalEvent: ClientEvent | null;
+  setModalEvent: Dispatch<SetStateAction<ClientEvent | null>>;
+};
+
+const initialEventAdminContext:EventAdminContext = {
+  events: [],
+  setEvents: () => {return;},
+  page: DEFAULT_PAGE,
+  setPage: () => {return;},
+  perPage: DEFAULT_PER_PAGE,
+  setPerPage: () => {return;},
+  pages: 1,
+  setPages: () => {return;},
+  total: 0,
+  setTotal: () => {return;},
+  search: null,
+  setSearch: () => {return;},
+  eventModalOpen: false,
+  setEventModalOpen: () => {return;},
+  modalEvent: null,
+  setModalEvent: () => {return;}
+};
+
+const EventAdminContext = createContext(initialEventAdminContext);
+
+export const getServerSideProps = (async (context) => {
+  const page = DEFAULT_PAGE;
+  const perPage = DEFAULT_PER_PAGE;
+  const { req, res } = context;
+  const session = await getServerAuthSession({ req, res });
+  const caller = createCaller(session);
+  const response = await caller.event.adminGetPaginatedEvents({ page, perPage, search: null });
+  return {
+    props: {
+      initialEventsState: {
+        events: response.events.map(
+          event => (
+            {
+              ...event,
+              // Why this is necessary: https://stackoverflow.com/questions/70449092/reason-object-object-date-cannot-be-serialized-as-json-please-only-ret
+              startDateTime: String(event.startDateTime),
+              endDateTime: String(event.endDateTime),
+              createdAt: String(event.createdAt),
+              updatedAt: String(event.updatedAt)
+            }
+          )
+        ),
+        total: response.total,
+        page,
+        perPage
+      }
+    }
   };
-  const onCreateEvent = async () => {
-    return;
+}) satisfies GetServerSideProps<{ initialEventsState:InitialEventsState }>
+
+const AdminEventManagement = (
+  {initialEventsState}
+  :InferGetServerSidePropsType<typeof getServerSideProps>
+) => {
+  const [ page, setPage ] = useState<number> (initialEventsState.page);
+  const [ perPage, setPerPage ] = useState<number> (initialEventsState.perPage);
+  const [ total, setTotal ] = useState<number> (initialEventsState.total);
+  const [ pages, setPages ] = useState<number> (Math.ceil(initialEventsState.total / initialEventsState.perPage));
+  const [ search, setSearch ] = useState<string | null> (null);
+  const [ events, setEvents ] = useState<ClientEvent[]> (initialEventsState.events);
+  const [ eventModalOpen, setEventModalOpen ] = useState<boolean> (false);
+  const [ modalEvent, setModalEvent ] = useState<ClientEvent | null> (null);
+
+  const openEventAddModal = () => {
+    setModalEvent(null);
+    setEventModalOpen(true);
   };
-  const onPriceStatusChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setIsFree(event.target.checked);
-  };
-  const onPrivateStatusChange = (
-    event: React.ChangeEvent<HTMLInputElement>,
-  ) => {
-    setIsPrivate(event.target.checked);
-  };
+  
   return (
-    <div>
-      <p>Admin Events Page</p>
-      <Button variant="primary" onClick={onSetShowEventFormModel}>
-        Create an Event
-      </Button>
-      <Modal modalOpen={showEventFormModal}>
-        <p className="mb-5 text-lg">Create an Event</p>
-        <form className="grid grid-cols-1 gap-5" onSubmit={onCreateEvent}>
-          <TextInput
-            id="name"
-            label="Event Name"
-            type="text"
-            required={true}
-          />
-          <TextInput
-            id="description"
-            label="Description"
-            type="textArea"
-            required={true}
-          />
-          <TextInput
-            id="address"
-            label="address"
-            type="text"
-            required={true}
-          />
-          {/* Todo - add google map here, click on the map to choose the address, and get lat&lng */}
-          <TextInput
-            id="lat"
-            label="latitude (optional)"
-            type="text"
-            required={true}
-          />
-          <TextInput
-            id="lng"
-            label="longitude (optional)"
-            type="text"
-            required={true}
-          />
-          <NumberInput
-            id="maxParticipants"
-            label="Max. Participants"
-            min={1}
-            defaultValue={1}
-            required={true}
-          />
-          {!isFree ? (
-            <NumberInput
-              id="price"
-              label="Price"
-              min={0}
-              defaultValue={0}
-              required={true}
-            />
-          ) : (
-            ""
-          )}
-          <Checkbox
-            id="isFree"
-            label="Free Event"
-            defaultValue={isFree}
-            onChange={onPriceStatusChange}
-          ></Checkbox>
-          <Checkbox
-            id="isPrivate"
-            label="Private Event"
-            defaultValue={isPrivate}
-            onChange={onPrivateStatusChange}
-          ></Checkbox>
-          {/* Todo - set status (EventStatus) - create a selection component */}
-          <Select
-            id="status"
-            name="status"
-            label="Status"
-            defaultValue="UPCOMING"
-            data={arrStatus}
-          ></Select>
-          {/* Todo - set Host (created by) - create a users selection component with search function */}
-          {/* Todo - set Participants - create a users selection component with search function */}
-          <hr />
-          <div className="flex flex-col sm:flex-row w-full justify-between gap-5">
-            <Button outline="info" onClick={onSetShowEventFormModel}>
-              Cancel
-            </Button>
-            <Button variant="primary" type="submit">
-              Confirm
-            </Button>
-          </div>
-        </form>
-      </Modal>
+    <div className="flex flex-col gap-3">
+      <h1 className="text-center font-bold text-lg">Events</h1>
+      <EventAdminContext.Provider value={{
+        page, setPage,
+        total, setTotal,
+        perPage, setPerPage,
+        pages, setPages,
+        search, setSearch,
+        events, setEvents,
+        eventModalOpen, setEventModalOpen,
+        modalEvent, setModalEvent
+      }}>
+        { (eventModalOpen) &&
+          <EventAddEditModal event={modalEvent}/>
+        }
+        <EventFilter />
+        <EventAddButton onClick={openEventAddModal} />
+        <EventTable />
+        <EventPaginator />
+      </EventAdminContext.Provider>
     </div>
   );
 };
 
-AdminEventManagement.getLayout = (page: ReactNode) => (
-  <AdminLayout page={page} />
-);
+AdminEventManagement.getLayout = (page:ReactNode) => <AdminLayout page={page} />;
+
+export const useEventAdminContext = () => useContext(EventAdminContext);
 
 export default AdminEventManagement;
