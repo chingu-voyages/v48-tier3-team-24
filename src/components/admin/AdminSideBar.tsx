@@ -1,7 +1,6 @@
 import Link from "next/link";
 import { FaRegUserCircle } from "react-icons/fa";
 import { MdOutlineEventAvailable } from "react-icons/md";
-import { MdOutlinePayment } from "react-icons/md";
 import { useRouter } from "next/router";
 
 const AdminSideBar = () => {
@@ -18,10 +17,6 @@ const AdminSideBar = () => {
         <Link href="/admin/events" className={`py-3 pl-3 flex flex-row items-center gap-3 text-white ${selectedRoute === "/events" ? "bg-es-primary-light font-bold" : "hover:bg-es-primary-light hover:pl-5"}`}>
           <MdOutlineEventAvailable/>
           Event Management
-        </Link>
-        <Link href="/admin/payments" className={`py-3 pl-3 flex flex-row items-center gap-3 text-white ${selectedRoute === "/payments" ? "bg-es-primary-light font-bold" : "hover:bg-es-primary-light hover:pl-5"}`}>
-          <MdOutlinePayment />
-          Payment Management
         </Link>
       </div>
     </aside>

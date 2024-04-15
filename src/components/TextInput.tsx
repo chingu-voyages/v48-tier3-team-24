@@ -1,7 +1,7 @@
 import type { ChangeEvent } from "react";
 
 interface TextInputProps {
-  type: "text" | "textArea" | "number";
+  type: "text" | "textArea" | "number" | "datetime-local";
   label: string;
   id: string;
   defaultValue?: string | undefined;

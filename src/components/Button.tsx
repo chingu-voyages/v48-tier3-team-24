@@ -35,7 +35,7 @@ const buttonVariants = cva("px-10 py-3 cursor-pointer font-bold h-fit", {
     },
     size: {
       default: "text-base",
-      sm: "text-base",
+      sm: "text-xs",
       md: "text-md",
       lg: "text-lg",
       xl: "text-xl",
