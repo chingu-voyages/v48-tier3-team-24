@@ -3,8 +3,7 @@ import { CalendarEventsSchema, EventUpcomingSchema } from "schemas";
 
 import {
   createTRPCRouter,
-  protectedProcedure,
-  verifiedUserProcedure,
+  protectedProcedure
 } from "~/server/api/trpc";
 
 export const dashRouter = createTRPCRouter({

@@ -9,11 +9,9 @@ export default function Modal(props: ModalProps) {
   return (
     <>
       {props.modalOpen && (
-        <div className="fixed right-0 top-0 h-full w-full bg-black bg-opacity-50 bg-blend-color-burn z-50">
-          <div className="flex h-full items-center justify-center">
-            <div className="rounded-lg border bg-white shadow-lg p-3">
-              {props.children}
-            </div>
+        <div className="fixed inset-0 flex flex-col items-center justify-center p-3 bg-black bg-opacity-50 bg-blend-color-burn z-50">
+          <div className="rounded-lg max-h-full w-full sm:w-1/3 border bg-white shadow-lg p-5 overflow-auto">
+            {props.children}
           </div>
         </div>
       )}

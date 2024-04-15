@@ -28,7 +28,7 @@ const UserRow = ({user}:{user:ClientUser}) => {
   };
 
   return (
-    <tr className="border-b border-neutral-200 dark:border-white/10">
+    <tr className="border-b border-neutral-200">
       <td className="whitespace-nowrap px-6 py-2">{user.id}</td>
       <td className="whitespace-nowrap px-6 py-2">{user.username}</td>
       <td className="whitespace-nowrap px-6 py-2">{user.name}</td>
